@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inserimento Nuovo Utente</title>
+    <!-- Link a Bootstrap CSS -->
+    <link href="/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        .main {
+            margin-top: 100px !important;
+        }
+        .bold {
+            font-weight: bold !important;
+        }
+        .button-elimina {
+            margin-left: 500px !important;
+            margin-top: 0px !important;
+        }
+    </style>
+</head>
+<body>
+    <%- include('toolbar', { livelloUser: livelloUser }) %>
+    <div class="container mt-5 main">
+        <h2 class="mt-5 mb-4 bold">Inserimento Nuovo Utente</h2>
+        <form  id="userForm">
+            <div class="form-group row">
+                <label for="nome" class="col-sm-2 col-form-label bold">Nome:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="nome" name="nome" required>
+                </div>
+            </div>
+            <div class="form-group row mt-3">
+                <label for="cognome" class="col-sm-2 col-form-label bold">Cognome:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="cognome" name="cognome" required>
+                </div>
+            </div>
+            <div class="form-group row mt-3">
+                <label for="codiceFiscale" class="col-sm-2 col-form-label bold">Codice Fiscale:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="codiceFiscale" name="codiceFiscale" required>
+                </div>
+            </div>
+            <div class="form-group row mt-3">
+                <label for="amministrazione" class="col-sm-2 col-form-label bold">Amministrazione:</label>
+                <div class="col-sm-10">
+                    <select id="selectAmministrazione" class="form-select select-ufficio" required></select>
+                </div>
+            </div>
+            <div class="form-group row mt-3">
+                <label for="qualifica" class="col-sm-2 col-form-label bold">Qualifica:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="qualifica" name="qualifica" required>
+                </div>
+            </div>
+            <div class="form-group row mt-3">
+                <label for="selectUfficio" class="col-sm-2 col-form-label bold">Ufficio:</label>
+                <div class="col-sm-10">
+                    <select id="selectUfficio" class="form-select select-ufficio" required></select>
+                </div>
+            </div>
+            <div class="form-group row mt-3">
+                <label for="selectLivello" class="col-sm-2 col-form-label bold">Livello Utente:</label>
+                <div class="col-sm-10">
+                    <select id="selectLivello" class="form-select select-ufficio" required></select>
+                </div>
+            </div>
+            <div class="form-group row mt-3">
+                <div class="col-sm-10 offset-sm-2">
+                    <button type="button" class="btn btn-primary bold" id="aggiungiUtente">Inserisci Utente</button>
+                    <button type="submit" class="btn btn-secondary bold">Aggiorna Utente</button>
+                    <button type="button" class="button-elimina btn btn-danger bold" id="eliminaUtente">Elimina Utente</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <%- include('footer') %>
+    <script  type="module" src="/js/admin.js" apiUserURL="<%= apiUserURL %>">
+  </script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js" ></script>
+    <!-- Link a Bootstrap JS (richiesto per il funzionamento di Bootstrap) -->
+</body>
+</html>

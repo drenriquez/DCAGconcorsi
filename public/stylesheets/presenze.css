@@ -1,0 +1,96 @@
+.logo{
+    margin-right: 10px;
+  }
+  .navbar-nav {
+  gap: 10px; /* Aggiungi qui lo spazio desiderato tra gli elementi del menu */
+  }
+
+  .navbar-nav .nav-link {
+    transition: background-color 0.3s ease; /* Aggiunto un effetto di transizione sul colore di sfondo */
+  }
+
+  .navbar-nav .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* Cambiato il colore di sfondo al passaggio del mouse */
+  }
+  #monthSelector{
+    font-weight: bold; /* Testo in neretto */
+    text-align: center;
+    color: rgb(83, 82, 82) ;
+  }
+  .head-day{
+    font-size: small;
+    color: rgb(83, 82, 82)  !important;
+    
+  }
+  /* Stile per le celle non lavorative */
+  .head-non-lavorativo {
+    background-color: #fab7b7 !important;
+  }
+  
+  .non-lavorativo {
+    background-color: #f8e4e4 !important;
+  }
+  .non-lavorativo-dispari{
+    background-color: #f6dada !important;
+  }
+  /* Stile per le celle selezionate */
+  .selezionato {
+    background-color: #cce5ff;
+  }
+  .selezionabile {
+    cursor: pointer !important;
+  }
+  .tdLavorativo{
+    background-color: #ffffff !important;
+  }
+  .tdLavorativo:hover {
+    background-color:rgb(228, 250, 242) !important;
+/* Altri stili desiderati quando il puntatore è sopra l'elemento */
+  }
+  /* Nascondi i bordi degli elementi select */
+  .form-control.custom-select {
+          border: none !important;
+          background-color: transparent !important;
+          -webkit-appearance: none !important;
+          -moz-appearance: none !important;
+          appearance: none !important;
+          margin: none !important;
+          padding: none !important;
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1;
+      }
+  td{
+    font-size: 12px;
+    background-color: #ffffff !important;
+    border-color: #d7d1d1;
+    position: relative;
+    height: 50px;
+    min-width: 42px;
+    max-width: 42px;
+
+  }
+ 
+ 
+  tr{
+    border-color: #d7d1d1;
+  }
+  .trDispari{
+    background-color: #f9f6f4 !important;
+  }
+  table {
+    border-color: #d7d1d1 !important;
+  }   
+  thead{
+    border-color: #d7d1d1 !important;
+  }
+  .currentDay{
+    background: rgba(153, 255, 0, 0.158) !important; /* Colore di sfondo con trasparenza */
+  background-blend-mode: screen !important; /* Sovrapposizione del colore */
+  }

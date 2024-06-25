@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <!-- Bootstrap CSS -->
+  <link href="/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <style>
+    .logo{
+      margin-right: 10px;
+    }
+    .navbar-nav {
+    gap: 10px; /* Aggiungi qui lo spazio desiderato tra gli elementi del menu */
+    }
+
+    .navbar-nav .nav-link {
+      transition: background-color 0.3s ease; /* Aggiunto un effetto di transizione sul colore di sfondo */
+    }
+
+    .navbar-nav .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.2); /* Cambiato il colore di sfondo al passaggio del mouse */
+    }
+    .main{
+        margin-top: 100px !important;
+    }
+    .responsive-image {
+    width: 50%; /* L'immagine sarà larga il 50% del suo contenitore */
+    height: auto; /* Mantiene il rapporto d'aspetto */
+  }
+  .title{
+    font-weight: bold;
+  }
+  </style>
+</head>
+<body>
+
+  <!-- Include la tollbar -->
+  <%- include('toolbar', { livelloUser: livelloUser }) %>
+
+  <!-- Content -->
+  <div class="container mt-5 main">
+    <div class="row">
+      <div class="col">
+        <h1 class="title"><%= title %></h1>
+        <p>Welcome to <%= title %></p>
+        
+        <p>Piattaforma centralizzata per la gestione delle presenze del personale - DIPARTIMENTO DEI VIGILI DEL FUOCO, DEL SOCCORSO PUBBLICO E DELLA DIFESA CIVILE
+          DIREZIONE CENTRALE PER L’AMMINISTRAZIONE GENERALE.</p>
+      </div>
+    </div>
+
+    <!-- Grid for images -->
+    <div class="row mt-5">
+      <div class="col-md-3">
+        <a href="https://accounts.dipvvf.it/" target="_blank">
+        <img src="/images/cambioPwd.gif" alt="cambio password account dipartimento" class="img-fluid">
+        </a>
+      </div>
+      <div class="col-md-3">
+        <a href="http://intranet.dipvvf.it/" target="_blank">
+        <img src="/images/intranetdipvvf.gif" alt="intranet dipVVF" class="img-fluid">
+        </a>
+      </div>
+      <div class="col-md-3">
+        <a href="http://sipecinfo.dipvvf.it/" target="_blank">
+        <img src="/images/sipecinfo.png" alt="sipec" class="img-fluid">
+        </a>
+      </div>
+      <div class="col-md-3">
+        <a href="https://noipa.mef.gov.it/cl/" target="_blank">
+        <img src="/images/noiPA.gif" alt="New Image 1" class="img-fluid">
+        </a>
+      </div>
+    </div>
+    <div class="row mt-3 mt-5">
+      <div class="col-md-3">
+        <a href="https://www.vigilfuoco.it/aspx/home.aspx" target="_blank">
+        <img src="/images/vigilFuoco.gif" alt="VigilFuoco.it" class="img-fluid">
+        </a>
+      </div>
+      <div class="col-md-3">
+        <a href="https://protocollo.dipvvf.it/folium/index.do" target="_blank">
+        <img src="/images/vigilia.gif" alt="Vigilia" class="img-fluid">
+        </a>
+      </div>
+      <div class="col-md-3">
+        <a href="https://webmail1.vigilfuoco.it/" target="_blank">
+        <img src="/images/webmail.gif" alt="webmail vigilfuoco" class="img-fluid">
+        </a>
+      </div>
+      <div class="col-md-3">
+        <a href="http://intrapersciv.interno.it/" target="_blank">
+        <img src="/images/minint.jpg" alt="New Image 2" class="img-fluid responsive-image">
+        </a>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+  </div>
+
+  <!-- Include il footer -->
+  <%- include('footer') %>
+
+  <!-- Bootstrap Bundle with Popper -->
+  <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

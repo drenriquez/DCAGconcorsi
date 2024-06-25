@@ -1,0 +1,11 @@
+node_modules/
+.env
+access.log
+CERT.crt
+KEY.key
+server.crt
+server.key
+example.com+5-key.pem
+example.com+5.pem
+rootCA-key.pem
+rootCA.pem

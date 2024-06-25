@@ -1,0 +1,338 @@
+
+[
+    {
+        "anagrafica": {
+            "nome": "Lorenzo",
+            "cognome": "Moretti",
+            "codiceFiscale": "MRTLNZ90A01H501A"
+        },
+        "amministrazione": "AC",
+        "qualifica": "AA",
+        "ufficio": "Ufficio I - Affari Generali",
+        "livelloUser": 0,
+        "assenze": {
+            "2024": {
+                "04": {
+                    "18": "PT",
+                    "20": "CO"
+                },
+                "06": {
+                    "11": "P937"
+                }
+            },
+            "2025": {
+                "01": {
+                    "15": "CO",
+                    "18": "PT"
+                },
+                "02": {
+                    "11": "P937"
+                }
+            }
+        }
+    },
+    {
+        "anagrafica": {
+            "nome": "Elisa",
+            "cognome": "Neri",
+            "codiceFiscale": "NRLISA80B02H501B"
+        },
+        "amministrazione": "CNVVF",
+        "qualifica": "AA",
+        "ufficio": "Ufficio I - Attivita' Socio Assistenziali",
+        "livelloUser": 1,
+        "assenze": {
+            "2024": {
+                "05": {
+                    "17": "PM"
+                },
+                "07": {
+                    "06": "PTT"
+                }
+            }
+        }
+    },
+    {
+        "anagrafica": {
+            "nome": "Enrico",
+            "cognome": "Notaro",
+            "codiceFiscale": "NTRNRC80S15G273K"
+        },
+        "amministrazione": "AC",
+        "qualifica": "AI",
+        "ufficio": "Ufficio II - Affari Concorsuali e Contenzioso",
+        "livelloUser": 2,
+        "assenze": {
+            "2024": {
+                "04": {
+                    "18": "PT",
+                    "20": "CO"
+                },
+                "06": {
+                    "11": "P937"
+                }
+            },
+            "2025": {
+                "01": {
+                    "15": "CO",
+                    "18": "PT"
+                },
+                "02": {
+                    "11": "P937"
+                }
+            }
+        }
+    },
+    {
+        "anagrafica": {
+            "nome": "Matteo",
+            "cognome": "Bellini",
+            "codiceFiscale": "BLLMTT80C03H501C"
+        },
+        "amministrazione": "AC",
+        "qualifica": "AA",
+        "ufficio": "Ufficio II - Affari Concorsuali e Contenzioso",
+        "livelloUser": 2,
+        "assenze": {
+            "2024": {
+                "06": {
+                    "23": "PR"
+                },
+                "07": {
+                    "14": "P278"
+                }
+            }
+        }
+    },
+    {
+        "anagrafica": {
+            "nome": "Sara",
+            "cognome": "Colucci",
+            "codiceFiscale": "CLCSRA70D04H501D"
+        },
+        "amministrazione": "CNVVF",
+        "qualifica": "AA",
+        "ufficio": "Ufficio II - Concorsi d'Accesso",
+        "livelloUser": 0,
+        "assenze": {
+            "2024": {
+                "05": {
+                    "30": "PE"
+                },
+                "07": {
+                    "22": "PL"
+                }
+            }
+        }
+    },
+    {
+        "anagrafica": {
+            "nome": "Giorgia",
+            "cognome": "Romani",
+            "codiceFiscale": "RMNGRG80E05H501E"
+        },
+        "amministrazione": "AC",
+        "qualifica": "AA",
+        "ufficio": "Direzione Centrale",
+        "livelloUser": 1,
+        "assenze": {
+            "2024": {
+                "06": {
+                    "01": "RC"
+                },
+                "07": {
+                    "18": "SFS"
+                }
+            }
+        }
+    },
+    {
+        "anagrafica": {
+            "nome": "Davide",
+            "cognome": "Leoni",
+            "codiceFiscale": "LNIDVD90F06H501F"
+        },
+        "amministrazione": "CNVVF",
+        "qualifica": "AA",
+        "ufficio": "Ufficio III - Affari Legali e Contenzioso",
+        "livelloUser": 2,
+        "assenze": {
+            "2024": {
+                "05": {
+                    "07": "SW"
+                },
+                "06": {
+                    "21": "TE"
+                }
+            }
+        }
+    },
+    {
+        "anagrafica": {
+            "nome": "Paola",
+            "cognome": "Marchi",
+            "codiceFiscale": "MRCPA80G07H501G"
+        },
+        "amministrazione": "AC",
+        "qualifica": "AA",
+        "ufficio": "Ufficio I - Attivita' Socio Assistenziali",
+        "livelloUser": 0,
+        "assenze": {
+            "2024": {
+                "04": {
+                    "19": "A"
+                },
+                "06": {
+                    "13": "BO"
+                }
+            }
+        }
+    },
+    {
+        "anagrafica": {
+            "nome": "Andrea",
+            "cognome": "Ferraro",
+            "codiceFiscale": "FRRAND80H08H501H"
+        },
+        "amministrazione": "CNVVF",
+        "qualifica": "AA",
+        "ufficio": "Ufficio II - Concorsi di Riqualificazione",
+        "livelloUser": 1,
+        "assenze": {
+            "2024": {
+                "05": {
+                    "11": "MAT"
+                },
+                "07": {
+                    "09": "CO"
+                }
+            }
+        }
+    },
+    {
+        "anagrafica": {
+            "nome": "Valeria",
+            "cognome": "Barone",
+            "codiceFiscale": "BRNVAL90I09H501I"
+        },
+        "amministrazione": "AC",
+        "qualifica": "AA",
+        "ufficio": "Ufficio II - Affari Concorsuali e Contenzioso",
+        "livelloUser": 2,
+        "assenze": {
+            "2024": {
+                "06": {
+                    "03": "DL119"
+                },
+                "07": {
+                    "21": "CS42"
+                }
+            }
+        }
+    },
+    {
+        "anagrafica": {
+            "nome": "Francesca",
+            "cognome": "Villa",
+            "codiceFiscale": "VLLFNC90L10H501J"
+        },
+        "amministrazione": "CNVVF",
+        "qualifica": "AA",
+        "ufficio": "Ufficio I - Affari Generali",
+        "livelloUser": 0,
+        "assenze": {
+            "2024": {
+                "04": {
+                    "28": "CS151"
+                },
+                "06": {
+                    "19": "legge 104"
+                }
+            }
+        }
+    },
+    {
+        "anagrafica": {
+            "nome": "Mario",
+            "cognome": "Rossi",
+            "codiceFiscale": "RSSMRA80A01H501Z"
+        },
+        "amministrazione": "AC",
+        "qualifica": "AA",
+        "ufficio": "Ufficio I - Attivita' Socio Assistenziali",
+        "livelloUser": 0,
+        "assenze": {
+            "2024": {
+                "04": {
+                    "15": "A"
+                },
+                "05": {
+                    "10": "BO"
+                }
+            }
+        }
+    },
+    {
+        "anagrafica": {
+            "nome": "Luigi",
+            "cognome": "Verdi",
+            "codiceFiscale": "VRDUGI70B03H501Y"
+        },
+        "amministrazione": "CNVVF",
+        "qualifica": "AA",
+        "ufficio": "Ufficio I - Affari Generali",
+        "livelloUser": 1,
+        "assenze": {
+            "2024": {
+                "06": {
+                    "20": "MAT"
+                },
+                "07": {
+                    "05": "CO"
+                }
+            }
+        }
+    },
+    {
+        "anagrafica": {
+            "nome": "Giuseppe",
+            "cognome": "Bianchi",
+            "codiceFiscale": "BNCGPP80C03H501X"
+        },
+        "amministrazione": "AC",
+        "qualifica": "AA",
+        "ufficio": "Ufficio II - Concorsi d'Accesso",
+        "livelloUser": 2,
+        "assenze": {
+            "2024": {
+                "04": {
+                    "30": "DL119"
+                },
+                "05": {
+                    "15": "CS42"
+                }
+            }
+        }
+    },
+    {
+        "anagrafica": {
+            "nome": "Francesco",
+            "cognome": "Neri",
+            "codiceFiscale": "NRIFNC90D04H501W"
+        },
+        "amministrazione": "CNVVF",
+        "qualifica": "AA",
+        "ufficio": "Ufficio II - Concorsi di Riqualificazione",
+        "livelloUser": 0,
+        "assenze": {
+            "2024": {
+                "06": {
+                    "10": "CS151"
+                },
+                "07": {
+                    "20": "legge 104"
+                }
+            }
+        }
+    }
+]
