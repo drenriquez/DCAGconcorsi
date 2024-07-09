@@ -26,6 +26,8 @@ class ILG189Controller {
         this.router.put('/ILG189updateIterConcorsoByCodiciFiscali', this.updateIterConcorsoByCodiciFiscali.bind(this));//passare come body {"TRVDRA80L24F839E":{ "idStep": 0, ...}, "TRVDRA80L24F839E":{ "idStep": 0, ...}}
         this.router.get('/ILG189candidatiByNomeCognome', this.getCandidatiByNomeCognome.bind(this)); //
         this.router.get('/ILG189countCandidati', this.countCandidati.bind(this)); 
+        this.router.put('/ILG189updateIterConcorso', this.updateIterConcorso.bind(this));
+        this.router.put('/ILG189addIterConcorso', this.addIterConcorso.bind(this));
     }
 // alessia del muto
     async getAllCandidati(req, res) {
@@ -189,6 +191,24 @@ class ILG189Controller {
         try {
             const count = await iLGDao.countCandidati();
             res.json({ count });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+    async updateIterConcorso(req, res) {
+        const { codiceFiscale, idStep, updateData } = req.body;
+        try {
+            const result = await iLGDao.updateIterConcorso(codiceFiscale, idStep, updateData);
+            res.json(result);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+    async addIterConcorso(req, res) {
+        const { codiceFiscale, newIterConcorso } = req.body;
+        try {
+            const result = await iLGDao.addIterConcorso(codiceFiscale, newIterConcorso);
+            res.json(result);
         } catch (error) {
             res.status(500).json({ error: error.message });
         }

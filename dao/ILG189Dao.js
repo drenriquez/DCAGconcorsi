@@ -317,6 +317,62 @@ class ILG189Dao {
             throw error;
         }
     }
+
+    async updateIterConcorso(codiceFiscale, idStep, updateData) {
+        try {
+            const result = await this.candidatiCollection.updateOne(
+                { codiceFiscale: codiceFiscale, "iterConcorso.idStep": idStep },
+                {
+                    $set: {
+                        "iterConcorso.$.esito": updateData.esito,
+                        "iterConcorso.$.punteggio": updateData.punteggio,
+                        "iterConcorso.$.assenzaGiustificata": updateData.assenzaGiustificata,
+                        "iterConcorso.$.note": updateData.note
+                    }
+                }
+            );
+            if (result.matchedCount === 0) {
+                // If no matching document is found, add a new step
+                await this.candidatiCollection.updateOne(
+                    { codiceFiscale: codiceFiscale },
+                    {
+                        $push: {
+                            iterConcorso: {
+                                idStep: idStep,
+                                dataProva: updateData.dataProva,
+                                prova: updateData.prova,
+                                esito: updateData.esito,
+                                punteggio: updateData.punteggio,
+                                assenzaGiustificata: updateData.assenzaGiustificata,
+                                note: updateData.note
+                            }
+                        }
+                    }
+                );
+            }
+            return result;
+        } catch (error) {
+            console.error('Error updating iterConcorso:', error);
+            throw error;
+        }
+    }
+    async addIterConcorso(codiceFiscale, newIterConcorso) {
+        try {
+            const result = await this.candidatiCollection.updateOne(
+                { codiceFiscale: codiceFiscale },
+                {
+                    $push: {
+                        iterConcorso: newIterConcorso
+                    }
+                }
+            );
+            return result;
+        } catch (error) {
+            console.error('Error adding iterConcorso:', error);
+            throw error;
+        }
+    }
+    
     
 }
 
