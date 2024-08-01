@@ -4,6 +4,7 @@
   }
   .navbar-nav {
     gap: 10px; /* Aggiungi qui lo spazio desiderato tra gli elementi del menu */
+    /* background-color: brown !important */
   }
   .navbar-nav .nav-link {
     transition: background-color 0.3s ease; /* Aggiunto un effetto di transizione sul colore di sfondo */
@@ -20,7 +21,9 @@
   }
 </style>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-secondary fixed-top"> <!-- Cambiato bg-primary in bg-secondary per applicare un colore grigio alla tollbar -->
+<!-- <nav class="navbar navbar-expand-lg navbar-light bg-secondary fixed-top"> -->
+   <!-- Cambiato bg-primary in bg-secondary per applicare un colore grigio alla tollbar -->
+  <nav class="navbar navbar-expand-lg fixed-top" style="background-color: #842e28;">
     <div class="container">
       <img src="/images/vvf_logo.png" alt="VVF Logo" width="40" height="40" class="rounded-circle logo mr-2">
       <a class="navbar-brand text-light title" href="/home">DCAGpresenze</a>
@@ -44,6 +47,15 @@
           
             <li class="nav-item">
               <a class="nav-link text-light" href="/admin">ADMIN</a>
+            </li>
+            <!-- <li class="nav-item">
+              <a class="nav-link text-light" href="/gestioneConcorsi">GESTIONE CONCORSI</a>
+            </li> -->
+            <li class="nav-item">
+              <a class="nav-link text-light" href="/gestioneConcorsi">CONCORSI INTERNI</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-light" href="/gestioneConcorsi">CONCORSI ESTERNI</a>
             </li>
           
         <% } %>

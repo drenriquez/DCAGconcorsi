@@ -177,6 +177,27 @@ const APIgetUserByCodiceFiscale = async (host, codiceFiscale) => {
         throw error;
     }
 };
+const APIgetAllConcorsi = async (host)=>{
+    try {
+        const response = await fetch(`${host}api/databaseCollectionNames`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin'
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const user = await response.json();
+        return user;
+    } catch (error) {
+        console.error('Error fetching user by codice fiscale:', error);
+        throw error;
+    }
+}
 export {
   APIgetAllUsersInOrdineCognome,
   APIaddAbsenceById,
@@ -185,5 +206,6 @@ export {
   APIcreateUser,
   APIdeleteUser,
   APIupdateUser,
-  APIgetUserByCodiceFiscale
+  APIgetUserByCodiceFiscale,
+  APIgetAllConcorsi
 };

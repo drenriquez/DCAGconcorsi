@@ -1,7 +1,7 @@
 const { MongoClient, ObjectId } = require('mongodb');
 const databaseConfig = require('../config/database');
 
-class ILG189Dao {
+class VF350Dao {
     constructor() {
         this.mongoClient = new MongoClient(databaseConfig.dbURI, {
             useNewUrlParser: true,
@@ -15,9 +15,9 @@ class ILG189Dao {
     async initializeDatabase() {
         try {
             await this.mongoClient.connect();
-            console.log(`Connected to MongoDB ILG189Dao database ${databaseConfig.dbURI}`);
+            console.log(`Connected to MongoDB VF350Dao database ${databaseConfig.dbURI}`);
             this.db = this.mongoClient.db(databaseConfig.dbName);
-            this.candidatiCollection = this.db.collection('189ILG'); 
+            this.candidatiCollection = this.db.collection('350VF'); 
         } catch (error) {
             console.error('Error connecting to MongoDB:', error);
         }
@@ -518,5 +518,5 @@ class ILG189Dao {
     
 }
 
-module.exports = ILG189Dao;
+module.exports = VF350Dao;
 

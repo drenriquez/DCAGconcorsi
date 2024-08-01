@@ -1,38 +1,38 @@
 require('dotenv').config({ path: '../.env' });
 const express = require('express');
-const  ILG189Dao = require('../dao/ILG189Dao'); 
-const iLGDao = new  ILG189Dao();
+const  VF350Dao = require('../dao/VF350Dao'); 
+const iLGDao = new  VF350Dao();
 
-class ILG189Controller {
+class VF350Controller {
     constructor() {
         this.router = express.Router();
         this.initializeRoutes();
     }
 
     initializeRoutes() {
-        this.router.get('/ILG189candidati', this.getAllCandidati.bind(this));
-        this.router.get('/ILG189candidati/:id', this.getCandidatoById.bind(this));
-        this.router.post('/ILG189candidati', this.createCandidato.bind(this));
-        this.router.put('/ILG189candidati/:id', this.updateCandidato.bind(this));
-       // this.router.delete('/ILG189candidati/:id', this.deleteCandidatoById.bind(this));
-       //this.router.delete('/ILG189deleteCandidatoByCodiceFiscale', this.deleteCandidatoByCodiceFiscale.bind(this));
-        this.router.get('/ILG189candidati/cognome/:cognome', this.getCandidatiByCognome.bind(this));
-        this.router.get('/ILG189candidati/codiceFiscale/:codiceFiscale', this.getCandidatoByCodiceFiscale.bind(this));https://172.16.17.11/api/ILG189candidati/codiceFiscale/RNZMTT97S15H294R
-        this.router.post('/ILG189candidatiByCodiciFiscali', this.getCandidatiByCodiciFiscali.bind(this));
-        this.router.get('/ILG189candidatiNonAmmessi', this.getAllNonAmmessi.bind(this));//https://172.16.17.11/api/ILG189candidatiNonAmmessi
-        this.router.get('/ILG189candidatiRecapiti', this.getCandidatiRecapiti.bind(this)); // https://172.16.17.11/api/ILG189candidatiRecapiti?codiciFiscali=TRVDRA80L24F839E,MNZCLN82L03G273A
-        this.router.put('/ILG189candidatiUpdateList', this.updateCandidati.bind(this));
-        this.router.get('/ILG189candidatiByIdStep/:idStep', this.getCandidatiByIdStep.bind(this));
-        this.router.put('/ILG189updateIterConcorsoByCodiciFiscali', this.updateIterConcorsoByCodiciFiscali.bind(this));//passare come body {"TRVDRA80L24F839E":{ "idStep": 0, ...}, "TRVDRA80L24F839E":{ "idStep": 0, ...}}
-        this.router.get('/ILG189candidatiByNomeCognome', this.getCandidatiByNomeCognome.bind(this)); //
-        this.router.get('/ILG189countCandidati', this.countCandidati.bind(this)); 
-        this.router.put('/ILG189updateIterConcorso', this.updateIterConcorso.bind(this));
-        this.router.put('/ILG189addIterConcorso', this.addIterConcorso.bind(this));
-        this.router.get('/ILG189candidatiAmmessi', this.getCandidatiAmmessiSorted.bind(this));
-        this.router.get('/ILG189candidatiWithLastDomandaConcorso', this.getCandidatiWithLastDomandaConcorso.bind(this));
-        this.router.get('/ILG189candidatiCNVVF', this.getCNVVFCandidates.bind(this));
-        this.router.get('/ILG189candidatiInvaliditaCivile', this.getInvaliditaCivileCandidates.bind(this)); 
-        this.router.get('/ILG189candidatiDSA', this.getDSACandidates.bind(this));
+        this.router.get('/VF350Candidati', this.getAllCandidati.bind(this));
+        this.router.get('/VF350Candidati/:id', this.getCandidatoById.bind(this));
+        this.router.post('/VF350Candidati', this.createCandidato.bind(this));
+        this.router.put('/VF350Candidati/:id', this.updateCandidato.bind(this));
+       // this.router.delete('/VF350Candidati/:id', this.deleteCandidatoById.bind(this));
+       //this.router.delete('/VF350deleteCandidatoByCodiceFiscale', this.deleteCandidatoByCodiceFiscale.bind(this));
+        this.router.get('/VF350Candidati/cognome/:cognome', this.getCandidatiByCognome.bind(this));
+        this.router.get('/VF350Candidati/codiceFiscale/:codiceFiscale', this.getCandidatoByCodiceFiscale.bind(this));https://172.16.17.11/api/VF350Candidati/codiceFiscale/RNZMTT97S15H294R
+        this.router.post('/VF350CandidatiByCodiciFiscali', this.getCandidatiByCodiciFiscali.bind(this));
+        this.router.get('/VF350CandidatiNonAmmessi', this.getAllNonAmmessi.bind(this));//https://172.16.17.11/api/VF350CandidatiNonAmmessi
+        this.router.get('/VF350CandidatiRecapiti', this.getCandidatiRecapiti.bind(this)); // https://172.16.17.11/api/VF350CandidatiRecapiti?codiciFiscali=TRVDRA80L24F839E,MNZCLN82L03G273A
+        this.router.put('/VF350CandidatiUpdateList', this.updateCandidati.bind(this));
+        this.router.get('/VF350CandidatiByIdStep/:idStep', this.getCandidatiByIdStep.bind(this));
+        this.router.put('/VF350updateIterConcorsoByCodiciFiscali', this.updateIterConcorsoByCodiciFiscali.bind(this));//passare come body {"TRVDRA80L24F839E":{ "idStep": 0, ...}, "TRVDRA80L24F839E":{ "idStep": 0, ...}}
+        this.router.get('/VF350CandidatiByNomeCognome', this.getCandidatiByNomeCognome.bind(this)); //
+        this.router.get('/VF350countCandidati', this.countCandidati.bind(this)); 
+        this.router.put('/VF350updateIterConcorso', this.updateIterConcorso.bind(this));
+        this.router.put('/VF350addIterConcorso', this.addIterConcorso.bind(this));
+        this.router.get('/VF350CandidatiAmmessi', this.getCandidatiAmmessiSorted.bind(this));
+        this.router.get('/VF350CandidatiWithLastDomandaConcorso', this.getCandidatiWithLastDomandaConcorso.bind(this));
+        this.router.get('/VF350CandidatiCNVVF', this.getCNVVFCandidates.bind(this));
+        this.router.get('/VF350CandidatiInvaliditaCivile', this.getInvaliditaCivileCandidates.bind(this)); 
+        this.router.get('/VF350CandidatiDSA', this.getDSACandidates.bind(this));
     }
 // alessia del muto
     async getAllCandidati(req, res) {
@@ -261,4 +261,4 @@ class ILG189Controller {
     }
 }
 
-module.exports = ILG189Controller;
+module.exports = VF350Controller;

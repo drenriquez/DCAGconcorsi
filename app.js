@@ -30,8 +30,13 @@ const loginRouter = require('./routes/login');
 const logoutRouter = require('./routes/logout');
 const dashboardRouter = require('./routes/dashboard');
 const adminRouter =require('./routes/admin');
+const gestioneConcorsiRouter =require('./routes/gestioneConcorsi');
+const concorsiEsterniRouter =require('./routes/concorsiEsterni');
+const concorsiInterniRouter =require('./routes/concorsiInterni');
 const UserController = require('./controllers/userController');
 const ILG189Controller = require('./controllers/ILG189Controller');
+const VF350Controller = require('./controllers/VF350Controller');
+const DatabaseController=require('./controllers/databaseController');
 const app = express();
 const utilsPath = path.join(__dirname, 'utils');
 
@@ -45,7 +50,11 @@ app.use(cors({
 
 const userController = new UserController();
 const iLG189Controller = new ILG189Controller();
+const vF350Controller = new VF350Controller();
+const databaseController=new DatabaseController();
+app.use('/api',databaseController.getRouter())
 app.use('/api',iLG189Controller.getRouter());
+app.use('/api',vF350Controller.getRouter());
 app.use('/api', userApiAuth,userController.getRouter());
 
 app.use(helmet());
@@ -111,6 +120,9 @@ app.use(loginRouter);
 app.use(logoutRouter);
 app.use(dashboardRouter);
 app.use(adminRouter);
+app.use(gestioneConcorsiRouter);
+app.use(concorsiEsterniRouter);
+app.use(concorsiInterniRouter);
 
 app.use(function(req, res, next) {
   next(createError(404));
