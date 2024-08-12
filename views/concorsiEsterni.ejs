@@ -36,48 +36,27 @@
         .secondary-toolbar a:hover {
             text-decoration: underline;
         }
+        .card {
+            margin-top: 15px !important;
+            width:90% !important; /* Imposta la larghezza fissa desiderata */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Ombreggiatura leggera */
+            transition: box-shadow 0.3s ease-in-out; /* Transizione per un effetto più fluido */
+        }
+        
+        /* Centra le card */
+        #cardContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 100px !important;
+        }
     </style>
 </head>
 <body>
     <%- include('toolbar', { livelloUser: livelloUser }) %>
-    <div class="container">
-        <div class="secondary-toolbar">
-            <a href="#" id="section1">Sezione 1</a>
-            <a href="#" id="section2">Sezione 2</a>
-        </div>
-    </div>
-    <div class="container mt-5 main">
-        <h2 class="mt-5 mb-4 bold">Gestione Concorsi</h2>
-        <select id="selectConcorso" class="form-select select-concorso">
-        </select>
-        <form id="userForm">
-            <div class="form-group row">
-                <label for="nome" class="col-sm-2 col-form-label bold">Nome:</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="nome" name="nome" required>
-                </div>
-            </div>
-            <div class="form-group row mt-3">
-                <label for="cognome" class="col-sm-2 col-form-label bold">Cognome:</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="cognome" name="cognome" required>
-                </div>
-            </div>
-            <div class="form-group row mt-3">
-                <label for="codiceFiscale" class="col-sm-2 col-form-label bold">Codice Fiscale:</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="codiceFiscale" name="codiceFiscale" required>
-                </div>
-            </div>
-            <div class="form-group row mt-3">
-                <div class="col-sm-10 offset-sm-2">
-                    <button type="button" class="btn btn-primary bold" id="aggiungiUtente">Cerca</button>
-                </div>
-            </div>
-        </form>
-    </div>
+    
     <%- include('footer') %>
-    <script type="module" src="/js/gestioneConcorsi.js" apiUserURL="<%= apiUserURL %>"></script>
+    <script type="module" src="/js/concorsiEsterni.js" apiUserURL="<%= apiUserURL %>"></script>
     <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Link a Bootstrap JS (richiesto per il funzionamento di Bootstrap) -->
 </body>

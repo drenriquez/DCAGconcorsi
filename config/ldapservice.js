@@ -5,6 +5,7 @@ const ldap = require('ldapjs');
 async function ldapServerAuth(username, password) {
   return new Promise((resolve, reject) => {
     const ldap_server = process.env.LDAP_SERVER;
+    
     //console.log("++++++ serverldap ", ldap_server);
    // console.log("++++ username ", username);
    

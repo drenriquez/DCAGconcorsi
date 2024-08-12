@@ -1,7 +1,7 @@
 const { MongoClient, ObjectId } = require('mongodb');
 const databaseConfig = require('../config/database');
 
-class ConcorsiEsterniCollectionDao {
+class ConcorsiEsterniDao {
     constructor() {
         this.mongoClient = new MongoClient(databaseConfig.dbURI, {
             useNewUrlParser: true,
@@ -17,7 +17,7 @@ class ConcorsiEsterniCollectionDao {
             await this.mongoClient.connect();
             console.log(`Connected to MongoDB concorsiEsterni database ${databaseConfig.dbURI}`);
             this.db = this.mongoClient.db(databaseConfig.dbName);
-            this.candidatiCollection = this.db.collection('concorsiEsterni'); 
+            this.concorsiEsterniCollection = this.db.collection('concorsiEsterni'); 
         } catch (error) {
             console.error('Error connecting to MongoDB:', error);
         }
@@ -25,7 +25,8 @@ class ConcorsiEsterniCollectionDao {
 
     async findAll() {
         try {
-            return await this.candidatiCollection.find({}).toArray();
+            console.log("test concorsiEsterniDao")
+            return await this.concorsiEsterniCollection.find({}).toArray();
         } catch (error) {
             console.error('Error fetching all candidati:', error);
             throw error;
@@ -34,4 +35,4 @@ class ConcorsiEsterniCollectionDao {
     
 }
 
-module.exports = ConcorsiEsterniCollectionDao;
+module.exports = ConcorsiEsterniDao;

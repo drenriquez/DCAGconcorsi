@@ -1,0 +1,20 @@
+[{
+  "_id": {
+    "$oid": "66ab434edc45054b7dfae0cd"
+  },
+  "nome": "350 VVF",
+  "nomeCollection": "350VF",
+  "data": "20/06/2024",
+  "descrizione": "concorso pubblico, per titoli ed esami, a 350 posti nella qualifica di vigile del fuoco del Corpo nazionale dei vigili del fuoco.",
+  "order": "0"
+},
+{
+  "_id": {
+    "$oid": "66ab434edc45054b7dfae0ce"
+  },
+  "nome": "189 ISPETTORE LOGISTICO GESTIONALE",
+  "nomeCollection": "189ILG",
+  "data": "18/10/2023",
+  "descrizione": "concorso pubblico, per esami, a 189 posti nella qualifica di ispettore logistico gestionale del Corpo nazionale dei vigili del fuoco.",
+  "order": "1"
+}]

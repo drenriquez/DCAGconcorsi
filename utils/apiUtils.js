@@ -177,9 +177,9 @@ const APIgetUserByCodiceFiscale = async (host, codiceFiscale) => {
         throw error;
     }
 };
-const APIgetAllConcorsi = async (host)=>{
+const APIgetAllConcorsiEsterni = async (host)=>{
     try {
-        const response = await fetch(`${host}api/databaseCollectionNames`, {
+        const response = await fetch(`${host}api/concorsiEsterniLista`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -207,5 +207,5 @@ export {
   APIdeleteUser,
   APIupdateUser,
   APIgetUserByCodiceFiscale,
-  APIgetAllConcorsi
+  APIgetAllConcorsiEsterni
 };
