@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inserimento Nuovo Utente</title>
+    <title>database</title>
     <!-- Link a Bootstrap CSS -->
     <link href="/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -19,13 +19,38 @@
             margin-left: 500px !important;
             margin-top: 0px !important;
         }
+        .select-concorso {
+            top: 50%;
+            width: 400px;
+            margin-bottom: 50px;
+        }
+        .secondary-toolbar {
+            margin-top: 10px;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+        .secondary-toolbar a {
+            margin-right: 15px;
+            color: #007bff;
+        }
+        .secondary-toolbar a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <%- include('toolbar', { livelloUser: livelloUser }) %>
+    <div class="container">
+        <div class="secondary-toolbar">
+            <a href="#" id="section1">Sezione 1</a>
+            <a href="#" id="section2">Sezione 2</a>
+        </div>
+    </div>
     <div class="container mt-5 main">
         <h2 class="mt-5 mb-4 bold">Gestione Concorsi</h2>
-        <form  id="userForm">
+        <select id="selectConcorso" class="form-select select-concorso">
+        </select>
+        <form id="userForm">
             <div class="form-group row">
                 <label for="nome" class="col-sm-2 col-form-label bold">Nome:</label>
                 <div class="col-sm-10">
@@ -44,22 +69,16 @@
                     <input type="text" class="form-control" id="codiceFiscale" name="codiceFiscale" required>
                 </div>
             </div>
-            
-            
-           
-           
             <div class="form-group row mt-3">
                 <div class="col-sm-10 offset-sm-2">
                     <button type="button" class="btn btn-primary bold" id="aggiungiUtente">Cerca</button>
-                    
                 </div>
             </div>
         </form>
     </div>
     <%- include('footer') %>
-    <script  type="module" src="/js/admin.js" apiUserURL="<%= apiUserURL %>">
-  </script>
-    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js" ></script>
+    <script type="module" src="/js/database.js" apiUserURL="<%= apiUserURL %>"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Link a Bootstrap JS (richiesto per il funzionamento di Bootstrap) -->
 </body>
 </html>

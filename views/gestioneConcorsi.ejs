@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inserimento Nuovo Utente</title>
+    <title>Concorso <%- concorsoId %></title>
     <!-- Link a Bootstrap CSS -->
     <link href="/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -36,49 +36,348 @@
         .secondary-toolbar a:hover {
             text-decoration: underline;
         }
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .pagination-container button {
+            margin: 0 5px;
+        }
+        .table{
+            margin-bottom: 100px !important;
+        }
+        .custom-pagination-btn {
+            background-color: #007bff; /* Colore di sfondo */
+            color: white; /* Colore del testo */
+        }
+
+        .custom-pagination-btn:hover {
+            background-color: #0056b3; /* Colore di sfondo al passaggio del mouse */
+        }
+
+        .active {
+            background-color: #28a745; /* Colore per il pulsante attivo */
+            color: white; /* Colore del testo per il pulsante attivo */
+        }
+        /* Ombra leggera per la card */
+        .card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 10px;
+        }
+        /* .btn-custom {
+            padding: 10px 20px; 
+            font-size: 1.2rem;  
+            color: #fff; 
+            background: linear-gradient(135deg, #69382a0d, #421703); 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+        } */
+        .btn-custom:hover {
+            transform: scale(1.1); /* Effetto zoom al passaggio del mouse */
+            transition: transform 0.2s ease-in-out; /* Animazione fluida */
+        }
+        .col-sm-2{
+            margin-right: 10px;
+            margin-top: 20px;
+        }
+        .dropdown {
+            width: 100%;
+            position: relative;
+            display: inline-block;
+            }
+
+            .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            padding: 12px;
+            z-index: 1;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        .dropdown-content label {
+            display: block;
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .dropdown input {   
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            color: #333;
+            font-weight: bold;
+            pointer-events: none; /* Impedisce l'interazione diretta con l'input */
+        }
+        .dropdown-content input[type="checkbox"] {
+            margin-right: 10px;
+            }
+        #eseguiBtn{
+          margin-right: 10px;
+        }  
+        .buttons-collapse{
+            background-color: #0056b3 !important;
+            border-color: #0056b3 !important;
+        }
     </style>
 </head>
 <body>
     <%- include('toolbar', { livelloUser: livelloUser }) %>
-    <div class="container">
-        <div class="secondary-toolbar">
-            <a href="#" id="section1">Sezione 1</a>
-            <a href="#" id="section2">Sezione 2</a>
+    
+    <div class="container mt-5 main">
+        <h2 class="mt-5 mb-4 bold">Gestione Concorso <%- concorsoId %></h2>
+
+         <!-- Toolbar con opzioni -->
+    <!-- Card con toolbar opzioni -->
+    <!-- Card con toolbar opzioni -->
+<div class="container">
+    <div class="card shadow-sm mt-4">
+        <div class="card-body">
+            <h5 class="card-title">Opzioni Filtro</h5>
+            <form class="row gx-3 gy-2 align-items-center">
+                <p>
+                    <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">TitoliPreferenziali e Riserve</a>
+                    <button class="btn btn-primary buttons-collaps" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Patenti</button>
+                    <button class="btn btn-primary buttons-collaps" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample3" aria-expanded="false" aria-controls="multiCollapseExample3">Tipo Prova</button>
+                </p>
+                  <div class="row">
+                    <div class="col">
+                      <div class="collapse multi-collapse" id="multiCollapseExample1">
+                        <div class="card card-body">
+                          <div class="col-sm-2">
+                            <div class="dropdown">
+                              <!-- Casella di testo che si riempie con le opzioni selezionate -->
+                              <label for="selectedOptions-dropdown-titoliPreferenziali" class="form-label">Titoli Preferenziali</label>
+                              <input type="text" id="selectedOptions-dropdown-titoliPreferenziali" placeholder="Seleziona opzioni..." readonly>
+                              <!-- Contenuto del dropdown con le opzioni multiple -->
+                              <div class="dropdown-content" id="dropdown-titoliPreferenziali">
+                                <!-- <label><input type="checkbox" name="codiceFiscale" value="codiceFiscale"> Codice Fiscale</label>
+                                <label><input type="checkbox" name="cognome" value="cognome"> Cognome</label>
+                                <label><input type="checkbox" name="nome" value="nome"> Nome</label>
+                                <label><input type="checkbox" name="dataNascita" value="dataNascita"> Data di Nascita</label> -->
+                              </div>
+                            </div>
+                          </div>
+                        <!-- Menu a tendina con selezione multipla -->
+                        <div class="col-sm-2">
+                            <div class="dropdown">
+                              <!-- Casella di testo che si riempie con le opzioni selezionate -->
+                              <label for="selectedOptions-dropdown-riserve" class="form-label">Riserve</label>
+                              <input type="text" id="selectedOptions-dropdown-riserve" placeholder="Seleziona opzioni..." readonly>
+                              <!-- Contenuto del dropdown con le opzioni multiple -->
+                              <div class="dropdown-content" id="dropdown-riserve">
+                              </div>
+                            </div>
+                          </div>
+        
+                         
+
+                      </div>
+                    </div>
+
+                    <div class="col">
+                      <div class="collapse multi-collapse" id="multiCollapseExample2">
+                        <div class="card card-body">
+
+                            <div class="col-sm-2">
+                                <div class="dropdown">
+                                  <!-- Casella di testo che si riempie con le opzioni selezionate -->
+                                  <label for="selectedOptions-dropdown-patenti" class="form-label">Patenti</label>
+                                  <input type="text" id="selectedOptions-dropdown-patenti" placeholder="Seleziona opzioni..." readonly>
+                                  <!-- Contenuto del dropdown con le opzioni multiple -->
+                                  <div class="dropdown-content" id="dropdown-patenti">
+                                  </div>
+                                </div>
+                              </div>
+
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div class="col">
+                        <div class="collapse multi-collapse" id="multiCollapseExample3">
+                          <div class="card card-body">
+                              
+                              <div class="col-sm-2">
+                                  <div class="dropdown">
+                                    <!-- Casella di testo che si riempie con le opzioni selezionate -->
+                                    <label for="selectedOptions-dropdown-tipoProve" class="form-label">Tipo Prova</label>
+                                    <input type="text" id="selectedOptions-dropdown-tipoProve" placeholder="Seleziona opzioni..." readonly>            
+                                    <!-- Contenuto del dropdown con le opzioni multiple -->
+                                    <div class="dropdown-content" id="dropdown-tipoProve">
+                                    </div>
+                                  </div>
+                                </div>  
+
+                                <div class="col-sm-2">
+                                    <div class="dropdown">
+                                      <!-- Casella di testo che si riempie con le opzioni selezionate -->
+                                      <label for="selectedOptions-dropdown-esitoProva" class="form-label">Esito Prova</label>
+                                      <input type="text" id="selectedOptions-dropdown-esitoProva" placeholder="Seleziona opzioni..." readonly>            
+                                      <!-- Contenuto del dropdown con le opzioni multiple -->
+                                      <div class="dropdown-content" id="dropdown-esitoProva">
+                                      </div>
+                                    </div>
+                                  </div>  
+                               <div class="col-sm-2">
+                                  <div class="dropdown">
+                                    <!-- Casella di testo che si riempie con le opzioni selezionate -->
+                                    <label for="selectedOptions-dropdown-dataProva" class="form-label">Data Prova</label>
+                                    <input type="text" id="selectedOptions-dropdown-dataProva" placeholder="Seleziona opzioni..." readonly>       
+                                    <!-- Contenuto del dropdown con le opzioni multiple -->
+                                    <div class="dropdown-content" id="dropdown-dataProva">
+                                    </div>
+                                  </div>
+                                </div> 
+                          </div>   
+                        </div>  
+                      </div>
+                  </div>
+                <div >        
+                </div>
+                <!-- Campo Nome -->
+                <div class="col-sm-2">
+                    <label for="nome" class="form-label">POSIZIONE</label>
+                    <input type="text" class="form-control" id="nome" placeholder="Inserisci Nome">
+                </div>
+
+                <!-- Campo Nome -->
+                <div class="col-sm-2">
+                    <label for="nome" class="form-label">Nome</label>
+                    <input type="text" class="form-control" id="nome" placeholder="Inserisci Nome">
+                </div>
+
+                <!-- Campo Cognome -->
+                <div class="col-sm-2">
+                    <label for="cognome" class="form-label">Cognome</label>
+                    <input type="text" class="form-control" id="cognome" placeholder="Inserisci Cognome">
+                </div>
+
+                <!-- Campo Codice Fiscale -->
+                <div class="col-sm-2">
+                    <label for="codiceFiscale" class="form-label">Codice Fiscale</label>
+                    <input type="text" class="form-control" id="codiceFiscale" placeholder="Codice Fiscale">
+                </div>
+
+                <!-- Campo ID Domanda -->
+                <div class="col-sm-2">
+                    <label for="idDomanda" class="form-label">ID Domanda</label>
+                    <input type="text" class="form-control" id="idDomanda" placeholder="ID Domanda">
+                </div>
+       
+                <!-- Campo Data Da -->
+                <div class="col-sm-2">
+                    <label for="dateFrom" class="form-label">Nati Da</label>
+                    <input type="date" class="form-control" id="dateFrom">
+                </div>
+
+                <!-- Campo Data A -->
+                <div class="col-sm-2">
+                    <label for="dateTo" class="form-label"> A</label>
+                    <input type="date" class="form-control" id="dateTo">
+                </div>
+                 
+
+                <div class="col-sm-2">
+                    <div class="dropdown">
+                      <!-- Casella di testo che si riempie con le opzioni selezionate -->
+                      <label for="selectedOptions-dropdown-domande" class="form-label">DOMANDA</label>
+                      <input type="text" id="selectedOptions-dropdown-domande" placeholder="Seleziona opzioni..." readonly> 
+                      <!-- Contenuto del dropdown con le opzioni multiple -->
+                      <div class="dropdown-content" id="dropdown-domande">
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <!-- <div class="col-sm-2">
+                    <div class="dropdown">  
+                      <label for="selectedOptions-dropdown-titoliDiStudio" class="form-label">Titolo Di Studio</label>
+                      <input type="text" id="selectedOptions-dropdown-titoliDiStudio" placeholder="Seleziona opzioni..." readonly>
+                      <div class="dropdown-content" id="dropdown-titoliDiStudio">
+                        <label><input type="checkbox" name="codiceFiscale" value="codiceFiscale"> Codice Fiscale</label>
+                        <label><input type="checkbox" name="cognome" value="cognome"> Cognome</label>
+                        <label><input type="checkbox" name="nome" value="nome"> Nome</label>
+                        <label><input type="checkbox" name="dataNascita" value="dataNascita"> Data di Nascita</label>
+                      </div>
+                    </div>
+                  </div> -->
+
+                  <div class="col-sm-2">
+                    <div class="dropdown">
+                      <!-- Casella di testo che si riempie con le opzioni selezionate -->
+                      <label for="selectedOptions-dropdown-campiRestituiti" class="form-label">Campi Restituiti</label>
+                      <input type="text" id="selectedOptions-dropdown-campiRestituiti" placeholder="Seleziona opzioni..." readonly>
+                  
+                      <!-- Contenuto del dropdown con le opzioni multiple -->
+                      <div class="dropdown-content" id="dropdown-campiRestituiti">
+                        <label><input type="checkbox" name="codiceFiscale" value="codiceFiscale"> Codice Fiscale</label>
+                        <label><input type="checkbox" name="cognome" value="cognome"> Cognome</label>
+                        <label><input type="checkbox" name="nome" value="nome"> Nome</label>
+                        <label><input type="checkbox" name="dataNascita" value="dataNascita"> Data di Nascita</label>
+                      </div>
+                    </div>
+                  </div>
+
+                <!-- Bottone Esegui -->
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-success mt-3" id="eseguiBtn">Esegui Filtri</button>
+                </div>
+
+
+
+            </form>
         </div>
     </div>
-    <div class="container mt-5 main">
-        <h2 class="mt-5 mb-4 bold">Gestione Concorsi</h2>
-        <select id="selectConcorso" class="form-select select-concorso">
-        </select>
-        <form id="userForm">
-            <div class="form-group row">
-                <label for="nome" class="col-sm-2 col-form-label bold">Nome:</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="nome" name="nome" required>
+</div>
+
+
+
+        <!-- Contenitore per i pulsanti di navigazione delle pagine -->
+        <div id="pagination" class="pagination-container mt-4">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center bold" id="paginationList"></ul>
+            </nav>
+        </div>
+        <div class="container mt-5">
+            <!-- Spinner di caricamento -->
+            <div id="loadingSpinner" class="text-center">
+                <div class="spinner-border text-warning"  style="width: 3rem; height: 3rem;" role="status">
+                    <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
-            <div class="form-group row mt-3">
-                <label for="cognome" class="col-sm-2 col-form-label bold">Cognome:</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="cognome" name="cognome" required>
-                </div>
-            </div>
-            <div class="form-group row mt-3">
-                <label for="codiceFiscale" class="col-sm-2 col-form-label bold">Codice Fiscale:</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="codiceFiscale" name="codiceFiscale" required>
-                </div>
-            </div>
-            <div class="form-group row mt-3">
-                <div class="col-sm-10 offset-sm-2">
-                    <button type="button" class="btn btn-primary bold" id="aggiungiUtente">Cerca</button>
-                </div>
-            </div>
-        </form>
+            <table class="table table-bordered table-striped" id="concorsiTable">
+                <thead>
+                    <tr id="tableHeader"></tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+
     </div>
+    
     <%- include('footer') %>
-    <script type="module" src="/js/gestioneConcorsi.js" apiUserURL="<%= apiUserURL %>"></script>
+    
+    <!-- Script per la gestione della paginazione e generazione della tabella -->
+    <script type="module" src="/js/gestioneConcorsi.js" 
+        apiUserURL="<%= apiUserURL %>"
+        concorsoId="<%= concorsoId %>"
+    ></script>
+
+    <!-- Bootstrap JS -->
     <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Link a Bootstrap JS (richiesto per il funzionamento di Bootstrap) -->
 </body>
 </html>

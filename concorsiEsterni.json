@@ -1,16 +1,9 @@
 [
     {
-        "nome":"350 VVF",
-        "nomeCollection":"350VF",
-        "data":"20/06/2024",
-        "descrizione":"concorso pubblico, per esami, a 189 posti nella qualifica di ispettore logistico gestionale del Corpo nazionale dei vigili del fuoco.",
-        "order":"0"
-    },
-    {
-        "nome":"189 ISPETTORE LOGISTICO GESTIONALE",
-        "nomeCollection":"189ILG",
-        "data":"18/10/2023",
-        "descrizione":"concorso pubblico, per esami, a 189 posti nella qualifica di ispettore logistico gestionale del Corpo nazionale dei vigili del fuoco.",
-        "order":"1"
+        "nome":"88 VD",
+        "nomeCollection":"88VD",
+        "data":"26/09/2023",
+        "descrizione":"Concorso pubblico, per esami, a 88 posti nella qualifica di vice direttore del ruolo dei direttivi del Corpo Nazionale dei Vigili del Fuoco.",
+        "order":"2"
     }
 ]

@@ -12,6 +12,18 @@ const { MongoClient } = require('mongodb');
 const databaseConfig = require('./config/database');
 const { userApiAuth }= require('./middleware/userApiAuth');
 
+
+// Import GraphQL dependencies
+const { graphqlHTTP } = require('express-graphql');
+const schema = require('./graphql-mongodb-app/schema');
+const resolvers = require('./graphql-mongodb-app/resolver');
+
+
+
+
+
+
+
 const mongoClient = new MongoClient(databaseConfig.dbURI);
 mongoClient.connect(function(err) {
   if (err) {
@@ -29,7 +41,8 @@ const usersRouter = require('./routes/users');
 const loginRouter = require('./routes/login');
 const logoutRouter = require('./routes/logout');
 const dashboardRouter = require('./routes/dashboard');
-const adminRouter =require('./routes/admin')
+const adminRouter =require('./routes/admin');
+const databaseRouter =require('./routes/database')
 const gestioneConcorsiRouter =require('./routes/gestioneConcorsi');
 const concorsiEsterniRouter=require('./routes/concorsiEsterni');
 const ConcorsiEsterniController =require('./controllers/concorsiEsterniController');
@@ -54,6 +67,16 @@ const iLG189Controller = new ILG189Controller('189ILG');
 const vF350Controller = new VF350Controller('350VF');
 const databaseController=new DatabaseController();
 const concorsiEsterniController= new ConcorsiEsterniController()
+
+
+// Configura il server GraphQL
+app.use('/graphql', graphqlHTTP({
+  schema,
+  rootValue: resolvers,
+  graphiql: true, // Attiva GraphiQL per testare le query via interfaccia
+}));
+
+//REST
 app.use('/api',databaseController.getRouter())
 app.use('/api',iLG189Controller.getRouter());
 app.use('/api',vF350Controller.getRouter());
@@ -123,6 +146,7 @@ app.use(loginRouter);
 app.use(logoutRouter);
 app.use(dashboardRouter);
 app.use(adminRouter);
+app.use(databaseRouter);
 app.use(gestioneConcorsiRouter);
 app.use(concorsiEsterniRouter);
 
