@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             cognome
             nome
             dataNascita
+            statoCandidato
         }
     }
     `;
@@ -55,15 +56,46 @@ document.addEventListener('DOMContentLoaded', async function() {
         getStatiCandidato(concorso: "${concorsoId}")
     }
     `;
+    let queryGetAllFields=`
+    query {
+    getAllFields(concorso: "${concorsoId}")
+    }
+    `;
+    let queryGetSimpleFields=`
+    query {
+    getSimpleFields(concorso: "${concorsoId}")
+    }
+    `;
+    let queryGetDatiInDomanda=`
+    query {
+    getAllCampiDomandeConcorso(concorso: "${concorsoId}")
+    }
+    `;
+    //dropd
     //dropdown-titoliPreferenziali
     popolaDropdown(queryGetAllRiserve,'dropdown-riserve',concorsoId);
     popolaDropdown(queryGetAllTitoliPreferenziali,'dropdown-titoliPreferenziali',concorsoId)
     popolaDropdown(queryGetListaUnicaPatenti,'dropdown-patenti',concorsoId)
     popolaDropdown(queryGetTipologieProve,'dropdown-tipoProve',concorsoId)//'dropdown-tipoProve'
     popolaDropdown(queryGetStatiCandidato,'dropdown-domande',concorsoId)//'dropdown-domande'
+    popolaDropdown(queryGetAllFields,'dropdown-campiRestituiti',concorsoId)//'dropdown-domande'
+    popolaDropdown(queryGetSimpleFields,'dropdown-anagrafica',concorsoId);
+    popolaDropdown(queryGetTipologieProve,'dropdown-iterConcorso',concorsoId);
+    popolaDropdown(queryGetDatiInDomanda,'dropdown-domanda',concorsoId);
+
 
 });
-
+    let riserve= []
+    let titoliPreferenziali= []
+    let patenti= []
+    let tipoProve=[]
+    let esitiProve=[]
+    let dateProve=[]
+    let statoCandidato=[]
+    let campiRestituiti=[]
+    let nome= ""
+    let cognome= ""
+    let codiceFiscale= ""
   async function avvioFunction(query){
    
     const spinner = document.getElementById('loadingSpinner');
@@ -263,7 +295,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   }
  
  function getSelectedTest() {
-    var checkboxes = document.querySelectorAll('.dropdown-content input[type="checkbox"]');
+    var checkboxes = document.querySelectorAll('.dropdown-campiRestituiti input[type="checkbox"]');
     var selectedFruits = [];
     checkboxes.forEach(function(checkbox) {
       if (checkbox.checked) {
@@ -293,12 +325,49 @@ document.addEventListener('DOMContentLoaded', async function() {
     const selectedOptionsInput = document.getElementById(`selectedOptions-${idDropdown}`);
     // Seleziona tutte le checkbox all'interno del div con id "dropdown-titoliPreferenziali"
     const checkboxes = document.querySelectorAll(`#${idDropdown} input[type="checkbox"]`);
+
     function updateSelectedOptions(selectedOptionsInput,checkboxes) {
         const selected = Array.from(checkboxes)
           .filter(checkbox => checkbox.checked)
           .map(checkbox => checkbox.value); // Raccoglie i valori selezionati
         selectedOptionsInput.value = selected.length ? selected.join(', ') : 'Seleziona opzioni...';
-       
+       // console.log("////////////  ",idDropdown,"---  ",selected);
+        switch(idDropdown) {
+            case "dropdown-riserve":
+              riserve=selected;
+              console.log(selected)
+            break;
+            case "dropdown-titoliPreferenziali":
+              titoliPreferenziali=selected
+              console.log(titoliPreferenziali)
+            break;
+            case "dropdown-patenti":
+                patenti=selected
+                console.log(patenti)
+            break;
+            case "dropdown-tipoProve":
+                tipoProve=selected
+                console.log(tipoProve)
+            break;
+            case "dropdown-esitoProva":
+                esitiProve=selected
+                console.log(esitiProve)
+            break;
+            case "dropdown-dataProva":
+                dateProve=selected
+                console.log(dateProve)
+            break;
+            case "dropdown-domande":
+                statoCandidato=selected
+                console.log(statoCandidato)
+            break;
+            case "dropdown-campiRestituiti":
+                campiRestituiti=selected
+                console.log(campiRestituiti)
+            break;
+            default:
+              // code block
+          }
         if(idDropdown==="dropdown-tipoProve"){
             let dropdownElementEsiti=document.getElementById('dropdown-esitoProva');
             let dropdownElementDataProva=document.getElementById('dropdown-dataProva');

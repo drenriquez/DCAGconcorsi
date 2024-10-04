@@ -45,11 +45,12 @@ const adminRouter =require('./routes/admin');
 const databaseRouter =require('./routes/database')
 const gestioneConcorsiRouter =require('./routes/gestioneConcorsi');
 const concorsiEsterniRouter=require('./routes/concorsiEsterni');
+
 const ConcorsiEsterniController =require('./controllers/concorsiEsterniController');
 //const concorsiInterniRouter =require('./controllers/concorsiInterniController');
 const UserController = require('./controllers/userController');
-const ILG189Controller = require('./controllers/concorsoGenericController');
-const VF350Controller = require('./controllers/concorsoGenericController');
+//const ILG189Controller = require('./controllers/concorsoGenericController');
+//const VF350Controller = require('./controllers/concorsoGenericController');
 const DatabaseController=require('./controllers/databaseController');
 const app = express();
 const utilsPath = path.join(__dirname, 'utils');
@@ -63,14 +64,14 @@ app.use(cors({
 }));
 
 const userController = new UserController();
-const iLG189Controller = new ILG189Controller('189ILG');
-const vF350Controller = new VF350Controller('350VF');
+//const iLG189Controller = new ILG189Controller('189ILG');
+//const vF350Controller = new VF350Controller('350VF');
 const databaseController=new DatabaseController();
 const concorsiEsterniController= new ConcorsiEsterniController()
 
 
 // Configura il server GraphQL
-app.use('/graphql', graphqlHTTP({
+app.use('/graphql',userApiAuth, graphqlHTTP({
   schema,
   rootValue: resolvers,
   graphiql: true, // Attiva GraphiQL per testare le query via interfaccia
@@ -78,8 +79,8 @@ app.use('/graphql', graphqlHTTP({
 
 //REST
 app.use('/api',databaseController.getRouter())
-app.use('/api',iLG189Controller.getRouter());
-app.use('/api',vF350Controller.getRouter());
+//app.use('/api',iLG189Controller.getRouter());
+//app.use('/api',vF350Controller.getRouter());
 app.use('/api',concorsiEsterniController.getRouter());
 app.use('/api', userApiAuth,userController.getRouter());
 

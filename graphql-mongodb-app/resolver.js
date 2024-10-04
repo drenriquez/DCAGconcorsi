@@ -107,7 +107,7 @@ const resolvers = {
     console.log(result.length);
     return result;
   },
-  getAllTitoliPreferenziali: async ({ concorso }) => {
+/*   getAllTitoliPreferenziali: async ({ concorso }) => {
     const userDao = new UserDAO(concorso);
     await userDao.initializeDatabase();
 
@@ -131,8 +131,14 @@ const resolvers = {
     });
 
     return Array.from(titoliPreferenziali); // Convertiamo il Set in array
-  },
-  getAllRiserve: async ({ concorso }) => {
+  }, */
+  getAllTitoliPreferenziali: async ({ concorso }) => {
+    const userDao = new UserDAO(concorso);
+    await userDao.initializeDatabase();
+    // Chiama il metodo DAO per ottenere i titoli preferenziali
+    return await userDao.getTitoliPreferenziali();
+},
+  /* getAllRiserve: async ({ concorso }) => {
     const userDao = new UserDAO(concorso);
     await userDao.initializeDatabase();
 
@@ -156,7 +162,14 @@ const resolvers = {
     });
 
     return Array.from(riserve); // Convertiamo il Set in array
-  },
+  }, */
+  getAllRiserve: async ({ concorso }) => {
+    const userDao = new UserDAO(concorso);
+    await userDao.initializeDatabase();
+
+    // Chiama il metodo DAO per ottenere le riserve
+    return await userDao.getRiserve();
+},
   getCandidatiByRiserve: async ({ concorso, riserve }) => {
     const userDao = new UserDAO(concorso);
     await userDao.initializeDatabase();
@@ -228,7 +241,7 @@ const resolvers = {
 
     return candidatiConTitoliPreferenziali; // Restituisce un array di candidati
 },
-  getListaUnicaPatenti: async ({ concorso }) => {
+  /* getListaUnicaPatenti: async ({ concorso }) => {
     const userDao = new UserDAO(concorso);
     await userDao.initializeDatabase();
 
@@ -251,7 +264,14 @@ const resolvers = {
       }
     });
     return Array.from(patentiUniche); // Converte il Set in un array per la risposta
-  },
+  }, */
+  getListaUnicaPatenti: async ({ concorso }) => {
+    const userDao = new UserDAO(concorso);
+    await userDao.initializeDatabase();
+
+    // Chiama il metodo DAO per ottenere le patenti uniche
+    return await userDao.getPatentiUniche();
+},
   getCandidatiByPatenti: async ({ concorso, patenti }) => {
     const userDao = new UserDAO(concorso);
     await userDao.initializeDatabase();
@@ -289,7 +309,7 @@ const resolvers = {
 
     return candidatiConPatente; // Restituisce un array di candidati
 },
-getTipologieProve :async ({ concorso }) => {
+/* getTipologieProve :async ({ concorso }) => {
   const userDao = new UserDAO(concorso); // Inizializzi il DAO per il concorso specificato
   await userDao.initializeDatabase();
 
@@ -311,6 +331,13 @@ getTipologieProve :async ({ concorso }) => {
   });
 
   return Array.from(tipologieProveUniche); // Converte il Set in un Array prima di restituirlo
+}, */
+getTipologieProve: async ({ concorso }) => {
+  const userDao = new UserDAO(concorso);
+  await userDao.initializeDatabase();
+
+  // Chiama il metodo DAO per ottenere le tipologie di prove uniche
+  return await userDao.getTipologieProveUniche();
 },
 getStatiCandidato: async ({ concorso }) => {
   const userDao = new UserDAO(concorso); // Inizializzi il DAO per il concorso specificato
@@ -328,7 +355,7 @@ getStatiCandidato: async ({ concorso }) => {
 
   return Array.from(statiCandidatoUnici); // Converte il Set in un Array prima di restituirlo
 },
-getEsitiByProva: async ({ concorso, tipoProva }) => {
+/* getEsitiByProva: async ({ concorso, tipoProva }) => {
   const userDao = new UserDAO(concorso);
   await userDao.initializeDatabase();
 
@@ -352,8 +379,15 @@ getEsitiByProva: async ({ concorso, tipoProva }) => {
 
   // Converte il set in un array e lo restituisce
   return Array.from(esitiSet);
+}, */
+getEsitiByProva: async ({ concorso, tipoProva }) => {
+  const userDao = new UserDAO(concorso);
+  await userDao.initializeDatabase();
+
+  // Chiama il metodo DAO per ottenere gli esiti unici
+  return await userDao.getEsitiByProva(tipoProva);
 },
-getDateProveByTipoProva: async ({ concorso, tipoProva }) => {
+/* getDateProveByTipoProva: async ({ concorso, tipoProva }) => {
   const userDao = new UserDAO(concorso);
   await userDao.initializeDatabase();
 
@@ -396,8 +430,16 @@ getDateProveByTipoProva: async ({ concorso, tipoProva }) => {
 
  
   return Array.from(dateProvaSet).sort((a, b) => new Date(a) - new Date(b));
+}, */
+getDateProveByTipoProva: async ({ concorso, tipoProva }) => {
+  const userDao = new UserDAO(concorso);
+  await userDao.initializeDatabase();
+
+  // Chiama il metodo DAO per ottenere le date delle prove uniche
+  return await userDao.getDateProveByTipoProva(tipoProva);
 },
-getCandidatiByCriteria: async ({ concorso, riserve, titoliPreferenziali, patenti, statoCandidato }) => {
+
+/* getCandidatiByCriteria: async ({ concorso, riserve, titoliPreferenziali, patenti, statoCandidato }) => {
   const userDao = new UserDAO(concorso);
   await userDao.initializeDatabase();
   // Recupera tutti i candidati dalla collezione
@@ -435,7 +477,7 @@ getCandidatiByCriteria: async ({ concorso, riserve, titoliPreferenziali, patenti
       }
       // Controllo dello statoCandidato, se presente il parametro
       if (statoCandidato && statoCandidato.length > 0) {
-        hasStatoCandidato = user.statoCandidato === statoCandidato;
+        hasStatoCandidato = statoCandidato.includes( user.statoCandidato );
       }
       // Se l'utente soddisfa tutte le condizioni, impostiamo meetsCriteria a true
       meetsCriteria = hasRiserva && hasTitoloPreferenziale && hasPatente && hasStatoCandidato;
@@ -453,7 +495,38 @@ getCandidatiByCriteria: async ({ concorso, riserve, titoliPreferenziali, patenti
   });
   
   return candidati; // Restituisce un array di candidati che soddisfano i criteri
+}, */
+ /**
+     * Trova i candidati in base ai criteri di ricerca passati( JSDoc)
+     * @param {Array} riserve - Lista delle riserve da cercare
+     * @param {Array} titoliPreferenziali - Lista dei titoli preferenziali
+     * @param {Array} patenti - Lista delle patenti
+     * @param {Array} statoCandidato - Lista degli stati candidato
+     * @returns {Array} candidati che soddisfano i criteri
+     */
+getCandidatiByCriteria: async ({ concorso, riserve, titoliPreferenziali, patenti, statoCandidato, nome,cognome,codiceFiscale,BirthDateGreaterThanOrEqual,BirthDateLessThanOrEqual }) => {
+    const userDao = new UserDAO(concorso);
+    await userDao.initializeDatabase();
+
+    // Chiama il metodo DAO per ottenere i candidati in base ai criteri specificati
+    return await userDao.getCandidatiByCriteria({ riserve, titoliPreferenziali, patenti, statoCandidato,nome,cognome,codiceFiscale,BirthDateGreaterThanOrEqual,BirthDateLessThanOrEqual  });
 },
+getAllFields: async ({ concorso }) => {
+  const userDao = new UserDAO(concorso);
+  await userDao.initializeDatabase();
+  return await userDao.getAllFields();
+},
+getSimpleFields: async ({ concorso }) => {
+  const userDao = new UserDAO(concorso);
+  await userDao.initializeDatabase();
+  return await userDao.getSimpleFields();
+},
+getAllCampiDomandeConcorso: async ({ concorso }) => {
+  const userDao = new UserDAO(concorso);
+  await userDao.initializeDatabase();
+  return await userDao.getAllCampiDomandeConcorso();
+}
+
 
 };
 

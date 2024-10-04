@@ -131,6 +131,7 @@
             background-color: #0056b3 !important;
             border-color: #0056b3 !important;
         }
+       
     </style>
 </head>
 <body>
@@ -151,6 +152,8 @@
                     <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">TitoliPreferenziali e Riserve</a>
                     <button class="btn btn-primary buttons-collaps" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Patenti</button>
                     <button class="btn btn-primary buttons-collaps" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample3" aria-expanded="false" aria-controls="multiCollapseExample3">Tipo Prova</button>
+                    <a class="btn btn-success" data-bs-toggle="collapse" href="#multiCollapseExample4" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Filtro Campi Restituiti</a>
+                    <a class="btn btn-dark" data-bs-toggle="collapse" href="#multiCollapseExample5" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Filtro Avanzato</a>
                 </p>
                   <div class="row">
                     <div class="col">
@@ -245,6 +248,81 @@
                           </div>   
                         </div>  
                       </div>
+
+                      <div class="col">
+                        <div class="collapse multi-collapse" id="multiCollapseExample4">
+                          <div class="card card-body" id="card-multiCollapseExample4" >
+  
+                           
+  
+                            <div class="col-sm-2">
+                              <div class="dropdown">
+                                <!-- Casella di testo che si riempie con le opzioni selezionate -->
+                                <label for="selectedOptions-dropdown-anagrafica" class="form-label">Anagrafica</label>
+                                <input type="text" id="selectedOptions-dropdown-anagrafica" placeholder="Seleziona opzioni..." readonly>
+                    
+                                <!-- Contenuto del dropdown con le opzioni multiple -->
+                                <div class="dropdown-content" id="dropdown-anagrafica">
+                                </div>
+                              </div>
+                            </div>
+  
+                            <div class="col-sm-2">
+                              <div class="dropdown">
+                                <!-- Casella di testo che si riempie con le opzioni selezionate -->
+                                <label for="selectedOptions-dropdown-domanda" class="form-label">Dati in Domanda</label>
+                                <input type="text" id="selectedOptions-dropdown-domanda" placeholder="Seleziona opzioni..." readonly>
+                            
+                                <!-- Contenuto del dropdown con le opzioni multiple -->
+                                <div class="dropdown-content" id="dropdown-domanda">
+                                </div>
+                              </div>
+                            </div>
+  
+                            <div class="col-sm-2">
+                            <div class="dropdown">
+                              <!-- Casella di testo che si riempie con le opzioni selezionate -->
+                              <label for="selectedOptions-dropdown-iterConcorso" class="form-label">IterConcorso</label>
+                              <input type="text" id="selectedOptions-dropdown-iterConcorso" placeholder="Seleziona opzioni..." readonly>
+                          
+                              <!-- Contenuto del dropdown con le opzioni multiple -->
+                              <div class="dropdown-content" id="dropdown-iterConcorso">
+                              </div>
+                            </div>
+                          </div>
+  
+  
+  
+  
+                          </div>
+                        </div>
+                      </div>
+
+
+                      <div class="col">
+                        <div class="collapse multi-collapse" id="multiCollapseExample5">
+                          <div class="card card-body">
+  
+                            <div class="col-sm-2">
+                              <div class="dropdown">
+                                <!-- Casella di testo che si riempie con le opzioni selezionate -->
+                                <label for="selectedOptions-dropdown-campiRestituiti" class="form-label">Campi Restituiti</label>
+                                <input type="text" id="selectedOptions-dropdown-campiRestituiti" placeholder="Seleziona opzioni..." readonly>
+                            
+                                <!-- Contenuto del dropdown con le opzioni multiple -->
+                                <div class="dropdown-content" id="dropdown-campiRestituiti">
+                                </div>
+                              </div>
+                            </div>
+  
+                          </div>
+                        </div>
+                      </div>
+  
+
+
+
+
                   </div>
                 <div >        
                 </div>
@@ -294,7 +372,7 @@
                 <div class="col-sm-2">
                     <div class="dropdown">
                       <!-- Casella di testo che si riempie con le opzioni selezionate -->
-                      <label for="selectedOptions-dropdown-domande" class="form-label">DOMANDA</label>
+                      <label for="selectedOptions-dropdown-domande" class="form-label">STATO CANDIDATO</label>
                       <input type="text" id="selectedOptions-dropdown-domande" placeholder="Seleziona opzioni..." readonly> 
                       <!-- Contenuto del dropdown con le opzioni multiple -->
                       <div class="dropdown-content" id="dropdown-domande">
@@ -315,26 +393,13 @@
                       </div>
                     </div>
                   </div> -->
-
-                  <div class="col-sm-2">
-                    <div class="dropdown">
-                      <!-- Casella di testo che si riempie con le opzioni selezionate -->
-                      <label for="selectedOptions-dropdown-campiRestituiti" class="form-label">Campi Restituiti</label>
-                      <input type="text" id="selectedOptions-dropdown-campiRestituiti" placeholder="Seleziona opzioni..." readonly>
+                 
                   
-                      <!-- Contenuto del dropdown con le opzioni multiple -->
-                      <div class="dropdown-content" id="dropdown-campiRestituiti">
-                        <label><input type="checkbox" name="codiceFiscale" value="codiceFiscale"> Codice Fiscale</label>
-                        <label><input type="checkbox" name="cognome" value="cognome"> Cognome</label>
-                        <label><input type="checkbox" name="nome" value="nome"> Nome</label>
-                        <label><input type="checkbox" name="dataNascita" value="dataNascita"> Data di Nascita</label>
-                      </div>
-                    </div>
-                  </div>
+                  
 
                 <!-- Bottone Esegui -->
                 <div class="d-flex justify-content-end">
-                    <button type="button" class="btn btn-success mt-3" id="eseguiBtn">Esegui Filtri</button>
+                    <button type="button" class="btn btn-danger mt-3" id="eseguiBtn">Esegui Filtri</button>
                 </div>
 
 

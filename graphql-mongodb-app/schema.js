@@ -6,7 +6,8 @@ const schema = buildSchema(`
   scalar DateTime
 
   type Query {
-    getUserById(concorso: String!, id: String!): User
+   """Ottiene un utente tramite ID e concorso"""
+    getUserById( """Il nome del concorso"""concorso: String!, id: String!): User
     getAllUsers(concorso: String!): [User]
     getUsersByBirthDate(concorso: String!, filterDate: DateTime!): [User]
     getUsersByBirthDateGreaterThan(concorso: String!, filterDate: DateTime!): [User]
@@ -22,10 +23,17 @@ const schema = buildSchema(`
     getListaUnicaPatenti(concorso: String!): [String]
     getCandidatiByPatenti(concorso: String!, patenti: [String]!): [User]
     getTipologieProve(concorso: String!): [String]
-    getCandidatiByCriteria(concorso: String!, riserve: [String], titoliPreferenziali: [String], patenti: [String], statoCandidato: [String]): [User]
+     """Ottiene utenti tramite filtri, restituisce potenzialmente tutti i campi, con l'eccezione delle domandeConcorso, delle quali restituisce i dati relativi solo dell'ultima domanda"""
+    getCandidatiByCriteria(concorso: String!, riserve: [String], titoliPreferenziali: [String], patenti: [String], statoCandidato: [String],nome: String, cognome: String, codiceFiscale: String ,BirthDateGreaterThanOrEqual:DateTime ,BirthDateLessThanOrEqual:DateTime): [User]
     getStatiCandidato(concorso: String!): [String]
     getEsitiByProva(concorso: String!,tipoProva:String!): [String]
     getDateProveByTipoProva(concorso: String!,tipoProva:String!): [String]
+    """restituisce tutti i nomi possibili contenuti nei documenti, anche aanidatio contenuti in liste, facendo quindi un controllo sulla collezione intera"""
+    getAllFields(concorso: String!): [String!]!
+    """restituisce i nomi dei campi semplici che non contengono oggetti o liste, sostanzialmente l'anagrafica"""
+    getSimpleFields(concorso: String!): [String!]!
+    """analizza l'intera collezione e, per ogni documento, estrae i campi presenti nell'ultimo oggetto di domandeConcorso"""
+    getAllCampiDomandeConcorso(concorso: String!): [String!]!
   }
 
   type Mutation {
