@@ -24,7 +24,7 @@ const schema = buildSchema(`
     getCandidatiByPatenti(concorso: String!, patenti: [String]!): [User]
     getTipologieProve(concorso: String!): [String]
      """Ottiene utenti tramite filtri, restituisce potenzialmente tutti i campi, con l'eccezione delle domandeConcorso, delle quali restituisce i dati relativi solo dell'ultima domanda"""
-    getCandidatiByCriteria(concorso: String!, riserve: [String], titoliPreferenziali: [String], patenti: [String], statoCandidato: [String],nome: String, cognome: String, codiceFiscale: String ,BirthDateGreaterThanOrEqual:DateTime ,BirthDateLessThanOrEqual:DateTime): [User]
+    getCandidatiByCriteria(concorso: String!, riserve: [String], titoliPreferenziali: [String], patenti: [String], tipoProve: [String], dateProve: [String], esitiProve: [String],  statoCandidato: [String], nome: String, cognome: String, codiceFiscale: String ,BirthDateGreaterThanOrEqual:DateTime ,BirthDateLessThanOrEqual:DateTime): [User]
     getStatiCandidato(concorso: String!): [String]
     getEsitiByProva(concorso: String!,tipoProva:String!): [String]
     getDateProveByTipoProva(concorso: String!,tipoProva:String!): [String]
@@ -80,14 +80,19 @@ const schema = buildSchema(`
     infoInvio: InfoInvio
     anagCandidato: AnagCandidato
     diploma: Diploma
+    laurea: Laurea
+    abilitazione: Abilitazione
     lingua: Lingua
+    lstTitoliValutabili: [String]
     lstTitoliPreferenziali: [TitoloPreferenziale]
-    lstRiserve: [String]
+    lstRiserve: [Riserve]
+    lstPatenti: [Patente]
     appartenenteCNVVF: Boolean
     numeroFigli: Int
     invaliditaCivile: String
     dSA: String
     note: String
+    volontarioCNVVF: Boolean
   }
 
   type InfoInvio {
@@ -116,11 +121,56 @@ const schema = buildSchema(`
     dataConseguimento: DateTime  # Usa DateTime per il campo data
     descrizioneAltroTitolo: String
     note: String
+    tipologia: Tipologia
+    settore: Settore
+    selezione: Selezione
+    descTitolo: String
+  }
+
+   type Laurea {
+    tipoTitolo: String
+    titoloStudio: TitoloStudio
+    istituto: String
+    luogoIstituto: Comune
+    indirizzoIstituto: String
+    dataConseguimento: DateTime  # Usa DateTime per il campo data
+    descrizioneAltroTitolo: String
+    note: String
+    tipologia: Tipologia
+    settore: Settore
+    selezione: Selezione
+    descTitolo: String
+  }
+
+  type Abilitazione {
+    tipoTitolo: String
+    titoloStudio: TitoloStudio
+    istituto: String
+    luogoIstituto: Comune
+    indirizzoIstituto: String
+    annoConseguimento: Int
+    note: String
+    sessione: String
   }
 
   type Titolo {
     _id: Int
     descrizione: String
+  }
+
+  type Patente {
+    tipoPatente: TipoPatente
+    numero: String
+    enteRilascio: String
+    dataRilascio: DateTime  # Usa DateTime per il campo data
+    dataScadenza: DateTime  # Usa DateTime per il campo data
+
+  }
+
+  type TipoPatente {
+    _id: Int
+    tipo: String
+    punti: Int
   }
 
   type TitoloStudio {
@@ -136,6 +186,24 @@ const schema = buildSchema(`
     _id: Int
     descrizione: String
     livelloDiIstruzione: LivelloDiIstruzione
+    flagSettore: Boolean
+    flagSelezione: Boolean
+    flgTesto: Boolean
+    codiceMIUR: String
+    idTipoStudio: String
+  }
+
+  type Settore{
+    _id: String
+    idPadre: String
+    descrizione: String
+    flgSelezione: Boolean
+  }
+
+  type Selezione{
+    _id: String
+    idPadre: String
+    descrizione: String
   }
 
   type LivelloDiIstruzione {
@@ -159,6 +227,11 @@ const schema = buildSchema(`
     descrizione: String
   }
 
+   type Riserve {
+    _id: Int
+    descrizione: String
+  }
+
   type IterConcorso {
     idStep: Int
     dataProva: DateTime  # Usa DateTime per il campo data
@@ -167,6 +240,8 @@ const schema = buildSchema(`
     punteggio: String
     linkAllegati: String
     assenzaGiustificata: String
+    cFTipoProva: String
+    cFTipoEsito: String
     note: String
   }
 

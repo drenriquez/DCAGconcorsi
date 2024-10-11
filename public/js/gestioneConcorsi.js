@@ -5,23 +5,60 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Ottieni gli elementi del DOM
     const concorsoId = document.querySelector('script[type="module"]').getAttribute('concorsoId');
     document.querySelector('#eseguiBtn').addEventListener('click', function() {
-        let campiSelezionati=getSelectedTest()
-       // console.log(campiSelezionati);
+        //let campiSelezionati=getSelectedTest()
+      console.log(campiRestituiti);
+      let campiPerQuery = campiRestituiti.length === 0 ? ["cognome", "nome",`    domandeConcorso {
+                    lstPatenti {
+                    	tipoPatente {
+                    	 
+                    	  tipo
+                    
+                    	}
+                     
+                    }
+                 
+               
+                   }  `] : campiRestituiti;
         avvioFunction( `
             query {
-                getAllUsers(concorso: "${concorsoId}") {
-                    ${campiSelezionati[0]}
-                    cognome
-                    nome
+                    getCandidatiByCriteria(concorso: "${concorsoId}",
+                    riserve: ${JSON.stringify(riserve)},
+                    titoliPreferenziali: ${JSON.stringify(titoliPreferenziali)},
+                    patenti: ${JSON.stringify(patenti)},
+                    tipoProve: ${JSON.stringify(tipoProve)},
+                    esitiProve: ${JSON.stringify(esitiProve)},
+                    dateProve: ${JSON.stringify(dateProve)},
+                    statoCandidato: ${JSON.stringify(statoCandidato)},
+                    nome: ${JSON.stringify(nome)},
+                    cognome: ${JSON.stringify(cognome)},
+                    codiceFiscale: ${JSON.stringify(codiceFiscale)},
+                    BirthDateGreaterThanOrEqual: ${JSON.stringify(BirthDateGreaterThanOrEqual)},
+                    BirthDateLessThanOrEqual: ${JSON.stringify(BirthDateLessThanOrEqual)},
+                            ) {
+                   ${campiPerQuery}
                 }
             }
             `)
         
     });
-   
+        const dateInputFrom = document.getElementById('dateFrom');
+
+        // Aggiungi un event listener per rilevare quando l'utente cambia il valore
+        dateInputFrom.addEventListener('change', function() {
+            // Salva il valore in una variabile
+            BirthDateGreaterThanOrEqual = dateInputFrom.value;
+        });
+        const dateInputTo = document.getElementById('dateTo');
+
+        // Aggiungi un event listener per rilevare quando l'utente cambia il valore
+        dateInputTo.addEventListener('change', function() {
+            // Salva il valore in una variabile
+            BirthDateLessThanOrEqual = dateInputTo.value;   
+        });
+  
     const query = `
     query {
-        getAllUsers(concorso: "${concorsoId}") {
+        getCandidatiByCriteria(concorso: "${concorsoId}") {
             codiceFiscale
             cognome
             nome
@@ -96,6 +133,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     let nome= ""
     let cognome= ""
     let codiceFiscale= ""
+    let BirthDateGreaterThanOrEqual=""
+    let BirthDateLessThanOrEqual=  ""
   async function avvioFunction(query){
    
     const spinner = document.getElementById('loadingSpinner');
@@ -111,7 +150,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Mostra lo spinner e nascondi la tabella all'inizio
   
     const response = await apiGraphQLgetAllUsers(query);
-    const users = response["data"]["getAllUsers"];
+    console.log(response)
+    const users = response["data"]["getCandidatiByCriteria"];
 
     // Numero di record per pagina
     const recordsPerPage = 2000;
@@ -119,6 +159,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     let sortDirection = {}; // Stato di ordinamento
 
     if (users.length > 0) {
+        console.log("____________________________",users[0])
         generateTableHeader(users[0]);
         generateTableRows(users, currentPage, recordsPerPage);
         generatePagination(users.length, recordsPerPage);
@@ -153,80 +194,113 @@ document.addEventListener('DOMContentLoaded', async function() {
         generateTableRows(users, currentPage, recordsPerPage);
     }
 
-    // Funzione per generare l'intestazione della tabella
-    function generateTableHeader(user) {
-        const headerRow = document.getElementById('tableHeader');
-        headerRow.innerHTML = ''; // Pulisci l'intestazione prima di rigenerarla
+  // Funzione per ottenere le chiavi dei campi annidati con la notazione puntata, inclusi gli array
+function getNestedKeys(obj, parentKey = '') {
+    let keys = [];
+
+    if (Array.isArray(obj)) {
+        // Se l'oggetto è un array, esplora ogni elemento dell'array
+        obj.forEach((item, index) => {
+            keys = keys.concat(getNestedKeys(item, `${parentKey}[${index}]`));
+        });
+    } else if (typeof obj === 'object' && obj !== null) {
+        // Se l'oggetto è un oggetto, esplora le sue chiavi
+        for (let key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                const fullKey = parentKey ? `${parentKey}.${key}` : key;
+                keys = keys.concat(getNestedKeys(obj[key], fullKey));
+            }
+        }
+    } else {
+        // Se è un valore puro, aggiungi la chiave
+        keys.push(parentKey);
+    }
+    console.log("*******************",keys)
+    return keys;
+}
+
+
+// Funzione per generare l'intestazione della tabella
+function generateTableHeader(user) {
+    const headerRow = document.getElementById('tableHeader');
+    headerRow.innerHTML = ''; // Pulisci l'intestazione prima di rigenerarla
+
+    // Colonna per il numero progressivo
+    const thNumber = document.createElement('th');
+    thNumber.innerText = '#';
+    headerRow.appendChild(thNumber);
+
+    // Ottieni tutte le chiavi (compresi i campi annidati)
+    const nestedKeys = getNestedKeys(user);
+    console.log("----------------",nestedKeys)
+    // Genera le colonne per i nomi dei campi
+    nestedKeys.forEach(key => {
+        const th = document.createElement('th');
+        th.innerHTML = `${key} <i class="fas fa-sort"></i>`;
+        th.style.cursor = 'pointer';
+
+        // Aggiungi il gestore di eventi per ordinare quando si clicca sull'intestazione
+        th.addEventListener('click', () => sortTableByColumn(key));
+        headerRow.appendChild(th);
+    });
+}
+
+
+   // Funzione per popolare le righe della tabella, in base alla pagina corrente
+function generateTableRows(users, currentPage, recordsPerPage) {
+    const tableBody = document.getElementById('tableBody');
+    tableBody.innerHTML = ''; // Pulisci il corpo della tabella prima di rigenerarla
+
+    // Calcola l'indice dei record da visualizzare
+    const startIndex = (currentPage - 1) * recordsPerPage;
+    const endIndex = Math.min(startIndex + recordsPerPage, users.length);
+
+    // Ottieni tutte le chiavi (compresi i campi annidati)
+    const nestedKeys = getNestedKeys(users[0]);
+
+    // Visualizza solo i record per la pagina corrente
+    for (let i = startIndex; i < endIndex; i++) {
+        const user = users[i];
+        const row = document.createElement('tr');
 
         // Colonna per il numero progressivo
-        const thNumber = document.createElement('th');
-        thNumber.innerText = '#';
-        headerRow.appendChild(thNumber);
+        const tdNumber = document.createElement('td');
+        tdNumber.innerText = i + 1;
+        row.appendChild(tdNumber);
 
-        // Genera le colonne per i nomi dei campi
-        Object.keys(user).forEach(key => {
-            const th = document.createElement('th');
-            th.innerHTML = `${key} <i class="fas fa-sort"></i>`;
-            th.style.cursor = 'pointer';
-
-            // Aggiungi il gestore di eventi per ordinare quando si clicca sull'intestazione
-            th.addEventListener('click', () => sortTableByColumn(key));
-            headerRow.appendChild(th);
+        // Popola le celle della riga con i dati
+        nestedKeys.forEach(key => {
+            const td = document.createElement('td');
+            const value = getNestedValue(user, key); // Ottieni il valore con la notazione puntata
+            td.innerText = value !== null && value !== undefined ? value : ''; // Mostra il valore o stringa vuota
+            row.appendChild(td);
         });
+           // Aggiungi la colonna con il pulsante alla fine della riga
+           const tdButton = document.createElement('td');
+           const button = document.createElement('button');
+           button.className = 'btn btn-secondary shadow-sm  btn-custom'; // Stile del pulsante
+           //button.innerText = '=>'; // Testo del pulsante
+           button.innerHTML = '<i class="fas fa-arrow-right"></i>'; // Icona "arrow-right"
+   
+           // Imposta l'attributo data-codiceFiscale al codice fiscale dell'utente
+           button.setAttribute('data-codiceFiscale', user.codiceFiscale);
+   
+           // Aggiungi un gestore di eventi al pulsante
+           button.addEventListener('click', function() {
+               const codiceFiscale = this.getAttribute('data-codiceFiscale');
+               //console.log('Pulsante cliccato per codice fiscale:', codiceFiscale);
+   
+               // Inserisci qui la logica da eseguire quando viene cliccato il pulsante
+           });
+   
+           // Aggiungi il pulsante alla cella e la cella alla riga
+           tdButton.appendChild(button);
+           row.appendChild(tdButton);
+        // Aggiungi la riga completa alla tabella
+        tableBody.appendChild(row);
     }
+}
 
-    // Funzione per popolare le righe della tabella, in base alla pagina corrente
-    function generateTableRows(users, currentPage, recordsPerPage) {
-        const tableBody = document.getElementById('tableBody');
-        tableBody.innerHTML = ''; // Pulisci il corpo della tabella prima di rigenerarla
-    
-        // Calcola l'indice dei record da visualizzare
-        const startIndex = (currentPage - 1) * recordsPerPage;
-        const endIndex = Math.min(startIndex + recordsPerPage, users.length);
-    
-        // Visualizza solo i record per la pagina corrente
-        for (let i = startIndex; i < endIndex; i++) {
-            const user = users[i];
-            const row = document.createElement('tr');
-    
-            // Colonna per il numero progressivo
-            const tdNumber = document.createElement('td');
-            tdNumber.innerText = i + 1;
-            row.appendChild(tdNumber);
-    
-            // Popola le celle della riga con i dati
-            Object.values(user).forEach(value => {
-                const td = document.createElement('td');
-                td.innerText = value;
-                row.appendChild(td);
-            });
-    
-            // Aggiungi la colonna con il pulsante alla fine della riga
-            const tdButton = document.createElement('td');
-            const button = document.createElement('button');
-            button.className = 'btn btn-secondary shadow-sm  btn-custom'; // Stile del pulsante
-            //button.innerText = '=>'; // Testo del pulsante
-            button.innerHTML = '<i class="fas fa-arrow-right"></i>'; // Icona "arrow-right"
-    
-            // Imposta l'attributo data-codiceFiscale al codice fiscale dell'utente
-            button.setAttribute('data-codiceFiscale', user.codiceFiscale);
-    
-            // Aggiungi un gestore di eventi al pulsante
-            button.addEventListener('click', function() {
-                const codiceFiscale = this.getAttribute('data-codiceFiscale');
-                //console.log('Pulsante cliccato per codice fiscale:', codiceFiscale);
-    
-                // Inserisci qui la logica da eseguire quando viene cliccato il pulsante
-            });
-    
-            // Aggiungi il pulsante alla cella e la cella alla riga
-            tdButton.appendChild(button);
-            row.appendChild(tdButton);
-    
-            // Aggiungi la riga completa alla tabella
-            tableBody.appendChild(row);
-        }
-    }
 
     // Funzione per generare la navigazione delle pagine
     function generatePagination(totalRecords, recordsPerPage) {
@@ -291,6 +365,26 @@ document.addEventListener('DOMContentLoaded', async function() {
         // Aggiungi la classe "active" al pulsante della pagina corrente
         paginationButtons[currentPage - 1].classList.add('active');
     }
+    // Funzione per esplodere gli oggetti e trovare i valori puri
+
+
+
+
+
+
+
+
+   // Funzione per ottenere il valore di un campo annidato con la notazione puntata
+function getNestedValue(obj, key) {
+    return key.split('.').reduce((o, k) => {
+        if (k.includes('[')) {
+            // Gestisce l'accesso agli array (es: 'domandeConcorso[0]')
+            const [arrayKey, index] = k.split(/\[|\]/).filter(Boolean);
+            return (o && o[arrayKey] && o[arrayKey][index]) ? o[arrayKey][index] : null;
+        }
+        return o ? o[k] : null;
+    }, obj);
+}
    
   }
  
@@ -307,7 +401,7 @@ document.addEventListener('DOMContentLoaded', async function() {
  async function popolaDropdown(query,idDropdown,concorsoId){
     let dropdownElement=document.getElementById(idDropdown);
     const response = await apiGraphQLgetAllUsers(query);
-    console.log("+++++++++++++++++",idDropdown)
+    //console.log("+++++++++++++++++",idDropdown)
     //dropdownElement.innerHTML = `<label><input type="checkbox" name="codiceFiscale" value="codiceFiscale"> Codice Fiscale</label>`;
     // Cicla su tutte le proprietà di "data"
      for (let key in response.data) {
@@ -315,7 +409,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (Array.isArray(response.data[key])) {
             // Se è un array, cicla e stampa il contenuto
             response.data[key].forEach((titolo, index) => {
-                console.log(`${index + 1}. ${titolo}`);
+               // console.log(`${index + 1}. ${titolo}`);
                 dropdownElement.innerHTML += `<label><input type="checkbox" name="${titolo}" value="${titolo}"> ${titolo}</label>`;
             });
             break; // Esci dal ciclo dopo aver trovato l'array
@@ -331,7 +425,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           .filter(checkbox => checkbox.checked)
           .map(checkbox => checkbox.value); // Raccoglie i valori selezionati
         selectedOptionsInput.value = selected.length ? selected.join(', ') : 'Seleziona opzioni...';
-       // console.log("////////////  ",idDropdown,"---  ",selected);
+       //console.log("////////////  ",idDropdown,"---  ",selected);
         switch(idDropdown) {
             case "dropdown-riserve":
               riserve=selected;
@@ -368,6 +462,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             default:
               // code block
           }
+          console.log("////////////riga 377  ",idDropdown,"---  ",selected)
         if(idDropdown==="dropdown-tipoProve"){
             let dropdownElementEsiti=document.getElementById('dropdown-esitoProva');
             let dropdownElementDataProva=document.getElementById('dropdown-dataProva');

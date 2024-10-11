@@ -504,12 +504,12 @@ getDateProveByTipoProva: async ({ concorso, tipoProva }) => {
      * @param {Array} statoCandidato - Lista degli stati candidato
      * @returns {Array} candidati che soddisfano i criteri
      */
-getCandidatiByCriteria: async ({ concorso, riserve, titoliPreferenziali, patenti, statoCandidato, nome,cognome,codiceFiscale,BirthDateGreaterThanOrEqual,BirthDateLessThanOrEqual }) => {
+getCandidatiByCriteria: async ({ concorso, riserve, titoliPreferenziali, patenti, tipoProve, esitiProve, dateProve, statoCandidato, nome,cognome,codiceFiscale,BirthDateGreaterThanOrEqual,BirthDateLessThanOrEqual }) => {
     const userDao = new UserDAO(concorso);
     await userDao.initializeDatabase();
 
     // Chiama il metodo DAO per ottenere i candidati in base ai criteri specificati
-    return await userDao.getCandidatiByCriteria({ riserve, titoliPreferenziali, patenti, statoCandidato,nome,cognome,codiceFiscale,BirthDateGreaterThanOrEqual,BirthDateLessThanOrEqual  });
+    return await userDao.getCandidatiByCriteria({ riserve, titoliPreferenziali, patenti, tipoProve, esitiProve, dateProve, statoCandidato,nome,cognome,codiceFiscale,BirthDateGreaterThanOrEqual,BirthDateLessThanOrEqual  });
 },
 getAllFields: async ({ concorso }) => {
   const userDao = new UserDAO(concorso);

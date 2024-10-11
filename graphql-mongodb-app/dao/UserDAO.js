@@ -328,9 +328,10 @@ class UserDAO {
 
             // Esegui la pipeline di aggregazione
             const result = await this.collection.aggregate(pipeline).toArray();
-
+            //console.log("///////////////7",result)
             // Restituisci gli esiti
-            return result.map(item => item.esito);
+            return result.map(item => item.esito+`-${tipoProva}`);
+
         } catch (error) {
             console.error('Error fetching esiti by prova:', error);
             throw error;
@@ -470,7 +471,9 @@ class UserDAO {
     
                 // Verifica se valA è effettivamente un oggetto Date e può chiamare toISOString()
                 if (valA instanceof Date && !isNaN(valA)) {
-                    return valA.toISOString().split(':00.')[0];//.split('T')[0]; // Restituisce la parte della data (YYYY-MM-DD)
+                    let valB= valA.toISOString().split(':00.')[0];//.split('T')[0]; // Restituisce la parte della data (YYYY-MM-DD)
+                    let dataAndTipoProva=valB+`|${tipoProva}`
+                    return dataAndTipoProva
                 } else {
                     // Se la conversione non è possibile, restituisce il valore così com'è
                     return valA;
@@ -494,13 +497,16 @@ class UserDAO {
     async getCandidatiByCriteria({ 
         riserve, 
         titoliPreferenziali, 
-        patenti, 
-        statoCandidato, 
+        patenti,
+        tipoProve,
+        esitiProve, 
+        dateProve,     
+        statoCandidato,
         nome, 
         cognome, 
         codiceFiscale,
         BirthDateGreaterThanOrEqual,
-        BirthDateLessThanOrEqual 
+        BirthDateLessThanOrEqual
     }) {
         const query = {};
     
@@ -509,19 +515,24 @@ class UserDAO {
             query.statoCandidato = { $in: statoCandidato };
         }
     
-        // Aggiungi il filtro per le riserve
+        // Aggiungi il filtro per le riserve (deve essere soddisfatta una delle riserve specificate)
         if (riserve && riserve.length > 0) {
             query["domandeConcorso.lstRiserve.descrizione"] = { $in: riserve };
         }
     
-        // Aggiungi il filtro per i titoli preferenziali
+        // Aggiungi il filtro per i titoli preferenziali (deve essere soddisfatto uno dei titoli preferenziali specificati)
         if (titoliPreferenziali && titoliPreferenziali.length > 0) {
             query["domandeConcorso.lstTitoliPreferenziali.descrizione"] = { $in: titoliPreferenziali };
         }
     
-        // Aggiungi il filtro per le patenti
+        // Aggiungi il filtro per le patenti (deve essere soddisfatta una delle patenti specificate)
         if (patenti && patenti.length > 0) {
             query["domandeConcorso.lstPatenti.tipoPatente.tipo"] = { $in: patenti };
+        }
+    
+        // Aggiungi il filtro per il tipo di prove (deve essere presente una delle prove specificate)
+        if (tipoProve && tipoProve.length > 0) {
+            query["iterConcorso.prova.descrizione"] = { $in: tipoProve };
         }
     
         // Aggiungi il filtro per il nome
@@ -538,33 +549,70 @@ class UserDAO {
         if (codiceFiscale && codiceFiscale.length > 0) {
             query.codiceFiscale = { $regex: new RegExp(codiceFiscale, "i") }; // Ricerca case-insensitive con regex
         }
-         // Aggiungi il filtro per la data di nascita maggiore o uguale
+    
+        // Aggiungi il filtro per la data di nascita maggiore o uguale
         if (BirthDateGreaterThanOrEqual) {
             const birthDate = new Date(BirthDateGreaterThanOrEqual);
             query.dataNascita = { ...query.dataNascita, $gte: birthDate };
         }
-
+    
         // Aggiungi il filtro per la data di nascita minore o uguale
         if (BirthDateLessThanOrEqual) {
             const birthDate = new Date(BirthDateLessThanOrEqual);
             query.dataNascita = { ...query.dataNascita, $lte: birthDate };
         }
     
-        try {
-            // Cerca i candidati che soddisfano i criteri di ricerca
-             // Definisci la proiezione per limitare i campi restituiti
-           /*  const projection = {
-                codiceFiscale: 1,
-                cognome: 1,
-                nome: 1,
-                dataNascita: 1,
-                comuneNascita: 1,
-                statoCandidato: 1,
-            };
+        // Aggiungi il filtro per esitiProve
+        if (esitiProve && esitiProve.length > 0) {
+            const esitiProveConditions = esitiProve.map(esitoProva => {
+                const [esito, prova] = esitoProva.split("-"); // Divide la stringa in esito e prova
+                return {
+                    "iterConcorso": {
+                        $elemMatch: {
+                            "esito.descrizione": esito.trim(),
+                            "prova.descrizione": prova.trim()
+                        }
+                    }
+                };
+            });
     
-            // Cerca i candidati che soddisfano i criteri di ricerca
-            const candidati = await this.collection.find(query).project(projection).toArray(); 
-            */
+            // Aggiungiamo le condizioni esito come un $and (deve essere soddisfatto almeno uno degli esiti per ogni prova)
+            if (!query.$and) {
+                query.$and = [];
+            }
+            query.$and.push({
+                $or: esitiProveConditions
+            });
+        }
+    
+        // Aggiungi il filtro per dateProve
+        if (dateProve && dateProve.length > 0) {
+            const dateProveConditions = dateProve.map(dateProva => {
+                const [data, prova] = dateProva.split("|");
+                let formattedData = data + ":00.000+00:00"; // Aggiungi la parte mancante della data
+                return {
+                    "iterConcorso": {
+                        $elemMatch: {
+                            "prova.descrizione": prova.trim(),
+                            "dataProva": new Date(formattedData.trim()) // Data formattata correttamente
+                        }
+                    }
+                };
+            });
+    
+            // Aggiungi le condizioni $or per le date all'interno di $and
+            if (!query.$and) {
+                query.$and = [];
+            }
+            
+            // Aggiungi il filtro come $or, deve soddisfare almeno una delle date specifiche per la prova
+            query.$and.push({
+                $or: dateProveConditions
+            });
+        }
+    
+        try {
+            console.log(JSON.stringify(query))
             const candidati = await this.collection.find(query).toArray();
             
             // Modifica l'array domandeConcorso per includere solo l'ultima domanda
