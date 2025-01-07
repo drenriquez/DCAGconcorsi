@@ -239,7 +239,7 @@ const schema = buildSchema(`
     esito: Esito
     punteggio: String
     linkAllegati: String
-    assenzaGiustificata: String
+    assenzaGiustificata: AssenzaGiustificata
     cFTipoProva: String
     cFTipoEsito: String
     note: String
@@ -257,6 +257,13 @@ const schema = buildSchema(`
     descrizione: String
     statoCandidato: String
     notaObbligatoria: Boolean
+  }
+  type AssenzaGiustificata{
+    dataInizioMalattia: String
+    giorniCertificati: Int
+    numeroProtocollo: String
+    dataProtocollo: String
+    note: String
   }
 `);
 

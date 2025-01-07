@@ -1,0 +1,495 @@
+[{
+  "_id": {
+    "$oid": "66614e012e123b13d9cb710e"
+  },
+  "anagrafica": {
+    "nome": "Enrico",
+    "cognome": "Notaro",
+    "codiceFiscale": "NTRNRC80S15G273K"
+  },
+  "amministrazione": "AC",
+  "qualifica": "AI",
+  "ufficio": "Ufficio II - Concorsi d'Accesso",
+  "assenze": {},
+  "livelloUser": "2"
+},
+{
+  "_id": {
+    "$oid": "66614e682e123b13d9cb710f"
+  },
+  "anagrafica": {
+    "nome": "Nicoletta",
+    "cognome": "Zullo",
+    "codiceFiscale": "ZLLNLT57R67F544A"
+  },
+  "amministrazione": "CNVVF",
+  "qualifica": "O.E.",
+  "ufficio": "Ufficio II - Concorsi d'Accesso",
+  "livelloUser": "2",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "66615254048b5186b8b40297"
+  },
+  "anagrafica": {
+    "nome": "Stefano",
+    "cognome": "Censoni",
+    "codiceFiscale": "CNSSFN80A10E958P"
+  },
+  "amministrazione": "CNVVF",
+  "qualifica": "O",
+  "ufficio": "Ufficio II - Concorsi d'Accesso",
+  "livelloUser": "2",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "66615419048b5186b8b40298"
+  },
+  "anagrafica": {
+    "nome": "Daniele",
+    "cognome": "Lorenzon",
+    "codiceFiscale": "LRNDNL88A25H501I"
+  },
+  "amministrazione": "CNVVF",
+  "qualifica": "ISPETTORE LOGISTICO-GESTIONALE",
+  "ufficio": "Direzione Centrale",
+  "livelloUser": "0",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "66615560048b5186b8b4029b"
+  },
+  "anagrafica": {
+    "nome": "Roberta",
+    "cognome": "Viscusi",
+    "codiceFiscale": "VSCRRT64R42H501D"
+  },
+  "amministrazione": "AC",
+  "qualifica": "FUNZIONARIO ECONOMICO-FINANZIARIO",
+  "ufficio": "Direzione Centrale",
+  "livelloUser": "0",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "66615cb2048b5186b8b4029c"
+  },
+  "anagrafica": {
+    "nome": "Gabriella",
+    "cognome": "Biondo",
+    "codiceFiscale": "BNDGRL78S55A638H"
+  },
+  "amministrazione": "CNVVF",
+  "qualifica": "ISPETTORE INFORMATICO ESPERTO",
+  "ufficio": "Ufficio I - Affari Generali",
+  "livelloUser": "0",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "66615d63048b5186b8b4029d"
+  },
+  "anagrafica": {
+    "nome": "Paola",
+    "cognome": "Castello",
+    "codiceFiscale": "CSTPLA65E63H501O"
+  },
+  "amministrazione": "AC",
+  "qualifica": "OPERATORE AMMINISTRATIVO",
+  "ufficio": "Ufficio I - Affari Generali",
+  "livelloUser": "2",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "66615f75048b5186b8b4029f"
+  },
+  "anagrafica": {
+    "nome": "Renata",
+    "cognome": "Consolandi",
+    "codiceFiscale": "CNSRNT64R48I921L"
+  },
+  "amministrazione": "AC",
+  "qualifica": "ASSISTENTE AMMINISTRATIVO",
+  "ufficio": "Ufficio I - Affari Generali",
+  "livelloUser": "2",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "6661610b048b5186b8b402a0"
+  },
+  "anagrafica": {
+    "nome": "Achille",
+    "cognome": "Izzillo",
+    "codiceFiscale": "ZZLCLL58B02H501L"
+  },
+  "amministrazione": "AC",
+  "qualifica": "ASSISTENTE AMMINISTRATIVO",
+  "ufficio": "Ufficio I - Affari Generali",
+  "livelloUser": "0",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "6661618b048b5186b8b402a1"
+  },
+  "anagrafica": {
+    "nome": "Gennaro",
+    "cognome": "Ruccolo",
+    "codiceFiscale": "RCCGNR67T30Z110V"
+  },
+  "amministrazione": "CNVVF",
+  "qualifica": "ISPETTORE INFORMATICO",
+  "ufficio": "Ufficio I - Affari Generali",
+  "livelloUser": "2",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "666161fe048b5186b8b402a2"
+  },
+  "anagrafica": {
+    "nome": "Fabio",
+    "cognome": "Sampaolo",
+    "codiceFiscale": "SMPFBA95D07H501Y"
+  },
+  "amministrazione": "AC",
+  "qualifica": "ASSISTENTE INFORMATICO",
+  "ufficio": "Ufficio I - Affari Generali",
+  "livelloUser": "2",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "66616277048b5186b8b402a3"
+  },
+  "anagrafica": {
+    "nome": "Lucia",
+    "cognome": "Lonardo",
+    "codiceFiscale": "LNRLCU61A71Z401P"
+  },
+  "amministrazione": "CNVVF",
+  "qualifica": "OPERATORE ESPERTO SCATTO CONVENZIONALE",
+  "ufficio": "Ufficio I - Attivita' Socio Assistenziali",
+  "livelloUser": "0",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "66616334048b5186b8b402a4"
+  },
+  "anagrafica": {
+    "nome": "Donato",
+    "cognome": "De Santis",
+    "codiceFiscale": "DSNDNT59D02B624S"
+  },
+  "amministrazione": "AC",
+  "qualifica": "FUNZIONARIO AMMINISTRATIVO",
+  "ufficio": "Ufficio II - Concorsi d'Accesso",
+  "livelloUser": "0",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "666163ba048b5186b8b402a5"
+  },
+  "anagrafica": {
+    "nome": "Demetrio",
+    "cognome": "Nicolo'",
+    "codiceFiscale": "NCLDTR94D07H224C"
+  },
+  "amministrazione": "AC",
+  "qualifica": "ASSISTENTE AMMINISTRATIVO",
+  "ufficio": "Ufficio II - Concorsi d'Accesso",
+  "livelloUser": "0",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "666165c9048b5186b8b402a7"
+  },
+  "anagrafica": {
+    "nome": "Flavia",
+    "cognome": "Raccio",
+    "codiceFiscale": "RCCFLV69H59H501C"
+  },
+  "amministrazione": "CNVVF",
+  "qualifica": "DIRETTORE COORDINATORE SPECIALE LOGISTICO-GESTIONALE RE",
+  "ufficio": "Ufficio II - Concorsi d'Accesso",
+  "livelloUser": "0",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "6661669c048b5186b8b402a8"
+  },
+  "anagrafica": {
+    "nome": "Matteo",
+    "cognome": "Bresciani",
+    "codiceFiscale": "BRSMTT99A29H501S"
+  },
+  "amministrazione": "CNVVF",
+  "qualifica": "OPERATORE",
+  "ufficio": "Ufficio II - Concorsi di Riqualificazione",
+  "livelloUser": "0",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "66616765048b5186b8b402a9"
+  },
+  "anagrafica": {
+    "nome": "Barbara",
+    "cognome": "Colaninno",
+    "codiceFiscale": "CLNBBR78A59A048A"
+  },
+  "amministrazione": "CNVVF",
+  "qualifica": "ISPETTORE LOGISTICO-GESTIONALE",
+  "ufficio": "Ufficio II - Concorsi di Riqualificazione",
+  "livelloUser": "0",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "66616832048b5186b8b402aa"
+  },
+  "anagrafica": {
+    "nome": "Paolo",
+    "cognome": "Funi",
+    "codiceFiscale": "FNUPLA82L08H501V"
+  },
+  "amministrazione": "CNVVF",
+  "qualifica": "OPERATORE",
+  "ufficio": "Ufficio II - Concorsi di Riqualificazione",
+  "livelloUser": "0",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "66616897048b5186b8b402ab"
+  },
+  "anagrafica": {
+    "nome": "Martina",
+    "cognome": "Sbicego",
+    "codiceFiscale": "SBCMTN82H50L719V"
+  },
+  "amministrazione": "CNVVF",
+  "qualifica": "VICE DIRETTORE LOGISTICO-GESTIONALE",
+  "ufficio": "Ufficio II - Concorsi di Riqualificazione",
+  "livelloUser": "0",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "666169c2048b5186b8b402ac"
+  },
+  "anagrafica": {
+    "nome": "Nensi",
+    "cognome": "Buran",
+    "codiceFiscale": "BRNNNS80P46H501T"
+  },
+  "amministrazione": "CNVVF",
+  "qualifica": "ISPETTORE LOGISTICO-GESTIONALE",
+  "ufficio": "Ufficio II - Affari Concorsuali e Contenzioso",
+  "livelloUser": "0",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "66616a3a048b5186b8b402ad"
+  },
+  "anagrafica": {
+    "nome": "Paola",
+    "cognome": "Cerruto",
+    "codiceFiscale": "CRRPLA60H70H501F"
+  },
+  "amministrazione": "CNVVF",
+  "qualifica": "DIRETTORE LOGISTICO-GESTIONALE VICE DIRIGENTE",
+  "ufficio": "Ufficio II - Affari Concorsuali e Contenzioso",
+  "livelloUser": "0",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "66616abf048b5186b8b402ae"
+  },
+  "anagrafica": {
+    "nome": "Pamela",
+    "cognome": "Federico",
+    "codiceFiscale": "FDRPML75H42E573R"
+  },
+  "amministrazione": "AC",
+  "qualifica": "ASSISTENTE AMMINISTRATIVO",
+  "ufficio": "Ufficio II - Affari Concorsuali e Contenzioso",
+  "livelloUser": "0",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "66616c2b048b5186b8b402af"
+  },
+  "anagrafica": {
+    "nome": "Francesca",
+    "cognome": "Malecore",
+    "codiceFiscale": "MLCFNC87E54E506M"
+  },
+  "amministrazione": "AC",
+  "qualifica": "FUNZIONARIO AMMINISTRATIVO",
+  "ufficio": "Ufficio II - Affari Concorsuali e Contenzioso",
+  "livelloUser": "0",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "66616ce6048b5186b8b402b0"
+  },
+  "anagrafica": {
+    "nome": "Enrico",
+    "cognome": "Rondoni",
+    "codiceFiscale": "RNDNRC66M13H501O"
+  },
+  "amministrazione": "CNVVF",
+  "qualifica": "DIRETTORE COORDINATORE SPECIALE LOGISTICO-GESTIONALE RE",
+  "ufficio": "Ufficio II - Affari Concorsuali e Contenzioso",
+  "livelloUser": "0",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "66616e21048b5186b8b402b1"
+  },
+  "anagrafica": {
+    "nome": "Luca",
+    "cognome": "Terranova",
+    "codiceFiscale": "TRRLCU79E28F258J"
+  },
+  "amministrazione": "AC",
+  "qualifica": "ASSISTENTE AMMINISTRATIVO",
+  "ufficio": "Ufficio II - Affari Concorsuali e Contenzioso",
+  "livelloUser": "0",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "66616f75048b5186b8b402b3"
+  },
+  "anagrafica": {
+    "nome": "Marisa",
+    "cognome": "Calcagni",
+    "codiceFiscale": "CLCMRS62C61H501D"
+  },
+  "amministrazione": "AC",
+  "qualifica": "FUNZIONARIO ECONOMICO-FINANZIARIO",
+  "ufficio": "Ufficio III - Affari Legali e Contenzioso",
+  "livelloUser": "0",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "66617006048b5186b8b402b4"
+  },
+  "anagrafica": {
+    "nome": "Felicia",
+    "cognome": "Consagra",
+    "codiceFiscale": "CNSFLC72C56E573M"
+  },
+  "amministrazione": "CNVVF",
+  "qualifica": "ISPETTORE LOGISTICO-GESTIONALE ESPERTO",
+  "ufficio": "Ufficio III - Affari Legali e Contenzioso",
+  "livelloUser": "0",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "6661707c048b5186b8b402b5"
+  },
+  "anagrafica": {
+    "nome": "Giandomenico",
+    "cognome": "D'Egidio",
+    "codiceFiscale": "DGDGDM63H18F880D"
+  },
+  "amministrazione": "CNVVF",
+  "qualifica": "DIRETTORE LOGISTICO-GESTIONALE VICE DIRIGENTE",
+  "ufficio": "Ufficio III - Affari Legali e Contenzioso",
+  "livelloUser": "0",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "66617132048b5186b8b402b6"
+  },
+  "anagrafica": {
+    "nome": "Stefania Antonella",
+    "cognome": "La Rocca",
+    "codiceFiscale": "LRCSFN67H54G580V"
+  },
+  "amministrazione": "CNVVF",
+  "qualifica": "DIRETTORE LOGISTICO-GESTIONALE VICE DIRIGENTE",
+  "ufficio": "Ufficio III - Affari Legali e Contenzioso",
+  "livelloUser": "0",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "666171c3048b5186b8b402b7"
+  },
+  "anagrafica": {
+    "nome": "Lucia",
+    "cognome": "Magliulo",
+    "codiceFiscale": "MGLLCU78P41L259I"
+  },
+  "amministrazione": "CNVVF",
+  "qualifica": "ISPETTORE LOGISTICO-GESTIONALE",
+  "ufficio": "Ufficio III - Affari Legali e Contenzioso",
+  "livelloUser": "0",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "66617244048b5186b8b402b8"
+  },
+  "anagrafica": {
+    "nome": "Silvia",
+    "cognome": "Postorino",
+    "codiceFiscale": "PSTSLV68P45H501L"
+  },
+  "amministrazione": "CNVVF",
+  "qualifica": "ISPETTORE LOGISTICO-GESTIONALE ESPERTO",
+  "ufficio": "Ufficio III - Affari Legali e Contenzioso",
+  "livelloUser": "0",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "666172c4048b5186b8b402b9"
+  },
+  "anagrafica": {
+    "nome": "Gilda",
+    "cognome": "Tortora",
+    "codiceFiscale": "TRTGLD75M57B963Z"
+  },
+  "amministrazione": "CNVVF",
+  "qualifica": "ISPETTORE LOGISTICO-GESTIONALE ESPERTO",
+  "ufficio": "Ufficio III - Affari Legali e Contenzioso",
+  "livelloUser": "0",
+  "assenze": {}
+},
+{
+  "_id": {
+    "$oid": "66617ab84bf6fe53d91eff20"
+  },
+  "anagrafica": {
+    "nome": "Marco",
+    "cognome": "Di Leonardo",
+    "codiceFiscale": "DLNMRC88T29G492X"
+  },
+  "amministrazione": "CNVVF",
+  "qualifica": "VICE DIRETTORE",
+  "ufficio": "UFFICIO PER I SERVIZI INFORMATICI",
+  "livelloUser": "2",
+  "assenze": {}
+}]

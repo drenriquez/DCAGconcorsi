@@ -3,30 +3,20 @@ import { apiGraphQLgetAllUsers } from "../../utils/apiGraphql.js";
 document.addEventListener('DOMContentLoaded', async function() {
    
     // Ottieni gli elementi del DOM
-    // document.getElementById('exportBtn').addEventListener('click', exportTableToExcel);
+    document.getElementById('exportBtn').addEventListener('click', exportTableToExcelFromVisibleTable);
     const concorsoId = document.querySelector('script[type="module"]').getAttribute('concorsoId');
+    const concorsoTipoProva = document.querySelector('script[type="module"]').getAttribute('tipoProva');
     document.querySelector('#eseguiBtn').addEventListener('click', function() {
         //let campiSelezionati=getSelectedTest()
-      console.log("-----riga 10: ",campiRestituiti);
-      let campiPerQuery = campiRestituiti.length === 0 ? ["cognome", "nome","codiceFiscale","dataNascita",`    domandeConcorso {
-                    lstPatenti {
-                    	tipoPatente {
-                    	 
-                    	  tipo
-                    
-                    	}
-                     
-                    }
-                 
-               
-                   }  `] : campiRestituiti;
+      //console.log("-----riga 10: ",campiRestituiti);
+      let campiPerQuery = campiRestituiti.length === 0 ? ["cognome", "nome","codiceFiscale","dataNascita"] : campiRestituiti;
         avvioFunction( `
             query {
                     getCandidatiByCriteria(concorso: "${concorsoId}",
                     riserve: ${JSON.stringify(riserve)},
                     titoliPreferenziali: ${JSON.stringify(titoliPreferenziali)},
                     patenti: ${JSON.stringify(patenti)},
-                    tipoProve: ${JSON.stringify(tipoProve)},
+                    tipoProve: ${JSON.stringify(concorsoTipoProva)},
                     esitiProve: ${JSON.stringify(esitiProve)},
                     dateProve: ${JSON.stringify(dateProve)},
                     statoCandidato: ${JSON.stringify(statoCandidato)},
@@ -59,12 +49,31 @@ document.addEventListener('DOMContentLoaded', async function() {
   
     const query = `
     query {
-        getCandidatiByCriteria(concorso: "${concorsoId}") {
+        getCandidatiByCriteria(concorso: "${concorsoId}",tipoProve:"${concorsoTipoProva}") {
             codiceFiscale
             cognome
             nome
             dataNascita
             statoCandidato
+            iterConcorso{
+                prova {
+                    descrizione
+                }
+                esito {
+                    _id
+                    categoria
+                    descrizione
+                    statoCandidato
+                    notaObbligatoria
+                }
+                assenzaGiustificata {
+                    dataInizioMalattia
+                    giorniCertificati
+                    numeroProtocollo
+                    dataProtocollo
+                    note
+                }
+            }
         }
     }
     `;
@@ -109,18 +118,26 @@ document.addEventListener('DOMContentLoaded', async function() {
     getAllCampiDomandeConcorso(concorso: "${concorsoId}")
     }
     `;
+    let queryDateConcorsoTipoProva=`
+    query {
+    getDateProveByTipoProva(concorso: "${concorsoId}",tipoProva:"${concorsoTipoProva}")
+    }
+    `
     //dropd
     //dropdown-titoliPreferenziali
+
+
     popolaDropdown(queryGetAllRiserve,'dropdown-riserve',concorsoId);
     popolaDropdown(queryGetAllTitoliPreferenziali,'dropdown-titoliPreferenziali',concorsoId)
-    popolaDropdown(queryGetListaUnicaPatenti,'dropdown-patenti',concorsoId)
-    popolaDropdown(queryGetTipologieProve,'dropdown-tipoProve',concorsoId)//'dropdown-tipoProve'
-    popolaDropdown(queryGetStatiCandidato,'dropdown-domande',concorsoId)//'dropdown-domande'
+   // popolaDropdown(queryGetListaUnicaPatenti,'dropdown-patenti',concorsoId)
+    //popolaDropdown(queryGetTipologieProve,'dropdown-tipoProve',concorsoId)//'dropdown-tipoProve'
+    //popolaDropdown(queryGetStatiCandidato,'dropdown-domande',concorsoId)//'dropdown-domande'
     popolaDropdown(queryGetAllFields,'dropdown-campiRestituiti',concorsoId)//'dropdown-domande'
     popolaDropdown(queryGetSimpleFields,'dropdown-anagrafica',concorsoId);
-    popolaDropdown(queryGetTipologieProve,'dropdown-iterConcorso',concorsoId);
-    popolaDropdown(queryGetDatiInDomanda,'dropdown-domanda',concorsoId);
-
+    //popolaDropdown(queryGetTipologieProve,'dropdown-iterConcorso',concorsoId);
+    //popolaDropdown(queryGetDatiInDomanda,'dropdown-domanda',concorsoId);
+    popolaDropdown(queryDateConcorsoTipoProva,'dropdown-dataConcorsoTipoProva',concorsoId)
+ 
     const queryTipoProve = `
     query {
         getTipologieProve(concorso: "${concorsoId}") 
@@ -128,8 +145,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     `
    //codice per generare button per la gestione prove motorie
 
-    aggiungiPulsanteProve(concorsoId,"PROVA MOTORIO-ATTITUDINALE","PROVE MOTORIE")
-    aggiungiPulsanteProve(concorsoId,"VISITA MEDICA","VISITA MEDICA")
+    //aggiungiPulsanteProve(concorsoId,"PROVA MOTORIO-ATTITUDINALE","PROVE MOTORIE")
     
     
 });
@@ -161,7 +177,7 @@ async function avvioFunction(query){
     // Mostra lo spinner e nascondi la tabella all'inizio
   
     const response = await apiGraphQLgetAllUsers(query);
-    //console.log(response)
+    ////console.log(response)
     const users = response["data"]["getCandidatiByCriteria"];
     //document.getElementById('exportBtn').addEventListener('click', exportTableToExcel(users));
     console.log(users)
@@ -172,7 +188,7 @@ async function avvioFunction(query){
     let sortDirection = {}; // Stato di ordinamento
 
     if (users.length > 0) {
-        //console.log("____________________________",users[0])
+        ////console.log("____________________________",users[0])
         generateTableHeader(users[0]);
         generateTableRows(users, currentPage, recordsPerPage);
         generatePagination(users.length, recordsPerPage);
@@ -228,7 +244,7 @@ async function avvioFunction(query){
             // Se è un valore puro, aggiungi la chiave
             keys.push(parentKey);
         }
-        //console.log("*******************",keys)
+        ////console.log("*******************",keys)
         return keys;
     }
 
@@ -245,7 +261,7 @@ async function avvioFunction(query){
 
         // Ottieni tutte le chiavi (compresi i campi annidati)
         const nestedKeys = getNestedKeys(user);
-        //console.log("----------------",nestedKeys)
+        ////console.log("----------------",nestedKeys)
         // Genera le colonne per i nomi dei campi
         nestedKeys.forEach(key => {
             const th = document.createElement('th');
@@ -301,7 +317,7 @@ async function avvioFunction(query){
             // Aggiungi un gestore di eventi al pulsante
             button.addEventListener('click', function() {
                 const codiceFiscale = this.getAttribute('data-codiceFiscale');
-                //console.log('Pulsante cliccato per codice fiscale:', codiceFiscale);
+                console.log('Pulsante cliccato per codice fiscale:', codiceFiscale);
     
                 // Inserisci qui la logica da eseguire quando viene cliccato il pulsante
             });
@@ -408,7 +424,7 @@ async function avvioFunction(query){
  async function popolaDropdown(query,idDropdown,concorsoId){
     let dropdownElement=document.getElementById(idDropdown);
     const response = await apiGraphQLgetAllUsers(query);
-    //console.log("+++++++++++++++++",idDropdown)
+    ////console.log("+++++++++++++++++",idDropdown)
     //dropdownElement.innerHTML = `<label><input type="checkbox" name="codiceFiscale" value="codiceFiscale"> Codice Fiscale</label>`;
     // Cicla su tutte le proprietà di "data"
      for (let key in response.data) {
@@ -416,7 +432,7 @@ async function avvioFunction(query){
         if (Array.isArray(response.data[key])) {
             // Se è un array, cicla e stampa il contenuto
             response.data[key].forEach((titolo, index) => {
-               // console.log(`${index + 1}. ${titolo}`);
+               // //console.log(`${index + 1}. ${titolo}`);
                 dropdownElement.innerHTML += `<label><input type="checkbox" name="${titolo}" value="${titolo}"> ${titolo}</label>`;
             });
             break; // Esci dal ciclo dopo aver trovato l'array
@@ -432,44 +448,44 @@ async function avvioFunction(query){
           .filter(checkbox => checkbox.checked)
           .map(checkbox => checkbox.value); // Raccoglie i valori selezionati
         selectedOptionsInput.value = selected.length ? selected.join(', ') : 'Seleziona opzioni...';
-       //console.log("////////////  ",idDropdown,"---  ",selected);
+       ////console.log("////////////  ",idDropdown,"---  ",selected);
         switch(idDropdown) {
             case "dropdown-riserve":
               riserve=selected;
-              //console.log(selected)
+              ////console.log(selected)
             break;
             case "dropdown-titoliPreferenziali":
               titoliPreferenziali=selected
-              //console.log(titoliPreferenziali)
+              ////console.log(titoliPreferenziali)
             break;
             case "dropdown-patenti":
                 patenti=selected
-               // console.log(patenti)
+               // //console.log(patenti)
             break;
             case "dropdown-tipoProve":
                 tipoProve=selected
-               // console.log(tipoProve)
+               // //console.log(tipoProve)
             break;
             case "dropdown-esitoProva":
                 esitiProve=selected
-              //  console.log(esitiProve)
+              //  //console.log(esitiProve)
             break;
-            case "dropdown-dataProva":
+            case "dropdown-dataConcorsoTipoProva":
                 dateProve=selected
-               // console.log(dateProve)
+               // //console.log(dateProve)
             break;
             case "dropdown-domande":
                 statoCandidato=selected
-               // console.log(statoCandidato)
+               // //console.log(statoCandidato)
             break;
             case "dropdown-campiRestituiti":
                 campiRestituiti=selected
-               console.log("riga 455:",campiRestituiti)
+               //console.log("riga 455:",campiRestituiti)
             break;
             default:
               // code block
           }
-          console.log("////////////riga 377  ",idDropdown,"---  ",selected)
+          //console.log("////////////riga 377  ",idDropdown,"---  ",selected)
         if(idDropdown==="dropdown-tipoProve"){
             let dropdownElementEsiti=document.getElementById('dropdown-esitoProva');
             let dropdownElementDataProva=document.getElementById('dropdown-dataProva');
@@ -483,10 +499,10 @@ async function avvioFunction(query){
             selectedOptionsInputEsiti.value = selectedEsiti.length ? selectedEsiti.join(', ') : 'Seleziona opzioni...';
             
             //popolaDropdown(queryGetEsitiProve,"dropdown-esitoProva",concorsoId)
-           // console.log('----------',selected)
+           // //console.log('----------',selected)
             if(selected.length){
                 for (const elemento of selected) {
-                   // console.log(elemento);
+                   // //console.log(elemento);
                     let queryGetEsitiProve=`
                         query {
                             getEsitiByProva(concorso: "${concorsoId}",tipoProva:"${elemento}")
@@ -594,5 +610,3 @@ async function aggiungiPulsanteProve(concorsoId,nomeProva,nomeButton) {
         });
     }
 }
-
-   

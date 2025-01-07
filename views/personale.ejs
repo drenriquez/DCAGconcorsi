@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DCAGpresenze-riepilogo</title>
+    <!-- Link a Bootstrap CSS -->
+    <link href="/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        .main {
+            margin-top: 100px !important;
+        }
+        .bold {
+            font-weight: bold !important;
+        }
+        .form-group{
+            margin-bottom: 20px !important;
+        }
+    </style>
+</head>
+<body>
+    <%- include('toolbar', { livelloUser: livelloUser }) %>
+    <div class="container mt-5 main">
+        <div class="row">
+            <div class="col-md-6">
+                <h2 class="mt-5 mb-4 bold">Riepilogo Dati Assenze</h2>
+              <form id="userForm">
+                <div class="form-group row">
+                    <% if (livelloUser === "2") { %>
+          
+                        <label for="codiceFiscale" class="col-sm-4 col-form-label bold">CodiceFiscale:</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="codiceFiscale" name="codiceFiscale" value="<%= userCodFisc %>" required>
+                            </div>
+                      
+                    <% } %>
+                </div>
+                  <div class="form-group row">
+                      <label for="startDay" class="col-sm-4 col-form-label bold">dal Giorno:</label>
+                      <div class="col-sm-8">
+                      <input type="date" id="startDay" name="start" min="2024-01-01" value="" />
+                      </div>   
+                  </div>
+                  <div class="form-group row">
+                    <label for="endDay" class="col-sm-4 col-form-label bold">Al Giorno:</label>
+                    <div class="col-sm-8">
+                    <input type="date" id="endDay" name="endDay" min="2024-01-01" value="" />
+                    </div>   
+                </div>
+                  <!-- <div class="form-group row mt-3">
+                      <label for="selectGiustificativi" class="col-sm-4 col-form-label bold">Giustificativi:</label>
+                      <div class="col-sm-8">
+                          <select id="selectGiustificativi" class="form-select select-ufficio" required></select>
+                      </div>
+                  </div> -->
+                  <div class="form-group row mt-3">
+                      <div class="col-sm-12 d-flex justify-content-start">
+                          <button type="button" class="btn btn-primary bold me-2" id="createTable"  style="background-color: #288468; border-color: #288468 ;">mostra risultati</button>
+                         <!--  <button type="button" class="btn btn-primary bold me-2" id="esportaDatiPDF"  style="background-color: #ce3328; border-color: #ce3328;">Esporta Dati PDF</button> -->
+                      </div>
+                  </div>
+              </form>
+          </div>
+
+
+
+            <div class="col-md-6">
+                <!-- <h2 class="mt-5 mb-4 bold">Riepilogo</h2> -->
+                <table id="tabellaRiepilogativa" class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col">CODICE</th>
+                        <th scope="col">GIUSTIFICATIVO</th>
+                        <th scope="col">TOTALE</th>
+                        
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- <tr>
+                        <th scope="row">1</th>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">2</th>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">3</th>
+                        <td ></td>
+                        <td></td>
+                      </tr> -->
+                    </tbody>
+                  </table>
+            </div>
+
+           
+        </div>
+    </div>
+    <%- include('footer') %>
+    <script type="module" src="/js/personale.js" 
+        apiUserURL="<%= apiUserURL %>"
+        userCodFisc="<%= userCodFisc %>">
+    </script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/xlsx.full.min.js"></script>
+    <script src="/js/jspdf.min.js"></script>
+</body>
+</html>

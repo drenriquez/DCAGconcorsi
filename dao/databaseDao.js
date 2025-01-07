@@ -15,7 +15,7 @@ class DatabaseDao {
     async initializeDatabase() {
         try {
             await this.mongoClient.connect();
-            console.log(`Connected to MongoDB ILG189Dao database ${databaseConfig.dbURI}`);
+            console.log(`Connected to MongoDB databaseDao database ${databaseConfig.dbURI}`);
             this.db = this.mongoClient.db(databaseConfig.dbName);
             this.candidatiCollection = this.db.collection('189ILG'); 
         } catch (error) {

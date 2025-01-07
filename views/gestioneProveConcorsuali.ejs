@@ -146,7 +146,7 @@
     <%- include('toolbar', { livelloUser: livelloUser }) %>
     
     <div class="container mt-5 main">
-        <h2 class="mt-5 mb-4 bold">Gestione Concorso <%- concorsoId %></h2>
+        <h2 class="mt-5 mb-4 bold">Gestione <%- concorsoTipoProva %> <%- concorsoId %></h2>
 
          <!-- Toolbar con opzioni -->
     <!-- Card con toolbar opzioni -->
@@ -158,8 +158,6 @@
             <form class="row gx-3 gy-2 align-items-center">
                 <p>
                     <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">TitoliPreferenziali e Riserve</a>
-                    <button class="btn btn-primary buttons-collaps" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Patenti</button>
-                    <button class="btn btn-primary buttons-collaps" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample3" aria-expanded="false" aria-controls="multiCollapseExample3">Tipo Prova</button>
                     <a class="btn btn-success" data-bs-toggle="collapse" href="#multiCollapseExample4" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Filtro Campi Restituiti</a>
                     <a class="btn btn-dark" id="filtroAvanzato" data-bs-toggle="collapse" href="#multiCollapseExample5" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Filtro Avanzato</a>
                 </p>
@@ -198,64 +196,7 @@
                       </div>
                     </div>
 
-                    <div class="col">
-                      <div class="collapse multi-collapse" id="multiCollapseExample2">
-                        <div class="card card-body">
-
-                            <div class="col-sm-2">
-                                <div class="dropdown">
-                                  <!-- Casella di testo che si riempie con le opzioni selezionate -->
-                                  <label for="selectedOptions-dropdown-patenti" class="form-label">Patenti</label>
-                                  <input class="selectedOptions-dropdown" type="text" id="selectedOptions-dropdown-patenti" placeholder="Seleziona opzioni..." readonly>
-                                  <!-- Contenuto del dropdown con le opzioni multiple -->
-                                  <div class="dropdown-content" id="dropdown-patenti">
-                                  </div>
-                                </div>
-                              </div>
-
-                        </div>
-                      </div>
-                    </div>
-
-
-                    <div class="col">
-                        <div class="collapse multi-collapse" id="multiCollapseExample3">
-                          <div class="card card-body">
-                              
-                              <div class="col-sm-2">
-                                  <div class="dropdown">
-                                    <!-- Casella di testo che si riempie con le opzioni selezionate -->
-                                    <label for="selectedOptions-dropdown-tipoProve" class="form-label">Tipo Prova</label>
-                                    <input class="selectedOptions-dropdown" class="selectedOptions-dropdown" type="text" id="selectedOptions-dropdown-tipoProve" placeholder="Seleziona opzioni..." readonly>            
-                                    <!-- Contenuto del dropdown con le opzioni multiple -->
-                                    <div class="dropdown-content" id="dropdown-tipoProve">
-                                    </div>
-                                  </div>
-                                </div>  
-
-                                <div class="col-sm-2">
-                                    <div class="dropdown">
-                                      <!-- Casella di testo che si riempie con le opzioni selezionate -->
-                                      <label for="selectedOptions-dropdown-esitoProva" class="form-label">Esito Prova</label>
-                                      <input class="selectedOptions-dropdown" type="text" id="selectedOptions-dropdown-esitoProva" placeholder="Seleziona opzioni..." readonly>            
-                                      <!-- Contenuto del dropdown con le opzioni multiple -->
-                                      <div class="dropdown-content" id="dropdown-esitoProva">
-                                      </div>
-                                    </div>
-                                  </div>  
-                               <div class="col-sm-2">
-                                  <div class="dropdown">
-                                    <!-- Casella di testo che si riempie con le opzioni selezionate -->
-                                    <label for="selectedOptions-dropdown-dataProva" class="form-label">Data Prova</label>
-                                    <input class="selectedOptions-dropdown" type="text" id="selectedOptions-dropdown-dataProva" placeholder="Seleziona opzioni..." readonly>       
-                                    <!-- Contenuto del dropdown con le opzioni multiple -->
-                                    <div class="dropdown-content" id="dropdown-dataProva">
-                                    </div>
-                                  </div>
-                                </div> 
-                          </div>   
-                        </div>  
-                      </div>
+                  
 
                       <div class="col">
                         <div class="collapse multi-collapse" id="multiCollapseExample4">
@@ -334,11 +275,6 @@
                   </div>
                 <div >        
                 </div>
-                <!-- Campo Nome -->
-                <div class="col-sm-2">
-                    <label for="nome" class="form-label">POSIZIONE</label>
-                    <input type="text" class="form-control" id="nome" placeholder="Inserisci Nome">
-                </div>
 
                 <!-- Campo Nome -->
                 <div class="col-sm-2">
@@ -357,16 +293,10 @@
                     <label for="codiceFiscale" class="form-label">Codice Fiscale</label>
                     <input type="text" class="form-control" id="codiceFiscale" placeholder="Codice Fiscale">
                 </div>
-
-                <!-- Campo ID Domanda -->
-                <div class="col-sm-2">
-                    <label for="idDomanda" class="form-label">ID Domanda</label>
-                    <input type="text" class="form-control" id="idDomanda" placeholder="ID Domanda">
-                </div>
        
                 <!-- Campo Data Da -->
                 <div class="col-sm-2">
-                    <label for="dateFrom" class="form-label">Nati Da</label>
+                    <label for="dateFrom" class="form-label">Data Prove Da</label>
                     <input type="date" class="form-control" id="dateFrom">
                 </div>
 
@@ -377,30 +307,20 @@
                 </div>
                  
 
-                <div class="col-sm-2">
-                    <div class="dropdown">
-                      <!-- Casella di testo che si riempie con le opzioni selezionate -->
-                      <label for="selectedOptions-dropdown-domande" class="form-label">STATO CANDIDATO</label>
-                      <input class="selectedOptions-dropdown" type="text" id="selectedOptions-dropdown-domande" placeholder="Seleziona opzioni..." readonly> 
-                      <!-- Contenuto del dropdown con le opzioni multiple -->
-                      <div class="dropdown-content" id="dropdown-domande">
+          
+
+                  <div class="col-sm-2">
+                    <div class="dropdown">  
+                      <label for="selectedOptions-dropdown-dataConcorsoTipoProva" class="form-label">Data <%- concorsoTipoProva %></label>
+                      <input type="text" id="selectedOptions-dropdown-dataConcorsoTipoProva" placeholder="Seleziona opzioni..." readonly>
+                      <div class="dropdown-content" id="dropdown-dataConcorsoTipoProva">
+                        <!-- <label><input type="checkbox" name="codiceFiscale" value="codiceFiscale"> Codice Fiscale</label>
+                        <label><input type="checkbox" name="cognome" value="cognome"> Cognome</label>
+                        <label><input type="checkbox" name="nome" value="nome"> Nome</label>
+                        <label><input type="checkbox" name="dataNascita" value="dataNascita"> Data di Nascita</label> -->
                       </div>
                     </div>
                   </div>
-
-
-                  <!-- <div class="col-sm-2">
-                    <div class="dropdown">  
-                      <label for="selectedOptions-dropdown-titoliDiStudio" class="form-label">Titolo Di Studio</label>
-                      <input type="text" id="selectedOptions-dropdown-titoliDiStudio" placeholder="Seleziona opzioni..." readonly>
-                      <div class="dropdown-content" id="dropdown-titoliDiStudio">
-                        <label><input type="checkbox" name="codiceFiscale" value="codiceFiscale"> Codice Fiscale</label>
-                        <label><input type="checkbox" name="cognome" value="cognome"> Cognome</label>
-                        <label><input type="checkbox" name="nome" value="nome"> Nome</label>
-                        <label><input type="checkbox" name="dataNascita" value="dataNascita"> Data di Nascita</label>
-                      </div>
-                    </div>
-                  </div> -->
                  
                   
                   
@@ -447,9 +367,10 @@
     <%- include('footer') %>
     
     <!-- Script per la gestione della paginazione e generazione della tabella -->
-    <script type="module" src="/js/gestioneConcorsi.js" 
+    <script type="module" src="/js/gestioneProveConcorsuali.js" 
         apiUserURL="<%= apiUserURL %>"
         concorsoId="<%= concorsoId %>"
+        tipoProva="<%= concorsoTipoProva %>"
     ></script>
     <script src="/js/xlsx.full.min.js"></script>
     <!-- Bootstrap JS -->
