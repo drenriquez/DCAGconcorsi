@@ -330,7 +330,7 @@ class UserDAO {
             const result = await this.collection.aggregate(pipeline).toArray();
             //console.log("///////////////7",result)
             // Restituisci gli esiti
-            return result.map(item => item.esito+`-${tipoProva}`);
+            return result.map(item => item.esito+`|${tipoProva}`);
 
         } catch (error) {
             console.error('Error fetching esiti by prova:', error);
@@ -565,7 +565,7 @@ class UserDAO {
         // Aggiungi il filtro per esitiProve
         if (esitiProve && esitiProve.length > 0) {
             const esitiProveConditions = esitiProve.map(esitoProva => {
-                const [esito, prova] = esitoProva.split("-"); // Divide la stringa in esito e prova
+                const [esito, prova] = esitoProva.split("|"); // Divide la stringa in esito e prova
                 return {
                     "iterConcorso": {
                         $elemMatch: {
@@ -720,6 +720,47 @@ class UserDAO {
         } catch (error) {
             console.error('Errore durante l\'estrazione dei campi da domandeConcorso:', error);
             throw error;
+        }
+    }
+    async getStepsByProvaByCandidato(codiceFiscale, descrizioneProva) {
+        try {
+
+            const pipeline = [
+                {
+                    $match: {
+                        "domandeConcorso.anagCandidato.codiceFiscale": codiceFiscale
+                    }
+                },
+                {
+                    $unwind: "$iterConcorso"
+                },
+                {
+                    $match: {
+                        "iterConcorso.prova.descrizione": descrizioneProva
+                    }
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        idStep:{ $ifNull: ["$iterConcorso.idStep", "ID_NON_PRESENTE"] },  // Se il campo iterConcorso.idStep è nullo o mancante, sostituiscilo con "ID_NON_PRESENTE"
+                        dataProva: "$iterConcorso.dataProva",
+                        prova:"$iterConcorso.prova",
+                        esito: "$iterConcorso.esito",
+                        punteggio: "$iterConcorso.punteggio",
+                        note: "$iterConcorso.note",
+                        assenzaGiustificata: "$iterConcorso.assenzaGiustificata",
+                    }
+                }
+            ];
+           // console.log("----------Pipeline:", JSON.stringify(pipeline)); // Log della pipeline
+
+            const steps = await this.collection.aggregate(pipeline).toArray();
+            return steps;
+        } catch (error) {
+            console.error("Error fetching steps:", error);
+            throw error;
+        } finally {
+            await this.client.close();
         }
     }
         

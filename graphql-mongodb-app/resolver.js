@@ -525,7 +525,14 @@ getAllCampiDomandeConcorso: async ({ concorso }) => {
   const userDao = new UserDAO(concorso);
   await userDao.initializeDatabase();
   return await userDao.getAllCampiDomandeConcorso();
-}
+},
+getStepsByProvaByCandidato: async ({ concorso,codiceFiscale, tipoProva }) => {
+  const userDao = new UserDAO(concorso);
+  await userDao.initializeDatabase();
+
+  // Chiama il metodo DAO per ottenere le date delle prove uniche
+  return await userDao.getStepsByProvaByCandidato(codiceFiscale, tipoProva);
+},
 
 
 };

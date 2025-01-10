@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestione Stato Candidato</title>
+  <!-- Bootstrap CSS -->
+  <link href="/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .main {
+      margin-top: 50px;
+    }
+    .card {
+      margin-bottom: 20px;
+    }
+    .step-header {
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container main">
+    <h1 class="text-center">Gestione Stato Prova del Candidato</h1>
+
+    <!-- Informazioni Candidato -->
+    <div class="card">
+      <div class="card-header bg-primary text-white">Dati Candidato</div>
+      <div class="card-body">
+        <p><strong>Nome:</strong> Guglielmo</p>
+        <p><strong>Cognome:</strong> Zampini</p>
+        <p><strong>Codice Fiscale:</strong> ZMPGLL00L26G388R</p>
+      </div>
+    </div>
+
+    <!-- Lista degli Step della Prova -->
+    <div class="card">
+      <div class="card-header bg-secondary text-white">Dettagli Prova: PROVA MOTORIO-ATTITUDINALE</div>
+      <div class="card-body">
+
+        <!-- Step 1 -->
+        <div class="card">
+          <div class="card-header step-header">Step 1</div>
+          <div class="card-body">
+            <p><strong>Data Prova:</strong> 14 Gennaio 2025</p>
+            <p><strong>Esito:</strong> Assente Giustificato</p>
+            <p><strong>Note:</strong> Esami finali agente polizia locale</p>
+            <p><strong>Malattia:</strong> Dal 13 Gennaio 2025 (2 giorni certificati)</p>
+            <p><strong>Protocollo:</strong> Numero 83744 (18 Dicembre 2024)</p>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="card">
+          <div class="card-header step-header">Step 2</div>
+          <div class="card-body">
+            <p><strong>Data Prova:</strong> 29 Gennaio 2025</p>
+            <p><strong>Esito:</strong> Da Sostenere</p>
+            <p><strong>Note:</strong> Nessuna</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Azioni -->
+    <div class="text-center">
+      <button class="btn btn-success">Aggiorna Stato</button>
+      <button class="btn btn-danger">Elimina Prova</button>
+    </div>
+  </div>
+
+  <!-- Bootstrap Bundle with Popper -->
+  <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

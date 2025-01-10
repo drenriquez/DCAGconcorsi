@@ -4,10 +4,11 @@ document.addEventListener('DOMContentLoaded', async function() {
    
     // Ottieni gli elementi del DOM
     // document.getElementById('exportBtn').addEventListener('click', exportTableToExcel);
+    const hostApi = document.querySelector('script[type="module"]').getAttribute('apiUserURL');
     const concorsoId = document.querySelector('script[type="module"]').getAttribute('concorsoId');
     document.querySelector('#eseguiBtn').addEventListener('click', function() {
         //let campiSelezionati=getSelectedTest()
-      console.log("-----riga 10: ",campiRestituiti);
+      console.log("-----riga 10: ",generateStructuredString(campiRestituiti));
       let campiPerQuery = campiRestituiti.length === 0 ? ["cognome", "nome","codiceFiscale","dataNascita",`    domandeConcorso {
                     lstPatenti {
                     	tipoPatente {
@@ -36,7 +37,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     BirthDateGreaterThanOrEqual: ${JSON.stringify(BirthDateGreaterThanOrEqual)},
                     BirthDateLessThanOrEqual: ${JSON.stringify(BirthDateLessThanOrEqual)},
                             ) {
-                   ${campiPerQuery}
+                   ${generateStructuredString(campiPerQuery)}
                 }
             }
             `)
@@ -130,6 +131,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     aggiungiPulsanteProve(concorsoId,"PROVA MOTORIO-ATTITUDINALE","PROVE MOTORIE")
     aggiungiPulsanteProve(concorsoId,"VISITA MEDICA","VISITA MEDICA")
+    aggiungiPulsanteProve(concorsoId,"PROVA ORALE","PROVA ORALE")
     
     
 });
@@ -594,5 +596,34 @@ async function aggiungiPulsanteProve(concorsoId,nomeProva,nomeButton) {
         });
     }
 }
+function generateStructuredString(inputList) {
+    let result = '';
+    const processPath = (path) => {
+        const parts = path.split('.');
+        let structured = parts.shift();
+        for (const part of parts) {
+            if (structured.endsWith('}')) {
+                structured = structured.slice(0, -1);
+            }
+            structured += ` {
+                            ${part}
+                            }`;
+        }
+        return structured;
+    };
+    for (let i = 0; i < inputList.length; i++) {
+        const item = inputList[i];
+        if (item.startsWith('.')) {
+            result += processPath(item);
+        } else {
+            result += item;
+        }
+        if (i < inputList.length - 1) {
+            result += ',\n';
+        }
+    }
+    return result;
+}
+
 
    

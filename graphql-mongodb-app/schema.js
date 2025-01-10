@@ -34,6 +34,7 @@ const schema = buildSchema(`
     getSimpleFields(concorso: String!): [String!]!
     """analizza l'intera collezione e, per ogni documento, estrae i campi presenti nell'ultimo oggetto di domandeConcorso"""
     getAllCampiDomandeConcorso(concorso: String!): [String!]!
+    getStepsByProvaByCandidato(concorso: String!,codiceFiscale: String!,tipoProva:String!): [IterConcorso]
   }
 
   type Mutation {

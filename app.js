@@ -46,6 +46,7 @@ const databaseRouter =require('./routes/database')
 const gestioneConcorsiRouter =require('./routes/gestioneConcorsi');
 const concorsiEsterniRouter=require('./routes/concorsiEsterni');
 const gestioneProveConcorsualiRouter=require('./routes/gestioneProveConcorsuali');
+const gestioneProveCandidatoRouter=require('./routes/gestioneProveCandidato');
 
 const ConcorsiEsterniController =require('./controllers/concorsiEsterniController');
 //const concorsiInterniRouter =require('./controllers/concorsiInterniController');
@@ -152,6 +153,7 @@ app.use(databaseRouter);
 app.use(gestioneConcorsiRouter);
 app.use(concorsiEsterniRouter);
 app.use(gestioneProveConcorsualiRouter);
+app.use(gestioneProveCandidatoRouter);
 
 
 

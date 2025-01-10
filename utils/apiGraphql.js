@@ -10,7 +10,7 @@ const apiGraphQLgetAllUsers = async (query) => {
         query: query,
         }),
     });
-    //console.log("||||||||||||||||||||||||||||",query)
+    console.log("||||||||||||||||||||||||||||query graphql",query)
     const data = await response.json();
     //console.log(data);
     return data

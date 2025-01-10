@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestione Stato Candidato</title>
+  <!-- Bootstrap CSS -->
+  <link href="/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .main {
+      margin-top: 50px;
+    }
+    .card {
+      margin-bottom: 20px;
+    }
+    .step-header {
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    .card-body {
+  position: relative;
+  padding-bottom: 40px; /* Aggiungi un po' di spazio per il pulsante */
+}
+
+.edit-button {
+  position: absolute;
+  bottom: 10px; /* Posiziona il pulsante in basso */
+  right: 10px; /* Posiziona il pulsante a destra */
+}
+    .card-relative {
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <div class="container main">
+    <h1 class="text-center">Gestione Stato Prova del Candidato</h1>
+
+    <!-- Informazioni Candidato -->
+    <div class="card">
+      <div class="card-header bg-primary text-white">Dati Candidato</div>
+      <div class="card-body" id="candidato-info">
+        <!-- Dati candidato saranno inseriti dinamicamente -->
+      </div>
+    </div>
+
+    <!-- Lista degli Step della Prova -->
+    <div class="card">
+      <div class="card-header bg-secondary text-white">Dettagli Prova: <span id="nome-prova"></span></div>
+      <div class="card-body" id="steps-container">
+        <!-- Step saranno inseriti dinamicamente -->
+      </div>
+    </div>
+
+    <!-- Azioni -->
+    <div class="text-center">
+      <button class="btn btn-success" id="aggiorna-dati">Aggiorna Stato</button>
+    </div>
+  </div>
+
+  <!-- Bootstrap Bundle with Popper -->
+  <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Script per la gestione della paginazione e generazione della tabella -->
+  <script type="module" src="/js/gestioneProveCandidato.js" 
+    apiUserURL="<%= apiUserURL %>"
+    concorsoId="<%= concorsoId %>"
+    codiceFiscaleCandidato="<%= codiceFiscaleCandidato %>"
+    tipoProva="<%= concorsoTipoProva %>"
+  ></script>
+<script src="/js/xlsx.full.min.js"></script>
+<script src="/js/jspdf.min.js"></script>
+  
+</body>
+</html>

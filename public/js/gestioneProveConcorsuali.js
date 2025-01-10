@@ -1,11 +1,21 @@
 import { apiGraphQLgetAllUsers } from "../../utils/apiGraphql.js";
+import { generaTabulatiProveMotorie } from "../../utils/proveTabulatiGenerator.js"
+import { formatDate } from "../../utils/formatDate.js"
 
 document.addEventListener('DOMContentLoaded', async function() {
-   
-    // Ottieni gli elementi del DOM
-    document.getElementById('exportBtn').addEventListener('click', exportTableToExcelFromVisibleTable);
+    const hostApi = document.querySelector('script[type="module"]').getAttribute('apiUserURL');
     const concorsoId = document.querySelector('script[type="module"]').getAttribute('concorsoId');
     const concorsoTipoProva = document.querySelector('script[type="module"]').getAttribute('tipoProva');
+    const datiTest=[
+        { cognome: 'Ferracatena', nome: 'Francesco', dataNascita: '08/03/1999', lingua: 'Italiano' },
+        { cognome: 'Breci', nome: 'Alfio', dataNascita: '01/07/1996', lingua: 'Francese' },
+        { cognome: 'Ciampa', nome: 'Dolores', dataNascita: '29/08/1992', lingua: 'Spagnolo' },
+    ]
+    // Ottieni gli elementi del DOM
+    document.getElementById('exportBtn').addEventListener('click', exportTableToExcelFromVisibleTable);
+    //BUTTON PER GENERARE I TABULATI
+    document.getElementById('exportPdfBtn').addEventListener('click',()=>{generatorePDF(concorsoId,concorsoTipoProva)} );
+    
     document.querySelector('#eseguiBtn').addEventListener('click', function() {
         //let campiSelezionati=getSelectedTest()
       //console.log("-----riga 10: ",campiRestituiti);
@@ -122,6 +132,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     query {
     getDateProveByTipoProva(concorso: "${concorsoId}",tipoProva:"${concorsoTipoProva}")
     }
+    `;
+    let queryEsitiConcorsoTipoProva=`
+    query {
+    getEsitiByProva(concorso: "${concorsoId}",tipoProva:"${concorsoTipoProva}")
+    }
     `
     //dropd
     //dropdown-titoliPreferenziali
@@ -136,7 +151,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     popolaDropdown(queryGetSimpleFields,'dropdown-anagrafica',concorsoId);
     //popolaDropdown(queryGetTipologieProve,'dropdown-iterConcorso',concorsoId);
     //popolaDropdown(queryGetDatiInDomanda,'dropdown-domanda',concorsoId);
-    popolaDropdown(queryDateConcorsoTipoProva,'dropdown-dataConcorsoTipoProva',concorsoId)
+    popolaDropdown(queryDateConcorsoTipoProva,'dropdown-dataConcorsoTipoProva',concorsoId);
+    popolaDropdown(queryEsitiConcorsoTipoProva,'dropdown-esitoConcorsoTipoProva',concorsoId);
  
     const queryTipoProve = `
     query {
@@ -148,7 +164,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     //aggiungiPulsanteProve(concorsoId,"PROVA MOTORIO-ATTITUDINALE","PROVE MOTORIE")
     
     
-});
+}); 
+    let usersData=[];
     let riserve= []
     let titoliPreferenziali= []
     let patenti= []
@@ -177,8 +194,9 @@ async function avvioFunction(query){
     // Mostra lo spinner e nascondi la tabella all'inizio
   
     const response = await apiGraphQLgetAllUsers(query);
-    ////console.log(response)
+    console.log(query)
     const users = response["data"]["getCandidatiByCriteria"];
+    usersData=users;
     //document.getElementById('exportBtn').addEventListener('click', exportTableToExcel(users));
     console.log(users)
 
@@ -318,6 +336,7 @@ async function avvioFunction(query){
             button.addEventListener('click', function() {
                 const codiceFiscale = this.getAttribute('data-codiceFiscale');
                 console.log('Pulsante cliccato per codice fiscale:', codiceFiscale);
+                formCandidato(codiceFiscale)
     
                 // Inserisci qui la logica da eseguire quando viene cliccato il pulsante
             });
@@ -474,6 +493,10 @@ async function avvioFunction(query){
                 dateProve=selected
                // //console.log(dateProve)
             break;
+            case "dropdown-esitoConcorsoTipoProva":
+                esitiProve=selected
+               // //console.log(dateProve)
+            break;
             case "dropdown-domande":
                 statoCandidato=selected
                // //console.log(statoCandidato)
@@ -609,4 +632,86 @@ async function aggiungiPulsanteProve(concorsoId,nomeProva,nomeButton) {
             window.location.href = `/gestioneProveConcorsuali?id=${concorsoId}&tipoProva=${nomeProva}`;//?id=${concorsoId}
         });
     }
+};
+function hasKeys(obj, keys) {
+    // Verifica che tutte le chiavi siano presenti nell'oggetto
+    return keys.every(key => obj.hasOwnProperty(key));
+};
+function filterFields(objList, allowedFields) {
+    return objList.map(obj => {
+        // Crea un nuovo oggetto includendo solo i campi permessi
+        return Object.keys(obj)
+            .filter(key => allowedFields.includes(key))
+            .reduce((filteredObj, key) => {
+                filteredObj[key] = obj[key];
+                return filteredObj;
+            }, {});
+    });
+}
+function formatDatesInObjects(objectList, keyToFormat) {
+    return objectList.map(obj => {
+        // Crea una copia dell'oggetto per evitare modifiche all'originale
+        const newObj = { ...obj };
+        if (newObj[keyToFormat]) {
+            // Controlla se la chiave esiste e formatta il valore
+            newObj[keyToFormat] = formatDate(newObj[keyToFormat]);
+        }
+        return newObj;
+    });
+}
+function generatorePDF(concorsoId,concorsoTipoProva){
+    const requiredKeys = ['cognome', 'nome', 'dataNascita'];
+    if(hasKeys(usersData[0], requiredKeys)){
+        if(dateProve.length===1){
+            const filteredList = filterFields(usersData, requiredKeys);
+            const filterListFormattedDate= formatDatesInObjects(filteredList, "dataNascita")
+            let dataP =  formatDate(dateProve[0].split('|')[0],true, true);//.// Restituisce la parte della data in -> gg-mm-aaaa hh:mm
+            console.log(dataP)
+            switch (concorsoTipoProva) {
+                case 'PROVA MOTORIO-ATTITUDINALE':
+                    generaTabulatiProveMotorie(
+                        concorsoId,
+                        concorsoTipoProva,
+                        dataP,
+                        ['N', 'Cognome', 'Nome', 'Data Nascita', 'DOCUMENTO', 'PROVA 1', 'PROVA 2', 'PROVA 3'],
+                        [15, 40, 40, 40, 50, 30, 30, 30],
+                        [125, 170, 205, 240, 277],
+                        filterListFormattedDate
+                    );
+                    break;
+                
+                case 'PROVA ORALE':
+                    generaTabulatiProveMotorie(
+                        concorsoId,
+                        concorsoTipoProva,
+                        dataP,
+                        ['N', 'Cognome', 'Nome', 'Data Nascita', 'Lingua', 'DOCUMENTO', 'FIRMA'],
+                        [15, 40, 40, 40, 40, 60, 30],
+                        [125, 160, 215, 277],
+                        filterListFormattedDate
+                    );
+                    break;
+            
+                default:
+                    console.error('Tipo di prova non riconosciuto:', concorsoTipoProva);
+                    break;
+            }
+            //console.log(filterListFormattedDate,dateProve)
+        }
+       else(
+        alert("SELEZIONARE UNA DATA PROVA")
+       )
+    }
+    else(
+        alert("SELEZIONARE i campi: COGNOME, NOME, DATA DI NASCITA")
+    )
+} 
+function formCandidato(codiceFiscale){
+        const concorsoId = document.querySelector('script[type="module"]').getAttribute('concorsoId');
+        const concorsoTipoProva = document.querySelector('script[type="module"]').getAttribute('tipoProva')
+        const url = `/gestioneProveCandidato?id=${concorsoId}&tipoProva=${concorsoTipoProva}&codiceFiscaleCandidato=${codiceFiscale}`; // Sostituisci con l'URL desiderato
+        const windowFeatures = "width=800,height=600,resizable,scrollbars";
+    
+        window.open(url, "_blank", windowFeatures);
+   
 }

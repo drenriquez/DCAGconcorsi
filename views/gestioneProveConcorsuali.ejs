@@ -321,6 +321,19 @@
                       </div>
                     </div>
                   </div>
+
+                  <div class="col-sm-2">
+                    <div class="dropdown">  
+                      <label for="selectedOptions-dropdown-esitoConcorsoTipoProva" class="form-label">esiti <%- concorsoTipoProva %></label>
+                      <input type="text" id="selectedOptions-dropdown-esitoConcorsoTipoProva" placeholder="Seleziona opzioni..." readonly>
+                      <div class="dropdown-content" id="dropdown-esitoConcorsoTipoProva">
+                        <!-- <label><input type="checkbox" name="codiceFiscale" value="codiceFiscale"> Codice Fiscale</label>
+                        <label><input type="checkbox" name="cognome" value="cognome"> Cognome</label>
+                        <label><input type="checkbox" name="nome" value="nome"> Nome</label>
+                        <label><input type="checkbox" name="dataNascita" value="dataNascita"> Data di Nascita</label> -->
+                      </div>
+                    </div>
+                  </div>
                  
                   
                   
@@ -339,6 +352,7 @@
     </div>
 </div>
 <button id="exportBtn" class="btn btn-primary">Esporta in Excel</button>
+<button id="exportPdfBtn" class="btn btn-danger">Esporta in PDF Tabulati</button>
 
 
         <!-- Contenitore per i pulsanti di navigazione delle pagine -->
@@ -373,6 +387,7 @@
         tipoProva="<%= concorsoTipoProva %>"
     ></script>
     <script src="/js/xlsx.full.min.js"></script>
+    <script src="/js/jspdf.min.js"></script>
     <!-- Bootstrap JS -->
     <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
