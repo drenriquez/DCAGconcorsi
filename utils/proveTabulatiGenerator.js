@@ -1,13 +1,14 @@
 //const jsPDF = require('jspdf').jsPDF;
 //import jsPDF from 'jspdf'
 
-export function generaTabulatiProveMotorie(concorsoId,concorsoTipoProva,dataProva,intestazioneColonne,larghColonne,xLineeVerticali,dati) {
+export function generaTabulatiProveMotorie(concorsoId,concorsoTipoProva,tipologia,dataProva,intestazioneColonne,larghColonne,xLineeVerticali,dati,nomiDati) {
     const doc = new jsPDF({ orientation: 'landscape' }); // Modificato per layout orizzontale
     const paginaLarghezza = 297; // A4 width in mm per layout orizzontale
     const paginaAltezza = 210; // A4 height in mm per layout orizzontale
     const margine = 10;
     const altezzaLinea = 10;
     const larghezzeColonne = larghColonne; // Definito a livello globale
+    console.log('in generatorePDF i dati sono:',dati)
 
     // Funzione per disegnare l'intestazione con sfondo grigio
     function disegnaIntestazione(yCorrente) {
@@ -45,7 +46,7 @@ export function generaTabulatiProveMotorie(concorsoId,concorsoTipoProva,dataProv
     // Disegna intestazione iniziale
     doc.setFont('Helvetica', 'bold');
     doc.setFontSize(14);
-    const titolo = `${concorsoId} Tabulato Identificazione ${concorsoTipoProva} del ${dataProva}`;
+    const titolo = `${concorsoId} Tabulato ${tipologia} ${concorsoTipoProva} del ${dataProva}`;
     
     // Calcola la larghezza del testo per centrarlo
     const larghezzaTitolo = doc.getTextWidth(titolo);
@@ -64,7 +65,7 @@ export function generaTabulatiProveMotorie(concorsoId,concorsoTipoProva,dataProv
             yCorrente = margine + 20;
             doc.setFont('Helvetica', 'bold');
             doc.setFontSize(14);
-            const titolo = `${concorsoId} Tabulato Identificazione ${concorsoTipoProva} del ${dataProva}`;
+            const titolo = `${concorsoId} Tabulato ${tipologia} ${concorsoTipoProva} del ${dataProva}`;
     
             // Calcola la larghezza del testo per centrarlo
             const larghezzaTitolo = doc.getTextWidth(titolo);
@@ -78,11 +79,11 @@ export function generaTabulatiProveMotorie(concorsoId,concorsoTipoProva,dataProv
         let xCorrente = margine;
         const valori = [
             index + 1,
-            item.cognome,
-            item.nome,
-            item.dataNascita,
-            '', // DOCUMENTO vuoto
-            '', // PROVA 1 vuoto
+            item[`${nomiDati[0]}`] !== undefined ? item[`${nomiDati[0]}`] : '',
+            item[`${nomiDati[1]}`] !== undefined ? item[`${nomiDati[1]}`] : '',
+            item[`${nomiDati[2]}`] !== undefined ? item[`${nomiDati[2]}`] : '',
+            item[`${nomiDati[3]}`] !== undefined ? item[`${nomiDati[3]}`] : '',
+            item[`${nomiDati[4]}`] !== undefined ? item[`${nomiDati[4]}`] : '',
             '', // PROVA 2 vuoto
             ''  // PROVA 3 vuoto
         ];
@@ -127,7 +128,7 @@ export function generaTabulatiProveMotorie(concorsoId,concorsoTipoProva,dataProv
     disegnaNumeroPagina(numeroPagina, totalePagine);
 
     // Salvare il file PDF in download
-    doc.save(`tabulato${concorsoId}_${dataProva}.pdf`);
+    doc.save(`tabulato${concorsoId}_${tipologia}_${dataProva}.pdf`);
 }
 
 // Esempio di utilizzo

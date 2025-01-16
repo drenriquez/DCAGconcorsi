@@ -15,31 +15,33 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.getElementById('exportBtn').addEventListener('click', exportTableToExcelFromVisibleTable);
     //BUTTON PER GENERARE I TABULATI
     document.getElementById('exportPdfBtn').addEventListener('click',()=>{generatorePDF(concorsoId,concorsoTipoProva)} );
+    document.getElementById('exportPdfBtnEsiti').addEventListener('click',()=>{generatorePDF(concorsoId,"ESITI".concat(" ",concorsoTipoProva))} );
     
     document.querySelector('#eseguiBtn').addEventListener('click', function() {
         //let campiSelezionati=getSelectedTest()
       //console.log("-----riga 10: ",campiRestituiti);
       let campiPerQuery = campiRestituiti.length === 0 ? ["cognome", "nome","codiceFiscale","dataNascita"] : campiRestituiti;
-        avvioFunction( `
-            query {
-                    getCandidatiByCriteria(concorso: "${concorsoId}",
-                    riserve: ${JSON.stringify(riserve)},
-                    titoliPreferenziali: ${JSON.stringify(titoliPreferenziali)},
-                    patenti: ${JSON.stringify(patenti)},
-                    tipoProve: ${JSON.stringify(concorsoTipoProva)},
-                    esitiProve: ${JSON.stringify(esitiProve)},
-                    dateProve: ${JSON.stringify(dateProve)},
-                    statoCandidato: ${JSON.stringify(statoCandidato)},
-                    nome: ${JSON.stringify(nome)},
-                    cognome: ${JSON.stringify(cognome)},
-                    codiceFiscale: ${JSON.stringify(codiceFiscale)},
-                    BirthDateGreaterThanOrEqual: ${JSON.stringify(BirthDateGreaterThanOrEqual)},
-                    BirthDateLessThanOrEqual: ${JSON.stringify(BirthDateLessThanOrEqual)},
-                            ) {
-                   ${campiPerQuery}
-                }
+      avvioFunction( `
+        query {
+            getCandidatiByCriteria(
+                concorso: "${concorsoId}",
+                riserve: ${JSON.stringify(riserve)},
+                titoliPreferenziali: ${JSON.stringify(titoliPreferenziali)},
+                patenti: ${JSON.stringify(patenti)},
+                tipoProve: ${JSON.stringify(tipoProve)},
+                esitiProve: ${JSON.stringify(esitiProve)},
+                dateProve: ${JSON.stringify(dateProve)},
+                statoCandidato: ${JSON.stringify(statoCandidato)},
+                nome: ${JSON.stringify(nome || null)},
+                cognome: ${JSON.stringify(cognome || null)},
+                codiceFiscale: ${JSON.stringify(codiceFiscale || null)},
+                BirthDateGreaterThanOrEqual: ${JSON.stringify(BirthDateGreaterThanOrEqual || null)},
+                BirthDateLessThanOrEqual: ${JSON.stringify(BirthDateLessThanOrEqual || null)}
+            ) {
+                ${generateStructuredString(campiPerQuery)}
             }
-            `)
+        }
+        `)
         
     });
         const dateInputFrom = document.getElementById('dateFrom');
@@ -65,25 +67,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             nome
             dataNascita
             statoCandidato
-            iterConcorso{
-                prova {
-                    descrizione
-                }
-                esito {
-                    _id
-                    categoria
-                    descrizione
-                    statoCandidato
-                    notaObbligatoria
-                }
-                assenzaGiustificata {
-                    dataInizioMalattia
-                    giorniCertificati
-                    numeroProtocollo
-                    dataProtocollo
-                    note
-                }
-            }
         }
     }
     `;
@@ -659,24 +642,60 @@ function formatDatesInObjects(objectList, keyToFormat) {
         return newObj;
     });
 }
+function flattenAndFormatDates(objectList) {
+    return objectList.map(obj => {
+        // Funzione ricorsiva per appianare l'oggetto e gestire le date
+        function flattenObject(subObj, prefix = '') {
+            let result = {};
+
+            for (const key in subObj) {
+                if (subObj.hasOwnProperty(key)) {
+                    const newKey = prefix ? `${prefix}.${key}` : key;
+
+                    if (Array.isArray(subObj[key])) {
+                        // Se la proprietà è un array, appiana ogni elemento dell'array
+                        subObj[key].forEach((item, index) => {
+                            result = { ...result, ...flattenObject(item, `${newKey}.${index}`) };
+                        });
+                    } else if (typeof subObj[key] === 'object' && subObj[key] !== null) {
+                        // Se la proprietà è un oggetto, chiamata ricorsiva
+                        result = { ...result, ...flattenObject(subObj[key], newKey) };
+                    } else {
+                        // Se la proprietà è una data, la formatta
+                        result[newKey] = (key === 'dataNascita') ? formatDate(subObj[key]) : subObj[key];
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        // Restituisce l'oggetto appiattito e con le date formattate
+        return flattenObject(obj);
+    });
+}
 function generatorePDF(concorsoId,concorsoTipoProva){
     const requiredKeys = ['cognome', 'nome', 'dataNascita'];
     if(hasKeys(usersData[0], requiredKeys)){
         if(dateProve.length===1){
-            const filteredList = filterFields(usersData, requiredKeys);
+            const testDati=flattenAndFormatDates(usersData);
+            const filteredList = filterFields(usersData, requiredKeys);//non serve più, TODO
             const filterListFormattedDate= formatDatesInObjects(filteredList, "dataNascita")
+            
+            console.log('prova dati formattati:',testDati);
             let dataP =  formatDate(dateProve[0].split('|')[0],true, true);//.// Restituisce la parte della data in -> gg-mm-aaaa hh:mm
-            console.log(dataP)
             switch (concorsoTipoProva) {
                 case 'PROVA MOTORIO-ATTITUDINALE':
                     generaTabulatiProveMotorie(
                         concorsoId,
                         concorsoTipoProva,
+                        "Identificazione",
                         dataP,
                         ['N', 'Cognome', 'Nome', 'Data Nascita', 'DOCUMENTO', 'PROVA 1', 'PROVA 2', 'PROVA 3'],
                         [15, 40, 40, 40, 50, 30, 30, 30],
                         [125, 170, 205, 240, 277],
-                        filterListFormattedDate
+                        filterListFormattedDate,
+                        ['cognome','nome','dataNascita']
                     );
                     break;
                 
@@ -684,14 +703,29 @@ function generatorePDF(concorsoId,concorsoTipoProva){
                     generaTabulatiProveMotorie(
                         concorsoId,
                         concorsoTipoProva,
+                        "Identitficazione",
                         dataP,
-                        ['N', 'Cognome', 'Nome', 'Data Nascita', 'Lingua', 'DOCUMENTO', 'FIRMA'],
+                        ['N', 'Cognome', 'Nome', 'Data Nascita', 'Lingua', 'DOCUMENTO', 'FIRMA'],// N resta vuoto, il primo campo non viene popolato
                         [15, 40, 40, 40, 40, 60, 30],
                         [125, 160, 215, 277],
-                        filterListFormattedDate
+                       testDati,
+                        ['cognome','nome','dataNascita','domandeConcorso.0.lingua.descrizione']//popola i campi a partire dal secondo passato come parametro in 'intestazioneColonne'
                     );
                     break;
-            
+                    case 'ESITI PROVA ORALE':
+                        generaTabulatiProveMotorie(
+                            concorsoId,
+                            concorsoTipoProva.slice(6),
+                            "Esiti",
+                            dataP,
+                            ['N', 'Cognome', 'Nome', 'Data Nascita', 'Voto', 'Esito'],// N resta vuoto, il primo campo non viene popolato
+                            [15, 60, 60, 40, 40, 60, 30],
+                            [125, 165, 195, 277],
+                        testDati,
+                            ['cognome','nome','dataNascita']//popola i campi a partire dal secondo passato come parametro in 'intestazioneColonne'
+                        );
+                        break;
+        
                 default:
                     console.error('Tipo di prova non riconosciuto:', concorsoTipoProva);
                     break;
@@ -714,4 +748,41 @@ function formCandidato(codiceFiscale){
     
         window.open(url, "_blank", windowFeatures);
    
+};
+function generateStructuredString(inputList) {
+    let result = '';
+    const processPath = (path) => {
+        // Rimuovi il punto iniziale, se presente
+        if (path.startsWith('.')) {
+            path = path.slice(1);
+        }
+        const parts = path.split('.');
+        let structured = parts.shift();
+        for (const part of parts) {
+            structured += ` {
+                ${part}`;
+        }
+        for (let i = 0; i < parts.length; i++) {
+            structured += ' }';
+        }
+        return structured;
+    };
+    for (let i = 0; i < inputList.length; i++) {
+        const item = inputList[i];
+        if (item.includes('{')) {
+            // Preserva i blocchi annidati già completi
+            result += item.trim();
+        } else if (item.includes('.')) {
+            result += processPath(item);
+        } else {
+            result += item;
+        }
+        if (i < inputList.length - 1) {
+            result += '\n';
+        }
+    }
+    console.log('/////////////////// ', result);
+    return result;
 }
+
+   

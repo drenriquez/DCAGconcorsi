@@ -715,6 +715,7 @@ class UserDAO {
             });
 
             // Restituiamo l'insieme dei campi come array
+            console.log("*****getAllCampiDomandeConcorso: ",Array.from(campi))
             return Array.from(campi);
 
         } catch (error) {
@@ -789,7 +790,7 @@ function extractFields(doc, prefix, allFields) {
                 if (key === 'domandeConcorso' && doc[key].length > 0) {
                     // Prendi solo il primo elemento dell'array di domandeConcorso
                     const firstDomanda = doc[key][0];
-                    extractFields(firstDomanda, `${prefix}.domandaConcorso`, allFields);
+                    extractFields(firstDomanda, `${prefix}.domandeConcorso`, allFields);
                 } else if (key === 'iterConcorso') {
                     // Esplodi tutti i campi di iterConcorso (manteniamo la gestione iterConcorso)
                     doc[key].forEach((item, index) => {

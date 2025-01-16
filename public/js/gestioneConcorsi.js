@@ -9,21 +9,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.querySelector('#eseguiBtn').addEventListener('click', function() {
         //let campiSelezionati=getSelectedTest()
       console.log("-----riga 10: ",generateStructuredString(campiRestituiti));
-      let campiPerQuery = campiRestituiti.length === 0 ? ["cognome", "nome","codiceFiscale","dataNascita",`    domandeConcorso {
-                    lstPatenti {
-                    	tipoPatente {
-                    	 
-                    	  tipo
-                    
-                    	}
-                     
-                    }
-                 
-               
-                   }  `] : campiRestituiti;
+      let campiPerQuery = campiRestituiti.length === 0 ? ["cognome", "nome","codiceFiscale","dataNascita",`   `] : campiRestituiti;
         avvioFunction( `
             query {
-                    getCandidatiByCriteria(concorso: "${concorsoId}",
+                getCandidatiByCriteria(
+                    concorso: "${concorsoId}",
                     riserve: ${JSON.stringify(riserve)},
                     titoliPreferenziali: ${JSON.stringify(titoliPreferenziali)},
                     patenti: ${JSON.stringify(patenti)},
@@ -31,13 +21,13 @@ document.addEventListener('DOMContentLoaded', async function() {
                     esitiProve: ${JSON.stringify(esitiProve)},
                     dateProve: ${JSON.stringify(dateProve)},
                     statoCandidato: ${JSON.stringify(statoCandidato)},
-                    nome: ${JSON.stringify(nome)},
-                    cognome: ${JSON.stringify(cognome)},
-                    codiceFiscale: ${JSON.stringify(codiceFiscale)},
-                    BirthDateGreaterThanOrEqual: ${JSON.stringify(BirthDateGreaterThanOrEqual)},
-                    BirthDateLessThanOrEqual: ${JSON.stringify(BirthDateLessThanOrEqual)},
-                            ) {
-                   ${generateStructuredString(campiPerQuery)}
+                    nome: ${JSON.stringify(nome || null)},
+                    cognome: ${JSON.stringify(cognome || null)},
+                    codiceFiscale: ${JSON.stringify(codiceFiscale || null)},
+                    BirthDateGreaterThanOrEqual: ${JSON.stringify(BirthDateGreaterThanOrEqual || null)},
+                    BirthDateLessThanOrEqual: ${JSON.stringify(BirthDateLessThanOrEqual || null)}
+                ) {
+                    ${generateStructuredString(campiPerQuery)}
                 }
             }
             `)
@@ -599,31 +589,37 @@ async function aggiungiPulsanteProve(concorsoId,nomeProva,nomeButton) {
 function generateStructuredString(inputList) {
     let result = '';
     const processPath = (path) => {
+        // Rimuovi il punto iniziale, se presente
+        if (path.startsWith('.')) {
+            path = path.slice(1);
+        }
         const parts = path.split('.');
         let structured = parts.shift();
         for (const part of parts) {
-            if (structured.endsWith('}')) {
-                structured = structured.slice(0, -1);
-            }
             structured += ` {
-                            ${part}
-                            }`;
+                ${part}`;
+        }
+        for (let i = 0; i < parts.length; i++) {
+            structured += ' }';
         }
         return structured;
     };
     for (let i = 0; i < inputList.length; i++) {
         const item = inputList[i];
-        if (item.startsWith('.')) {
+        if (item.includes('{')) {
+            // Preserva i blocchi annidati già completi
+            result += item.trim();
+        } else if (item.includes('.')) {
             result += processPath(item);
         } else {
             result += item;
         }
         if (i < inputList.length - 1) {
-            result += ',\n';
+            result += '\n';
         }
     }
+    console.log('/////////////////// ', result);
     return result;
 }
-
 
    
