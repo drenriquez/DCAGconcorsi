@@ -494,7 +494,7 @@ class UserDAO {
      * @param {Array} statoCandidato - Lista degli stati candidato
      * @returns {Array} candidati che soddisfano i criteri
      */
-    async getCandidatiByCriteria({ 
+    /* async getCandidatiByCriteria({ 
         riserve, 
         titoliPreferenziali, 
         patenti,
@@ -629,8 +629,128 @@ class UserDAO {
             console.error('Error fetching candidates by criteria:', error);
             throw error;
         }
-    }
-    
+    } */
+        async getCandidatiByCriteria({ 
+            riserve, 
+            titoliPreferenziali, 
+            patenti,
+            tipoProve,
+            esitiProve, 
+            dateProve,     
+            statoCandidato,
+            nome, 
+            cognome, 
+            codiceFiscale,
+            BirthDateGreaterThanOrEqual,
+            BirthDateLessThanOrEqual
+        }) {
+            const query = {};
+        
+            // Aggiungi i filtri (identici a prima)
+            if (statoCandidato && statoCandidato.length > 0) {
+                query.statoCandidato = { $in: statoCandidato };
+            }
+        
+            if (riserve && riserve.length > 0) {
+                query["domandeConcorso.lstRiserve.descrizione"] = { $in: riserve };
+            }
+        
+            if (titoliPreferenziali && titoliPreferenziali.length > 0) {
+                query["domandeConcorso.lstTitoliPreferenziali.descrizione"] = { $in: titoliPreferenziali };
+            }
+        
+            if (patenti && patenti.length > 0) {
+                query["domandeConcorso.lstPatenti.tipoPatente.tipo"] = { $in: patenti };
+            }
+        
+            if (tipoProve && tipoProve.length > 0) {
+                query["iterConcorso.prova.descrizione"] = { $in: tipoProve };
+            }
+        
+            if (nome && nome.length > 0) {
+                query.nome = { $regex: new RegExp(nome, "i") };
+            }
+        
+            if (cognome && cognome.length > 0) {
+                query.cognome = { $regex: new RegExp(cognome, "i") };
+            }
+        
+            if (codiceFiscale && codiceFiscale.length > 0) {
+                query.codiceFiscale = { $regex: new RegExp(codiceFiscale, "i") };
+            }
+        
+            if (BirthDateGreaterThanOrEqual) {
+                const birthDate = new Date(BirthDateGreaterThanOrEqual);
+                query.dataNascita = { ...query.dataNascita, $gte: birthDate };
+            }
+        
+            if (BirthDateLessThanOrEqual) {
+                const birthDate = new Date(BirthDateLessThanOrEqual);
+                query.dataNascita = { ...query.dataNascita, $lte: birthDate };
+            }
+        
+            if (esitiProve && esitiProve.length > 0) {
+                const esitiProveConditions = esitiProve.map(esitoProva => {
+                    const [esito, prova] = esitoProva.split("|");
+                    return {
+                        "iterConcorso": {
+                            $elemMatch: {
+                                "esito.descrizione": esito.trim(),
+                                "prova.descrizione": prova.trim()
+                            }
+                        }
+                    };
+                });
+                if (!query.$and) query.$and = [];
+                query.$and.push({ $or: esitiProveConditions });
+            }
+        
+            if (dateProve && dateProve.length > 0) {
+                const dateProveConditions = dateProve.map(dateProva => {
+                    const [data, prova] = dateProva.split("|");
+                    const formattedData = data + ":00.000+00:00";
+                    return {
+                        "iterConcorso": {
+                            $elemMatch: {
+                                "prova.descrizione": prova.trim(),
+                                "dataProva": new Date(formattedData.trim())
+                            }
+                        }
+                    };
+                });
+                if (!query.$and) query.$and = [];
+                query.$and.push({ $or: dateProveConditions });
+            }
+        
+            try {
+                console.log(JSON.stringify(query));
+                
+                const candidati = await this.collection
+                    .aggregate([
+                        { $match: query }, // Filtra i documenti
+                        { $sort: { 
+                            cognome: 1,         // Ordina per cognome (ascendente)
+                            nome: 1,            // Ordina per nome (ascendente)
+                            dataNascita: 1      // Ordina per dataNascita (ascendente)
+                        }}
+                    ])
+                    .toArray();
+        
+                // Modifica l'array domandeConcorso per includere solo l'ultima domanda
+                const candidatiModificati = candidati.map(candidato => {
+                    if (candidato.domandeConcorso && candidato.domandeConcorso.length > 0) {
+                        candidato.domandeConcorso = [candidato.domandeConcorso[candidato.domandeConcorso.length - 1]];
+                    }
+                    return candidato;
+                });
+        
+                return candidatiModificati;
+            } catch (error) {
+                console.error('Error fetching candidates by criteria:', error);
+                throw error;
+            }
+        }
+        
         /**
      * Metodo per ottenere tutti i possibili campi in una collezione MongoDB
      */

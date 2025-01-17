@@ -119,9 +119,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     `
    //codice per generare button per la gestione prove motorie
 
-    aggiungiPulsanteProve(concorsoId,"PROVA MOTORIO-ATTITUDINALE","PROVE MOTORIE")
-    aggiungiPulsanteProve(concorsoId,"VISITA MEDICA","VISITA MEDICA")
-    aggiungiPulsanteProve(concorsoId,"PROVA ORALE","PROVA ORALE")
+    aggiungiPulsanteProve(concorsoId,"PROVA MOTORIO-ATTITUDINALE","PROVE MOTORIE",'filtroAvanzato',`btn btn-danger`)
+    aggiungiPulsanteProve(concorsoId,"VISITA MEDICA","VISITA MEDICA",'filtroAvanzato',`btn btn-warning`)
+    aggiungiPulsanteProve(concorsoId,"PROVA ORALE","PROVA ORALE",'filtroAvanzato',`btn btn-success`)
     
     
 });
@@ -561,29 +561,39 @@ function exportTableToExcel(data) {
 }
 
 //funzione per generare button per la gestione prove motorie e visite mediche
-async function aggiungiPulsanteProve(concorsoId,nomeProva,nomeButton) {
+async function aggiungiPulsanteProve(concorsoId, nomeProva, nomeButton, idButtonPrecedente,classButton) {
     const queryTipoProve = `
     query {
         getTipologieProve(concorso: "${concorsoId}") 
     }
-    `
-   //codice per generare button per la gestione prove motorie
-    let tipoProveLista= await apiGraphQLgetAllUsers(queryTipoProve)
-    let listaProve=JSON.stringify(tipoProveLista["data"]["getTipologieProve"]);
-    let presenzaProvaMotoria=listaProve.includes(nomeProva);
-    if(presenzaProvaMotoria){
-        const targetElement = document.getElementById('filtroAvanzato');
-        // Crea un nuovo elemento button
-        const newButton = document.createElement('button');
-        newButton.className = 'btn btn-danger'; // Aggiungi classi per lo stile
-        newButton.style.marginLeft = '10px';
-        newButton.textContent = nomeButton; // Testo del pulsante
-        newButton.type = 'button';
-        // Inserisci il pulsante subito dopo l'elemento con id "filtroAvanzato"
-        targetElement.insertAdjacentElement('afterend', newButton);
-        newButton.addEventListener('click', function () {
-            window.location.href = `/gestioneProveConcorsuali?id=${concorsoId}&tipoProva=${nomeProva}`;//?id=${concorsoId}
-        });
+    `;
+
+    try {
+        const tipoProveLista = await apiGraphQLgetAllUsers(queryTipoProve);
+        const listaProve = JSON.stringify(tipoProveLista["data"]["getTipologieProve"]);
+        const presenzaProva = listaProve.includes(nomeProva);
+
+        if (presenzaProva) {
+            const targetElement = document.getElementById(idButtonPrecedente);
+            if (!targetElement) {
+                console.error(`Elemento con ID "${idButtonPrecedente}" non trovato.`);
+                return;
+            }
+
+            const newButton = document.createElement('button');
+            newButton.className = classButton;
+            newButton.style.marginLeft = '10px';
+            newButton.textContent = nomeButton;
+            newButton.type = 'button';
+
+            targetElement.insertAdjacentElement('afterend', newButton);
+
+            newButton.addEventListener('click', function () {
+                window.location.href = `/gestioneProveConcorsuali?id=${concorsoId}&tipoProva=${nomeProva}`;
+            });
+        }
+    } catch (error) {
+        console.error("Errore durante l'aggiunta del pulsante:", error);
     }
 }
 function generateStructuredString(inputList) {

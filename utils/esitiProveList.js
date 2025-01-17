@@ -1,0 +1,25 @@
+const esitiProveList = [
+    'DA SOSTENERE',
+    'AMMESSO',
+    'NON AMMESSO',
+    'ASSENTE',
+    'ANNULLATA',
+    'ASSENTE GIUSTIFICATO',
+    'IN VALUTAZIONE',
+    'ESONERO L.104',
+    'NON CLASSIFICATO',
+    'SUPERATA',
+    'NON SUPERATA',
+    'NON VALUTATA',
+    'PROVA SOSPESA',
+    'INFORTUNATO',
+    'RINUNCIATARIO',
+    'SUPERATA CON RISERVA',
+    'REGOLARIZZAZIONE CERTIFICATO',
+    'NON IDONEO',
+    'IDONEO',
+    'ULTERIORI ACCERTAMENTI',
+    'ANTICIPO/POSTICIPO',
+];
+
+export default esitiProveList ;

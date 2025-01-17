@@ -1,28 +1,10 @@
 import { APIgetAllConcorsiEsterni } from "../../utils/apiUtils.js";
+import { apiGraphQLgetAllUsers } from "../../utils/apiGraphql.js";
 
-document.addEventListener('DOMContentLoaded', async function() {
-    const concorsi = [//esempio di struttura della collection
-        {
-            "_id": { "$oid": "66ab434edc45054b7dfae0cd" },
-            "nome": "350 VVF",
-            "nomeCollection": "350VF",
-            "data": "20/06/2024",
-            "descrizione": "concorso pubblico, per titoli ed esami, a 350 posti nella qualifica di vigile del fuoco del Corpo nazionale dei vigili del fuoco.",
-            "order": "0"
-        },
-        {
-            "_id": { "$oid": "66ab434edc45054b7dfae0ce" },
-            "nome": "189 ISPETTORE LOGISTICO GESTIONALE",
-            "nomeCollection": "189ILG",
-            "data": "18/10/2023",
-            "descrizione": "concorso pubblico, per esami, a 189 posti nella qualifica di ispettore logistico gestionale del Corpo nazionale dei vigili del fuoco.",
-            "order": "1"
-        }
-    ];
-
+document.addEventListener('DOMContentLoaded', async function () {
     let concorsiList = await getConcorsiEsterniList();
-    generatePage(concorsiList);
-})
+    await generatePage(concorsiList);
+});
 
 async function getConcorsiEsterniList() {
     const hostApi = document.querySelector('script[type="module"]').getAttribute('apiUserURL');
@@ -43,8 +25,8 @@ async function generatePage(concorsi) {
     container.appendChild(column);
     document.body.appendChild(container);
 
+    // Genera tutte le card
     concorsi.forEach(concorso => {
-        console.log(concorso)
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `
@@ -52,8 +34,9 @@ async function generatePage(concorsi) {
                 <h5 class="card-title">${concorso.nome}</h5>
                 <h6 class="card-subtitle mb-2 text-muted">${concorso.data}</h6>
                 <p class="card-text">${concorso.descrizione}</p>
-                <button type="button" class="btn btn-primary bold gestioneBtn" data-id="${concorso.nomeCollection}">GESTIONE</button>
-                <button type="submit" class="btn btn-secondary bold">CONSULTAZIONE</button>
+                <button type="button" class="btn btn-primary bold gestioneBtn" 
+                        data-id="${concorso.nomeCollection}" 
+                        id="button-${concorso.nomeCollection}">GESTIONE</button>
             </div>
         `;
         column.appendChild(card);
@@ -61,11 +44,58 @@ async function generatePage(concorsi) {
 
     // Aggiungi evento per il click sui bottoni "GESTIONE"
     document.querySelectorAll('.gestioneBtn').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const concorsoId = this.getAttribute('data-id');
-            // Reindirizza a /gestioneConcorso con l'id del concorso come query string
-            //console.log(concorsoId)
-            window.location.href = `/gestioneConcorsi?id=${concorsoId}`;//?id=${concorsoId}
+            window.location.href = `/gestioneConcorsi?id=${concorsoId}`;
         });
     });
+
+    // Aggiungi i pulsanti per le prove dopo che tutte le card sono state generate
+    const promises = concorsi.map(concorso => {
+             aggiungiPulsanteProve(concorso.nomeCollection, "PROVA MOTORIO-ATTITUDINALE", "PROVE MOTORIE", `button-${concorso.nomeCollection}`,`btn btn-danger`);
+             aggiungiPulsanteProve(concorso.nomeCollection, "VISITA MEDICA","VISITA MEDICA", `button-${concorso.nomeCollection}`,`btn btn-warning`);
+             aggiungiPulsanteProve(concorso.nomeCollection, "PROVA ORALE","PROVA ORALE", `button-${concorso.nomeCollection}`,`btn btn-success`)
+        }
+    );
+
+    await Promise.all(promises); // Attendi che tutte le chiamate siano completate
+    console.log("Tutti i pulsanti delle prove sono stati aggiunti.");
 }
+
+// Funzione per generare i pulsanti per la gestione delle prove
+async function aggiungiPulsanteProve(concorsoId, nomeProva, nomeButton, idButtonPrecedente,classButton) {
+    const queryTipoProve = `
+    query {
+        getTipologieProve(concorso: "${concorsoId}") 
+    }
+    `;
+
+    try {
+        const tipoProveLista = await apiGraphQLgetAllUsers(queryTipoProve);
+        const listaProve = JSON.stringify(tipoProveLista["data"]["getTipologieProve"]);
+        const presenzaProva = listaProve.includes(nomeProva);
+
+        if (presenzaProva) {
+            const targetElement = document.getElementById(idButtonPrecedente);
+            if (!targetElement) {
+                console.error(`Elemento con ID "${idButtonPrecedente}" non trovato.`);
+                return;
+            }
+
+            const newButton = document.createElement('button');
+            newButton.className = classButton;
+            newButton.style.marginLeft = '10px';
+            newButton.textContent = nomeButton;
+            newButton.type = 'button';
+
+            targetElement.insertAdjacentElement('afterend', newButton);
+
+            newButton.addEventListener('click', function () {
+                window.location.href = `/gestioneProveConcorsuali?id=${concorsoId}&tipoProva=${nomeProva}`;
+            });
+        }
+    } catch (error) {
+        console.error("Errore durante l'aggiunta del pulsante:", error);
+    }
+}
+
