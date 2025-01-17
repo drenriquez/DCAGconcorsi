@@ -41,12 +41,26 @@ document.addEventListener('DOMContentLoaded', async function() {
             BirthDateGreaterThanOrEqual = dateInputFrom.value;
         });
         const dateInputTo = document.getElementById('dateTo');
-
+      
         // Aggiungi un event listener per rilevare quando l'utente cambia il valore
         dateInputTo.addEventListener('change', function() {
             // Salva il valore in una variabile
             BirthDateLessThanOrEqual = dateInputTo.value;   
         });
+        
+        let cognomeInputElement= document.getElementById('cognome');
+        cognomeInputElement.addEventListener('change',function(){
+            cognome=cognomeInputElement.value;
+        })
+        let nomeInputElement= document.getElementById('nome');
+        nomeInputElement.addEventListener('change',function(){
+            nome=nomeInputElement.value;
+        })
+        let codiceFiscaleInputElement= document.getElementById('codiceFiscale');
+        codiceFiscaleInputElement.addEventListener('change',function(){
+            codiceFiscale=codiceFiscaleInputElement.value;
+        })
+        
   
     const query = `
     query {
@@ -139,6 +153,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     let BirthDateGreaterThanOrEqual=""
     let BirthDateLessThanOrEqual=  ""
 async function avvioFunction(query){
+    
    
     const spinner = document.getElementById('loadingSpinner');
     const tableContainer = document.getElementById('tableContainer');

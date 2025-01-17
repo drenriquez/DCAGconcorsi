@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 riserve: ${JSON.stringify(riserve)},
                 titoliPreferenziali: ${JSON.stringify(titoliPreferenziali)},
                 patenti: ${JSON.stringify(patenti)},
-                tipoProve: ${JSON.stringify(tipoProve)},
+                tipoProve: ${JSON.stringify(concorsoTipoProva)},
                 esitiProve: ${JSON.stringify(esitiProve)},
                 dateProve: ${JSON.stringify(dateProve)},
                 statoCandidato: ${JSON.stringify(statoCandidato)},
@@ -58,6 +58,18 @@ document.addEventListener('DOMContentLoaded', async function() {
             // Salva il valore in una variabile
             BirthDateLessThanOrEqual = dateInputTo.value;   
         });
+        let cognomeInputElement= document.getElementById('cognome');
+        cognomeInputElement.addEventListener('change',function(){
+            cognome=cognomeInputElement.value;
+        })
+        let nomeInputElement= document.getElementById('nome');
+        nomeInputElement.addEventListener('change',function(){
+            nome=nomeInputElement.value;
+        })
+        let codiceFiscaleInputElement= document.getElementById('codiceFiscale');
+        codiceFiscaleInputElement.addEventListener('change',function(){
+            codiceFiscale=codiceFiscaleInputElement.value;
+        })
   
     const query = `
     query {

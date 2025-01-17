@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const concorsoId = document.querySelector('script[type="module"]').getAttribute('concorsoId');
   const concorsoTipoProva = document.querySelector('script[type="module"]').getAttribute('tipoProva');
   const codiceFiscale = document.querySelector('script[type="module"]').getAttribute('codiceFiscaleCandidato');
-  const nomeProva = "PROVA MOTORIO-ATTITUDINALE";
+  const nomeProva = `${concorsoTipoProva}`;
   document.getElementById("nome-prova").textContent = nomeProva;
 
   const queryCandidato = `query {
