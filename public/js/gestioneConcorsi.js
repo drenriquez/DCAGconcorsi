@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const concorsoId = document.querySelector('script[type="module"]').getAttribute('concorsoId');
     document.querySelector('#eseguiBtn').addEventListener('click', function() {
         //let campiSelezionati=getSelectedTest()
-      console.log("-----riga 10: ",generateStructuredString(campiRestituiti));
+      //("-----riga 10: ",generateStructuredString(campiRestituiti));
       let campiPerQuery = campiRestituiti.length === 0 ? ["cognome", "nome","codiceFiscale","dataNascita",`   `] : campiRestituiti;
         avvioFunction( `
             query {
@@ -171,7 +171,7 @@ async function avvioFunction(query){
     //console.log(response)
     const users = response["data"]["getCandidatiByCriteria"];
     //document.getElementById('exportBtn').addEventListener('click', exportTableToExcel(users));
-    console.log(users)
+    console.log("users restituiti: ",users)
 
     // Numero di record per pagina
     const recordsPerPage = 2000;

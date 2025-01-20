@@ -85,6 +85,10 @@ function popolaSteps(steps) {
       }
       const formattedDateProva = formatDate( step.dataProva,true, false,"yyyy-MM-dd");
       const isAssenzaGiustificata = step.esito.descrizione === "ASSENTE GIUSTIFICATO";
+      const showExtraStepButton = ["ANTICIPO/POSTICIPO", "ASSENTE GIUSTIFICATO", "PROVA SOSPESA", "INFORTUNATO", "ULTERIORI ACCERTAMENTI"].includes(step.esito.descrizione);
+      const isLastStep= index+1===steps[steps.length - 1]['idStep']?true:false;
+      console.log('----------',isLastStep, index, isLastStep)
+      
       stepCard.innerHTML = `
         <div class="card-header step-header">Step ${index + 1}</div>
         <div class="card-body">
@@ -107,25 +111,46 @@ function popolaSteps(steps) {
               <label for="giorni-certificati-${index}" class="form-label"><strong>Giorni Certificati:</strong></label>
               <input type="number" id="giorni-certificati-${index}" class="form-control" value="${step.assenzaGiustificata?.giorniCertificati || ""}" />
             </div>
+            
           </div>
           <div class="mb-3">
             <label for="note-${index}" class="form-label"><strong>Note:</strong></label>
             <textarea id="note-${index}" class="form-control">${step.note}</textarea>
           </div>
-          <button class="btn btn-primary edit-button" onclick="modificaStep(${index})">Modifica Step</button>
+            <button class="btn btn-secondary" id="buttonAddStep-${index}" style="display:${showExtraStepButton&&isLastStep ? "block" : "none"};">Aggiungi Step Successivo</button> 
+            <button class="btn btn-primary edit-button" onclick="modificaStep(${index})">Modifica Step</button>
+          
         </div>
+        
       `;
 
       container.appendChild(stepCard);
+      
+      const buttonAddStep = document.getElementById(`buttonAddStep-${index}`);
+      buttonAddStep.addEventListener('click', () => {
+        aggiungiStep(index);
+      })
 
       // Event listener per mostrare/nascondere i campi aggiuntivi
       document.getElementById(`esito-${index}`).addEventListener("change", (event) => {
           const value = event.target.value;
+          const showExtraStepButton = ["ANTICIPO/POSTICIPO", "ASSENTE GIUSTIFICATO", "PROVA SOSPESA", "INFORTUNATO", "ULTERIORI ACCERTAMENTI"].includes(event.target.value);
+          const isLastStep= index+1===steps[steps.length - 1]['idStep']?true:false;
+          //console.log('----------',isLastStep, index, isLastStep)
           const extraFields = document.getElementById(`assenza-giustificata-fields-${index}`);
+          
           if (value === "ASSENTE GIUSTIFICATO") {
               extraFields.style.display = "block";
           } else {
               extraFields.style.display = "none";
+          }
+          if(showExtraStepButton && isLastStep){
+            buttonAddStep.style.display= "block"
+            
+              
+          }
+          else{
+            buttonAddStep.style.display= "none"
           }
       });
   });
@@ -148,4 +173,72 @@ function modificaStep(index) {
 
   console.log(`Modifica Step ${index + 1}:`, { dataProva, esito, note, dataInizioMalattia, giorniCertificati });
   // Qui puoi fare una chiamata API per aggiornare i dati nel backend
+}
+
+
+
+
+
+
+
+
+
+
+// Funzione per aggiungere uno step successivo
+function aggiungiStep(index) {
+    const container = document.getElementById("steps-container");
+
+    // Calcola il numero del nuovo step basato sugli step esistenti
+    const currentSteps = container.querySelectorAll(".card");
+    const newStepNumber = currentSteps.length + 1;
+
+    const newStepCard = document.createElement("div");
+    newStepCard.className = "card card-relative";
+
+    newStepCard.innerHTML = `
+      <div class="card-header step-header">Step ${newStepNumber}</div>
+      <div class="card-body">
+        <div class="mb-3">
+          <label for="data-prova-${newStepNumber}" class="form-label"><strong>Data e Ora Prova:</strong></label>
+          <input type="datetime-local" id="data-prova-${newStepNumber}" class="form-control" />
+        </div>
+        <div class="mb-3">
+          <label for="esito-${newStepNumber}" class="form-label"><strong>Esito:</strong></label>
+          <select id="esito-${newStepNumber}" class="form-control">
+            ${["DA SOSTENERE", "superato", "non superato", "assenza giustificata", "ANTICIPO/POSTICIPO", "ASSENTE GIUSTIFICATO", "PROVA SOSPESA", "INFORTUNATO", "ULTERIORI ACCERTAMENTI"]
+              .map(option => `<option value="${option}">${option}</option>`)
+              .join("")}
+          </select>
+        </div>
+        <div id="assenza-giustificata-fields-${newStepNumber}" style="display: none;">
+          <div class="mb-3">
+            <label for="data-inizio-malattia-${newStepNumber}" class="form-label"><strong>Data Inizio Malattia:</strong></label>
+            <input type="date" id="data-inizio-malattia-${newStepNumber}" class="form-control" />
+          </div>
+          <div class="mb-3">
+            <label for="giorni-certificati-${newStepNumber}" class="form-label"><strong>Giorni Certificati:</strong></label>
+            <input type="number" id="giorni-certificati-${newStepNumber}" class="form-control" />
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="note-${newStepNumber}" class="form-label"><strong>Note:</strong></label>
+          <textarea id="note-${newStepNumber}" class="form-control"></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="salvaNuovoStep(${newStepNumber})">Salva Step</button>
+      </div>
+    `;
+
+    container.appendChild(newStepCard);
+
+    // Event listener per mostrare/nascondere i campi aggiuntivi
+    document.getElementById(`esito-${newStepNumber}`).addEventListener("change", (event) => {
+        const value = event.target.value;
+        const extraFields = document.getElementById(`assenza-giustificata-fields-${newStepNumber}`);
+
+        if (value === "assenza giustificata") {
+            extraFields.style.display = "block";
+        } else {
+            extraFields.style.display = "none";
+        }
+    });
 }

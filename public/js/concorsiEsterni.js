@@ -34,7 +34,7 @@ async function generatePage(concorsi) {
                 <h5 class="card-title">${concorso.nome}</h5>
                 <h6 class="card-subtitle mb-2 text-muted">${concorso.data}</h6>
                 <p class="card-text">${concorso.descrizione}</p>
-                <button type="button" class="btn btn-primary bold gestioneBtn" 
+                <button type="button" class="btn btn-danger bold gestioneBtn" 
                         data-id="${concorso.nomeCollection}" 
                         id="button-${concorso.nomeCollection}">GESTIONE</button>
             </div>
@@ -52,9 +52,9 @@ async function generatePage(concorsi) {
 
     // Aggiungi i pulsanti per le prove dopo che tutte le card sono state generate
     const promises = concorsi.map(concorso => {
-             aggiungiPulsanteProve(concorso.nomeCollection, "PROVA MOTORIO-ATTITUDINALE", "PROVE MOTORIE", `button-${concorso.nomeCollection}`,`btn btn-danger`);
-             aggiungiPulsanteProve(concorso.nomeCollection, "VISITA MEDICA","VISITA MEDICA", `button-${concorso.nomeCollection}`,`btn btn-warning`);
-             aggiungiPulsanteProve(concorso.nomeCollection, "PROVA ORALE","PROVA ORALE", `button-${concorso.nomeCollection}`,`btn btn-success`)
+             aggiungiPulsanteProve(concorso.nomeCollection, "PROVA MOTORIO-ATTITUDINALE", "PROVE MOTORIE", `button-${concorso.nomeCollection}`,`btn btn-success`);
+             aggiungiPulsanteProve(concorso.nomeCollection, "VISITA MEDICA","VISITA MEDICA", `button-${concorso.nomeCollection}`,`btn custom-btn`);
+             aggiungiPulsanteProve(concorso.nomeCollection, "PROVA ORALE","PROVA ORALE", `button-${concorso.nomeCollection}`,`btn customB-btn`)
         }
     );
 
