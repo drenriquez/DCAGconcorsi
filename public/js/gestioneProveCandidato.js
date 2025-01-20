@@ -7,9 +7,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   const concorsoId = document.querySelector('script[type="module"]').getAttribute('concorsoId');
   const concorsoTipoProva = document.querySelector('script[type="module"]').getAttribute('tipoProva');
   const codiceFiscale = document.querySelector('script[type="module"]').getAttribute('codiceFiscaleCandidato');
+  
   const nomeProva = `${concorsoTipoProva}`;
   document.getElementById("nome-prova").textContent = nomeProva;
-
+ 
   const queryCandidato = `query {
       getCandidatiByCriteria(concorso:"${concorsoId}", codiceFiscale:"${codiceFiscale}") {
         _id
@@ -72,6 +73,9 @@ function popolaDatiCandidato(candidato) {
 
 // Funzione per popolare i dati degli step
 function popolaSteps(steps) {
+  const userCodFisc = document.querySelector('script[type="module"]').getAttribute('userCodFisc');
+  const livelloUser = document.querySelector('script[type="module"]').getAttribute('livelloUser');
+ // console.log('---------- ',userCodFisc,livelloUser)
   const container = document.getElementById("steps-container");
   container.innerHTML = ""; // Svuota il contenitore
 
@@ -87,7 +91,6 @@ function popolaSteps(steps) {
       const isAssenzaGiustificata = step.esito.descrizione === "ASSENTE GIUSTIFICATO";
       const showExtraStepButton = ["ANTICIPO/POSTICIPO", "ASSENTE GIUSTIFICATO", "PROVA SOSPESA", "INFORTUNATO", "ULTERIORI ACCERTAMENTI"].includes(step.esito.descrizione);
       const isLastStep= index+1===steps[steps.length - 1]['idStep']?true:false;
-      console.log('----------',isLastStep, index, isLastStep)
       
       stepCard.innerHTML = `
         <div class="card-header step-header">Step ${index + 1}</div>
@@ -118,7 +121,7 @@ function popolaSteps(steps) {
             <textarea id="note-${index}" class="form-control">${step.note}</textarea>
           </div>
             <button class="btn btn-secondary" id="buttonAddStep-${index}" style="display:${showExtraStepButton&&isLastStep ? "block" : "none"};">Aggiungi Step Successivo</button> 
-            <button class="btn btn-primary edit-button" onclick="modificaStep(${index})">Modifica Step</button>
+            <button class="btn btn-danger edit-button" id="buttonModificaStep-${index}" >Modifica Step</button>
           
         </div>
         
@@ -129,6 +132,11 @@ function popolaSteps(steps) {
       const buttonAddStep = document.getElementById(`buttonAddStep-${index}`);
       buttonAddStep.addEventListener('click', () => {
         aggiungiStep(index);
+        buttonAddStep.style.display = "none"
+      })
+      const buttonModificaStep = document.getElementById(`buttonModificaStep-${index}`);
+      buttonModificaStep.addEventListener('click', () => {
+        modificaStep(index,step);
       })
 
       // Event listener per mostrare/nascondere i campi aggiuntivi
@@ -157,7 +165,7 @@ function popolaSteps(steps) {
 }
 
 // Funzione per gestire la modifica di uno step
-function modificaStep(index) {
+function modificaStep(index,step) {
   const dataProva = document.getElementById(`data-prova-${index}`).value;
   const esito = document.getElementById(`esito-${index}`).value;
   const note = document.getElementById(`note-${index}`).value;
@@ -171,7 +179,8 @@ function modificaStep(index) {
       giorniCertificati = document.getElementById(`giorni-certificati-${index}`).value;
   }
 
-  console.log(`Modifica Step ${index + 1}:`, { dataProva, esito, note, dataInizioMalattia, giorniCertificati });
+  console.log(`Modifica Step ${index}:`, { dataProva, esito, note, dataInizioMalattia, giorniCertificati });
+  console.log('step: ',step)
   // Qui puoi fare una chiamata API per aggiornare i dati nel backend
 }
 

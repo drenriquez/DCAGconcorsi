@@ -534,6 +534,13 @@ getStepsByProvaByCandidato: async ({ concorso,codiceFiscale, tipoProva }) => {
   return await userDao.getStepsByProvaByCandidato(codiceFiscale, tipoProva);
 },
 
+addOrUpdateStep: async({concorso,codiceFiscale, provaDescrizione, idStep, stepData})=>{
+  console.log('---------chiamato resolver addOrUpdateStep ',concorso)
+  const userDao = new UserDAO(concorso);
+  await userDao.initializeDatabase();
+  return userDao.addOrUpdateStep(codiceFiscale, provaDescrizione, idStep, stepData)
+}
+
 
 };
 

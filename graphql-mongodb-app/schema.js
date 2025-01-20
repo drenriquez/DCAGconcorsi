@@ -40,6 +40,7 @@ const schema = buildSchema(`
   type Mutation {
     createUser(concorso: String!, codiceFiscale: String!, cognome: String!, nome: String!, dataNascita: DateTime!, comuneNascita: ComuneInput!): User
     deleteUser(concorso: String!, id: String!): String
+    addOrUpdateStep(concorso: String!, codiceFiscale: String!,provaDescrizione: String!,idStep: Int!,stepData: IterConcorsoInput!): IterConcorso
   }
 
   type User {
@@ -266,6 +267,40 @@ const schema = buildSchema(`
     dataProtocollo: String
     note: String
   }
+  input IterConcorsoInput {
+    idStep: Int
+    dataProva: DateTime
+    prova: ProvaInput
+    esito: EsitoInput
+    punteggio: String
+    linkAllegati: String
+    assenzaGiustificata: AssenzaGiustificataInput
+    cFTipoProva: String
+    cFTipoEsito: String
+    note: String
+}
+
+input ProvaInput {
+  _id: Int
+  categoria: String
+  descrizione: String
+}
+
+input EsitoInput {
+  _id: Int
+  categoria: String
+  descrizione: String
+  statoCandidato: String
+  notaObbligatoria: Boolean
+}
+
+input AssenzaGiustificataInput {
+  dataInizioMalattia: String
+  giorniCertificati: Int
+  numeroProtocollo: String
+  dataProtocollo: String
+  note: String
+}  
 `);
 
 module.exports = schema;

@@ -868,6 +868,8 @@ class UserDAO {
                         prova:"$iterConcorso.prova",
                         esito: "$iterConcorso.esito",
                         punteggio: "$iterConcorso.punteggio",
+                        cFTipoProva:"$iterConcorso.cFTipoProva",
+                        cFTipoEsito:"$iterConcorso.cFTipoEsito",
                         note: "$iterConcorso.note",
                         assenzaGiustificata: "$iterConcorso.assenzaGiustificata",
                     }
@@ -884,8 +886,55 @@ class UserDAO {
             await this.client.close();
         }
     }
-        
-        
+
+
+
+        // Aggiungi o aggiorna uno step
+    async addOrUpdateStep(codiceFiscale, provaDescrizione, idStep, stepData) {
+        console.log('*******chiamata funzione addOrUpdateStep nel DAO ')
+        try {
+            // Trova il documento con il codice fiscale specifico
+            const user = await this.collection.findOne({ codiceFiscale });
+            if (!user) {
+                throw new Error(`User with codiceFiscale ${codiceFiscale} not found`);
+            }
+
+            // Trova l'oggetto iterConcorso corrispondente alla provaDescrizione
+            const iterConcorsoIndex = user.iterConcorso.findIndex(
+                (step) => step.prova.descrizione === provaDescrizione && step.idStep === idStep
+            );
+
+            // Se esiste, aggiorna lo step; altrimenti aggiungilo
+            if (iterConcorsoIndex >= 0) {
+                const updateQuery = {
+                    $set: {
+                        [`iterConcorso.${iterConcorsoIndex}`]: {
+                            ...user.iterConcorso[iterConcorsoIndex],
+                            ...stepData,
+                        },
+                    },
+                };
+
+                const result = await this.collection.updateOne({ codiceFiscale }, updateQuery);
+                return result.modifiedCount > 0;
+            } else {
+                const pushQuery = {
+                    $push: {
+                        iterConcorso: {
+                            idStep,
+                            ...stepData,
+                        },
+                    },
+                };
+
+                const result = await this.collection.updateOne({ codiceFiscale }, pushQuery);
+                return result.modifiedCount > 0;
+            }
+        } catch (error) {
+            console.error('Error in addOrUpdateStep:', error);
+            throw error;
+        }
+    }
         
     }
     
