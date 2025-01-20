@@ -205,8 +205,7 @@ function aggiungiStep(index) {
         <div class="mb-3">
           <label for="esito-${newStepNumber}" class="form-label"><strong>Esito:</strong></label>
           <select id="esito-${newStepNumber}" class="form-control">
-            ${["DA SOSTENERE", "superato", "non superato", "assenza giustificata", "ANTICIPO/POSTICIPO", "ASSENTE GIUSTIFICATO", "PROVA SOSPESA", "INFORTUNATO", "ULTERIORI ACCERTAMENTI"]
-              .map(option => `<option value="${option}">${option}</option>`)
+            ${esitiProveList.map(option => `<option value="${option}">${option}</option>`)
               .join("")}
           </select>
         </div>
