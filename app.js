@@ -47,7 +47,7 @@ const gestioneConcorsiRouter =require('./routes/gestioneConcorsi');
 const concorsiEsterniRouter=require('./routes/concorsiEsterni');
 const gestioneProveConcorsualiRouter=require('./routes/gestioneProveConcorsuali');
 const gestioneProveCandidatoRouter=require('./routes/gestioneProveCandidato');
-
+const tabellaDaRiconvocareRouter=require('./routes/TabellaDaRiconvocare');
 const ConcorsiEsterniController =require('./controllers/concorsiEsterniController');
 //const concorsiInterniRouter =require('./controllers/concorsiInterniController');
 const UserController = require('./controllers/userController');
@@ -154,6 +154,7 @@ app.use(gestioneConcorsiRouter);
 app.use(concorsiEsterniRouter);
 app.use(gestioneProveConcorsualiRouter);
 app.use(gestioneProveCandidatoRouter);
+app.use(tabellaDaRiconvocareRouter)
 
 
 

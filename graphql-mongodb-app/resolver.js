@@ -527,12 +527,23 @@ getAllCampiDomandeConcorso: async ({ concorso }) => {
   return await userDao.getAllCampiDomandeConcorso();
 },
 getStepsByProvaByCandidato: async ({ concorso,codiceFiscale, tipoProva }) => {
-  const userDao = new UserDAO(concorso);
+  const userDao = new UserDAO(concorso)
+  await userDao.initializeDatabase();;
   await userDao.initializeDatabase();
 
   // Chiama il metodo DAO per ottenere le date delle prove uniche
   return await userDao.getStepsByProvaByCandidato(codiceFiscale, tipoProva);
 },
+
+getDocumentsByProvaWithEsito: async ({concorso,provaDescrizione, esitoList})=>{
+  const userDao = new UserDAO(concorso);
+  await userDao.initializeDatabase();
+  return userDao.getDocumentsByProvaWithEsito(provaDescrizione, esitoList);
+},
+/* -------------------------------------------------------------------------------------------------
+
+                          MUTATION
+------------------------------------------------------------------------------------------------------*/
 
 addOrUpdateStep: async({concorso,codiceFiscale, provaDescrizione, idStep, stepData})=>{
   console.log('---------chiamato resolver addOrUpdateStep ',concorso)

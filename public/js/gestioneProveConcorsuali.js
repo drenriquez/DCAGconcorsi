@@ -16,7 +16,22 @@ document.addEventListener('DOMContentLoaded', async function() {
     //BUTTON PER GENERARE I TABULATI
     document.getElementById('exportPdfBtn').addEventListener('click',()=>{generatorePDF(concorsoId,concorsoTipoProva)} );
     document.getElementById('exportPdfBtnEsiti').addEventListener('click',()=>{generatorePDF(concorsoId,"ESITI".concat(" ",concorsoTipoProva))} );
-    
+    let openedWindow = null; // Variabile per tenere traccia della finestra aperta
+
+    document.getElementById('daRiconvocare').addEventListener('click', () => {
+        const url = `/tabellaDaRiconvocare?id=${concorsoId}&tipoProva=${concorsoTipoProva}`; // Sostituisci con l'URL desiderato
+        const windowFeatures = "width=1200,height=600,resizable,scrollbars";
+
+        if (openedWindow && !openedWindow.closed) {
+            // Se la finestra è già aperta e non è chiusa, aggiorniamola
+            openedWindow.location.href = url;
+            openedWindow.focus(); // Porta la finestra in primo piano
+        } else {
+            // Altrimenti apriamo una nuova finestra e salviamo il riferimento
+            openedWindow = window.open(url, "_blank", windowFeatures);
+        }
+    });
+        
     document.querySelector('#eseguiBtn').addEventListener('click', function() {
         //let campiSelezionati=getSelectedTest()
       //console.log("-----riga 10: ",campiRestituiti);

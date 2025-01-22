@@ -844,6 +844,7 @@ class UserDAO {
         }
     }
     async getStepsByProvaByCandidato(codiceFiscale, descrizioneProva) {
+        
         try {
 
             const pipeline = [
@@ -886,9 +887,71 @@ class UserDAO {
             await this.client.close();
         }
     }
+    async getDocumentsByProvaWithEsito(provaDescrizione, esitoList) {
+        console.log("------------ DAO getDocumentsByProvaWithEsito -----------");
+        try {
+            if (!this.collection) {
+                throw new Error("Database not initialized. Call initializeDatabase first.");
+            }
+    
+            const pipeline = [
+                // Espandi l'array iterConcorso
+                { $unwind: "$iterConcorso" },
+    
+                // Filtra gli iterConcorso che corrispondono alla descrizione della prova e all'esito
+                {
+                    $match: {
+                        "iterConcorso.prova.descrizione": provaDescrizione,
+                        "iterConcorso.esito.descrizione": { $in: esitoList }
+                    }
+                },
+    
+                // Ordina per dataProva
+                { $sort: { "iterConcorso.dataProva": 1 } },
+    
+                // Raggruppa per documento principale (_id)
+                {
+                    $group: {
+                        _id: "$_id",
+                        codiceFiscale: { $first: "$codiceFiscale" },
+                        nome: { $first: "$nome" },
+                        cognome: { $first: "$cognome" },
+                        ultimoStep: { $last: "$iterConcorso" } // L'ultimo step per ogni documento
+                    }
+                },
+    
+                // Mantieni solo i campi rilevanti nel risultato finale
+                {
+                    $project: {
+                        _id: 1,
+                        codiceFiscale: 1,
+                        nome: 1,
+                        cognome: 1,
+                        iterConcorso: 1, // Includi l'intero array iterConcorso nel risultato finale
+                        "ultimoStep.prova.descrizione": 1,
+                        "ultimoStep.esito.descrizione": 1,
+                        "ultimoStep.dataProva": 1,
+                        "ultimoStep.assenzaGiustificata.dataInizioMalattia":1,
+                        "ultimoStep.assenzaGiustificata.giorniCertificati":1
+                      }
+                }
+            ];
+    
+            const results = await this.collection.aggregate(pipeline).toArray();
+            console.log("----",results,"-----")
+            return results;
+        } catch (error) {
+            console.error("Error fetching documents by prova and esito:", error);
+            throw error;
+        }
+    }
+    
 
 
+/* -------------------------------------------------------------------------------------------------
 
+                          MUTATION
+------------------------------------------------------------------------------------------------------*/
         // Aggiungi o aggiorna uno step
     async addOrUpdateStep(codiceFiscale, provaDescrizione, idStep, stepData) {
         console.log('*******chiamata funzione addOrUpdateStep nel DAO ')

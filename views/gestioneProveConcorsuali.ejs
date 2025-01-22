@@ -139,6 +139,19 @@
          
           width: 700px;
         }
+        .custom-btn {
+            background-color: #676b68; /* Colore di sfondo */
+            color: white; /* Colore del testo */
+            border: 2px solid #676b68; /* Bordo */
+            margin-left: 100px;
+            zoom: 120%;
+            float: right;
+        }
+        .custom-btn:hover {
+            background-color: #3e413f; /* Colore di sfondo hover */
+            border-color: #3e413f; /* Colore del bordo hover */
+            color: white; /* Colore del testo */
+        }
         
     </style>
 </head>
@@ -160,6 +173,7 @@
                     <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">TitoliPreferenziali e Riserve</a>
                     <a class="btn btn-success" data-bs-toggle="collapse" href="#multiCollapseExample4" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Filtro Campi Restituiti</a>
                     <a class="btn btn-dark" id="filtroAvanzato" data-bs-toggle="collapse" href="#multiCollapseExample5" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Filtro Avanzato</a>
+                    <a class="btn custom-btn" id="daRiconvocare" data-bs-toggle="collapse" href="/tabellaDaRiconvocare" role="button" aria-expanded="false">Da Riconvocare</a>
                 </p>
                   <div class="row">
                     <div class="col">
@@ -306,7 +320,7 @@
                     <input type="date" class="form-control" id="dateTo">
                 </div>
                  
-
+                
           
 
                   <div class="col-sm-2">
@@ -337,7 +351,7 @@
                  
                   
                   
-
+                  
                 <!-- Bottone Esegui -->
                 <div class="d-flex justify-content-end">
                     <button type="button" class="btn btn-danger mt-3" id="eseguiBtn">Esegui Filtri</button>
