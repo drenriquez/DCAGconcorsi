@@ -1,4 +1,4 @@
-import { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell } from "docx";
+//import { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell } from "docx";
 
 export function generaTabulatiProveMotorieDocx(concorsoId, concorsoTipoProva, tipologia, dataProva, intestazioneColonne, larghColonne, xLineeVerticali, dati, nomiDati) {
     const doc = new Document({

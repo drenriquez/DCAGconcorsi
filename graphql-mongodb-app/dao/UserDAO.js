@@ -887,7 +887,9 @@ class UserDAO {
             await this.client.close();
         }
     }
-    async getDocumentsByProvaWithEsito(provaDescrizione, esitoList) {
+
+     //considera l'ultimo step per dataProva
+   /*  async getDocumentsByProvaWithEsito(provaDescrizione, esitoList) {
         console.log("------------ DAO getDocumentsByProvaWithEsito -----------");
         try {
             if (!this.collection) {
@@ -895,57 +897,146 @@ class UserDAO {
             }
     
             const pipeline = [
-                // Espandi l'array iterConcorso
-                { $unwind: "$iterConcorso" },
-    
-                // Filtra gli iterConcorso che corrispondono alla descrizione della prova e all'esito
+                // Filtro iniziale per i documenti che contengono almeno un iterConcorso con la prova specifica
                 {
                     $match: {
-                        "iterConcorso.prova.descrizione": provaDescrizione,
-                        "iterConcorso.esito.descrizione": { $in: esitoList }
+                        "iterConcorso.prova.descrizione": provaDescrizione
                     }
                 },
     
-                // Ordina per dataProva
-                { $sort: { "iterConcorso.dataProva": 1 } },
+                // Espandi l'array iterConcorso
+                { $unwind: "$iterConcorso" },
     
-                // Raggruppa per documento principale (_id)
+                // Filtra gli iterConcorso che corrispondono alla descrizione della prova
+                {
+                    $match: {
+                        "iterConcorso.prova.descrizione": provaDescrizione
+                    }
+                },
+    
+                // Ordina per _id e dataProva per ogni documento
+                { $sort: { "_id": 1, "iterConcorso.dataProva": 1 } },
+    
+                // Raggruppa per documento principale (_id), mantenendo solo l'ultimo step della prova specifica
                 {
                     $group: {
                         _id: "$_id",
                         codiceFiscale: { $first: "$codiceFiscale" },
                         nome: { $first: "$nome" },
                         cognome: { $first: "$cognome" },
-                        ultimoStep: { $last: "$iterConcorso" } // L'ultimo step per ogni documento
+                        ultimoStep: { $last: "$iterConcorso" }
                     }
                 },
     
-                // Mantieni solo i campi rilevanti nel risultato finale
+                // Filtra i documenti in base all'esito dell'ultimo step
+                {
+                    $match: {
+                        "ultimoStep.esito.descrizione": { $in: esitoList }
+                    }
+                },
+                
+                    //ordina secondo la dataProva
+                    { $sort: { "ultimoStep.dataProva": 1 } },
+                // Proietta i campi desiderati
                 {
                     $project: {
                         _id: 1,
                         codiceFiscale: 1,
                         nome: 1,
                         cognome: 1,
-                        iterConcorso: 1, // Includi l'intero array iterConcorso nel risultato finale
                         "ultimoStep.prova.descrizione": 1,
                         "ultimoStep.esito.descrizione": 1,
                         "ultimoStep.dataProva": 1,
-                        "ultimoStep.assenzaGiustificata.dataInizioMalattia":1,
-                        "ultimoStep.assenzaGiustificata.giorniCertificati":1
-                      }
+                        "ultimoStep.assenzaGiustificata.dataInizioMalattia": 1,
+                        "ultimoStep.assenzaGiustificata.giorniCertificati": 1
+                    }
                 }
             ];
     
             const results = await this.collection.aggregate(pipeline).toArray();
-            console.log("----",results,"-----")
+            console.log("----", results, "-----");
             return results;
         } catch (error) {
             console.error("Error fetching documents by prova and esito:", error);
             throw error;
         }
-    }
-    
+    } */
+
+
+        //considera l'ultimo step per idStep
+        async getDocumentsByProvaWithEsito(provaDescrizione, esitoList) {
+            console.log("------------ DAO getDocumentsByProvaWithEsito -----------");
+            try {
+                if (!this.collection) {
+                    throw new Error("Database not initialized. Call initializeDatabase first.");
+                }
+        
+                const pipeline = [
+                    // Filtro iniziale per i documenti che contengono almeno un iterConcorso con la prova specifica
+                    {
+                        $match: {
+                            "iterConcorso.prova.descrizione": provaDescrizione
+                        }
+                    },
+        
+                    // Espandi l'array iterConcorso
+                    { $unwind: "$iterConcorso" },
+        
+                    // Filtra gli iterConcorso che corrispondono alla descrizione della prova
+                    {
+                        $match: {
+                            "iterConcorso.prova.descrizione": provaDescrizione
+                        }
+                    },
+        
+                    // Ordina per _id e idStep per ogni documento
+                    { $sort: { "_id": 1, "iterConcorso.idStep": 1 } },
+        
+                    // Raggruppa per documento principale (_id), mantenendo solo l'ultimo step della prova specifica
+                    {
+                        $group: {
+                            _id: "$_id",
+                            codiceFiscale: { $first: "$codiceFiscale" },
+                            nome: { $first: "$nome" },
+                            cognome: { $first: "$cognome" },
+                            ultimoStep: { $last: "$iterConcorso" }
+                        }
+                    },
+        
+                    // Filtra i documenti in base all'esito dell'ultimo step
+                    {
+                        $match: {
+                            "ultimoStep.esito.descrizione": { $in: esitoList }
+                        }
+                    },
+        
+                    //ordina secondo la dataProva
+                    { $sort: { "ultimoStep.dataProva": 1 } },
+                    // Proietta i campi desiderati
+                    {
+                        $project: {
+                            _id: 1,
+                            codiceFiscale: 1,
+                            nome: 1,
+                            cognome: 1,
+                            "ultimoStep.prova.descrizione": 1,
+                            "ultimoStep.esito.descrizione": 1,
+                            "ultimoStep.idStep": 1,
+                            "ultimoStep.dataProva": 1,
+                            "ultimoStep.assenzaGiustificata.dataInizioMalattia": 1,
+                            "ultimoStep.assenzaGiustificata.giorniCertificati": 1
+                        }
+                    }
+                ];
+        
+                const results = await this.collection.aggregate(pipeline).toArray();
+                console.log("----", results, "-----");
+                return results;
+            } catch (error) {
+                console.error("Error fetching documents by prova and esito:", error);
+                throw error;
+            }
+        }
 
 
 /* -------------------------------------------------------------------------------------------------
@@ -979,6 +1070,7 @@ class UserDAO {
                 };
 
                 const result = await this.collection.updateOne({ codiceFiscale }, updateQuery);
+                console.log('restult for MUTATION addOrUpdateStep : ',result)
                 return result.modifiedCount > 0;
             } else {
                 const pushQuery = {
@@ -991,6 +1083,7 @@ class UserDAO {
                 };
 
                 const result = await this.collection.updateOne({ codiceFiscale }, pushQuery);
+                console.log('restult for MUTATION addOrUpdateStep : ',result)
                 return result.modifiedCount > 0;
             }
         } catch (error) {

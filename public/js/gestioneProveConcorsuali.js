@@ -12,14 +12,14 @@ document.addEventListener('DOMContentLoaded', async function() {
         { cognome: 'Ciampa', nome: 'Dolores', dataNascita: '29/08/1992', lingua: 'Spagnolo' },
     ]
     // Ottieni gli elementi del DOM
-    document.getElementById('exportBtn').addEventListener('click', exportTableToExcelFromVisibleTable);
+    document.getElementById('exportBtn').addEventListener('click',()=>{ exportTableToExcelFromVisibleTable(concorsoId,concorsoTipoProva)});
     //BUTTON PER GENERARE I TABULATI
     document.getElementById('exportPdfBtn').addEventListener('click',()=>{generatorePDF(concorsoId,concorsoTipoProva)} );
     document.getElementById('exportPdfBtnEsiti').addEventListener('click',()=>{generatorePDF(concorsoId,"ESITI".concat(" ",concorsoTipoProva))} );
     let openedWindow = null; // Variabile per tenere traccia della finestra aperta
 
     document.getElementById('daRiconvocare').addEventListener('click', () => {
-        const url = `/tabellaDaRiconvocare?id=${concorsoId}&tipoProva=${concorsoTipoProva}`; // Sostituisci con l'URL desiderato
+        const url = `/tabellaDaRiconvocare?id=${concorsoId}&tipoProva=${concorsoTipoProva}`; 
         const windowFeatures = "width=1200,height=600,resizable,scrollbars";
 
         if (openedWindow && !openedWindow.closed) {
@@ -304,60 +304,67 @@ async function avvioFunction(query){
 
 
    // Funzione per popolare le righe della tabella, in base alla pagina corrente
-    function generateTableRows(users, currentPage, recordsPerPage) {
-        const tableBody = document.getElementById('tableBody');
-        tableBody.innerHTML = ''; // Pulisci il corpo della tabella prima di rigenerarla
+   function generateTableRows(users, currentPage, recordsPerPage) {
+    const tableBody = document.getElementById('tableBody');
+    tableBody.innerHTML = ''; // Pulisci il corpo della tabella prima di rigenerarla
 
-        // Calcola l'indice dei record da visualizzare
-        const startIndex = (currentPage - 1) * recordsPerPage;
-        const endIndex = Math.min(startIndex + recordsPerPage, users.length);
+    // Calcola l'indice dei record da visualizzare
+    const startIndex = (currentPage - 1) * recordsPerPage;
+    const endIndex = Math.min(startIndex + recordsPerPage, users.length);
 
-        // Ottieni tutte le chiavi (compresi i campi annidati)
-        const nestedKeys = getNestedKeys(users[0]);
+    // Ottieni tutte le chiavi (compresi i campi annidati)
+    const nestedKeys = getNestedKeys(users[0]);
 
-        // Visualizza solo i record per la pagina corrente
-        for (let i = startIndex; i < endIndex; i++) {
-            const user = users[i];
-            const row = document.createElement('tr');
+    // Visualizza solo i record per la pagina corrente
+    for (let i = startIndex; i < endIndex; i++) {
+        const user = users[i];
+        const row = document.createElement('tr');
 
-            // Colonna per il numero progressivo
-            const tdNumber = document.createElement('td');
-            tdNumber.innerText = i + 1;
-            row.appendChild(tdNumber);
+        // Colonna per il numero progressivo
+        const tdNumber = document.createElement('td');
+        tdNumber.innerText = i + 1;
+        row.appendChild(tdNumber);
 
-            // Popola le celle della riga con i dati
-            nestedKeys.forEach(key => {
-                const td = document.createElement('td');
-                const value = getNestedValue(user, key); // Ottieni il valore con la notazione puntata
-                td.innerText = value !== null && value !== undefined ? value : ''; // Mostra il valore o stringa vuota
-                row.appendChild(td);
-            });
-            // Aggiungi la colonna con il pulsante alla fine della riga
-            const tdButton = document.createElement('td');
-            const button = document.createElement('button');
-            button.className = 'btn btn-secondary shadow-sm  btn-custom'; // Stile del pulsante
-            //button.innerText = '=>'; // Testo del pulsante
-            button.innerHTML = '<i class="fas fa-arrow-right"></i>'; // Icona "arrow-right"
-    
-            // Imposta l'attributo data-codiceFiscale al codice fiscale dell'utente
-            button.setAttribute('data-codiceFiscale', user.codiceFiscale);
-    
-            // Aggiungi un gestore di eventi al pulsante
-            button.addEventListener('click', function() {
-                const codiceFiscale = this.getAttribute('data-codiceFiscale');
-                console.log('Pulsante cliccato per codice fiscale:', codiceFiscale);
-                formCandidato(codiceFiscale)
-    
-                // Inserisci qui la logica da eseguire quando viene cliccato il pulsante
-            });
-    
-            // Aggiungi il pulsante alla cella e la cella alla riga
-            tdButton.appendChild(button);
-            row.appendChild(tdButton);
-            // Aggiungi la riga completa alla tabella
-            tableBody.appendChild(row);
-        }
+        // Popola le celle della riga con i dati
+        nestedKeys.forEach(key => {
+            const td = document.createElement('td');
+            let value = getNestedValue(user, key); // Ottieni il valore con la notazione puntata
+
+            // Controlla se il valore è una data nel formato ISO
+            if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(value)) {
+                value = formatDate(value, false, false); // Formatta la data
+            }
+
+            td.innerText = value !== null && value !== undefined ? value : ''; // Mostra il valore o stringa vuota
+            row.appendChild(td);
+        });
+
+        // Aggiungi la colonna con il pulsante alla fine della riga
+        const tdButton = document.createElement('td');
+        const button = document.createElement('button');
+        button.className = 'btn btn-secondary shadow-sm btn-custom'; // Stile del pulsante
+        button.innerHTML = '<i class="fas fa-arrow-right"></i>'; // Icona "arrow-right"
+
+        // Imposta l'attributo data-codiceFiscale al codice fiscale dell'utente
+        button.setAttribute('data-codiceFiscale', user.codiceFiscale);
+
+        // Aggiungi un gestore di eventi al pulsante
+        button.addEventListener('click', function() {
+            const codiceFiscale = this.getAttribute('data-codiceFiscale');
+            console.log('Pulsante cliccato per codice fiscale:', codiceFiscale);
+            formCandidato(codiceFiscale);
+
+            // Inserisci qui la logica da eseguire quando viene cliccato il pulsante
+        });
+
+        // Aggiungi il pulsante alla cella e la cella alla riga
+        tdButton.appendChild(button);
+        row.appendChild(tdButton);
+
+        // Aggiungi la riga completa alla tabella
+        tableBody.appendChild(row);
     }
+}
 
 
     // Funzione per generare la navigazione delle pagine
@@ -564,13 +571,25 @@ async function avvioFunction(query){
         });
     
  }
- function exportTableToExcelFromVisibleTable() {
+ function exportTableToExcelFromVisibleTable(concorsoId,concorsoTipoProva) {
+    let dataP=""
+    if(dateProve.length===1){
+        dataP =  formatDate(dateProve[0].split('|')[0],true, true);//.// Restituisce la parte della data in -> gg-mm-aaaa hh:mm
+    }
     // Ottieni la tabella dal DOM
-    let table = document.getElementById('concorsiTable');  
+    console.log('exportBtn------------------------------------')
+    let table = document.getElementById('concorsiTable');
     if (!table) return;
 
     let rows = [];
-    
+
+    // Aggiungi una riga con il titolo che occupa 5 colonne
+    let titleRow =[`${concorsoTipoProva}_${concorsoId}__${dataP}`]; // Personalizza il titolo
+    rows.push([titleRow[0], '', '', '', '']);
+
+    // Aggiungi una riga vuota come separatore
+    rows.push([]);
+
     // Ottieni le righe dell'intestazione
     let headerRow = [];
     table.querySelectorAll('thead tr th').forEach(th => {
@@ -590,12 +609,52 @@ async function avvioFunction(query){
     // Crea un foglio di lavoro Excel con i dati della tabella
     let worksheet = XLSX.utils.aoa_to_sheet(rows);
 
+    // Imposta la larghezza delle colonne in base ai dati
+    let colWidths = headerRow.map((header, i) => {
+        let maxLength = Math.max(
+            header.length,
+            ...rows.slice(3).map(row => (row[i] ? row[i].toString().length : 0))
+        );
+        return { wch: maxLength + 2 }; // Aggiungi un po' di spazio extra
+    });
+    worksheet['!cols'] = colWidths;
+
+    // Aggiungi lo stile alle intestazioni (sfondo grigio chiaro e bordi)
+    let headerRange = XLSX.utils.encode_range({ s: { c: 0, r: 2 }, e: { c: headerRow.length - 1, r: 2 } });
+    for (let cellAddress in worksheet) {
+        if (worksheet[cellAddress] && cellAddress >= 'A3' && cellAddress <= 'Z3') {
+            worksheet[cellAddress].s = {
+                fill: { fgColor: { rgb: "D3D3D3" } },
+                border: {
+                    top: { style: "thin", color: { rgb: "000000" } },
+                    bottom: { style: "thin", color: { rgb: "000000" } },
+                    left: { style: "thin", color: { rgb: "000000" } },
+                    right: { style: "thin", color: { rgb: "000000" } }
+                },
+                font: { bold: true }
+            };
+        }
+    }
+
+    // Aggiungi i bordi a tutte le celle della tabella
+    Object.keys(worksheet).forEach(cell => {
+        if (cell[0] !== "!") {
+            worksheet[cell].s = worksheet[cell].s || {};
+            worksheet[cell].s.border = {
+                top: { style: "thin", color: { rgb: "000000" } },
+                bottom: { style: "thin", color: { rgb: "000000" } },
+                left: { style: "thin", color: { rgb: "000000" } },
+                right: { style: "thin", color: { rgb: "000000" } }
+            };
+        }
+    });
+
     // Crea una nuova cartella di lavoro
     let workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Dati");
 
     // Esporta il file Excel
-    XLSX.writeFile(workbook, 'dati_tabella.xlsx');
+    XLSX.writeFile(workbook, `${concorsoTipoProva}_${concorsoId}_${dataP}.xlsx`);
 }
 function exportTableToExcel(data) {
     if (!data || data.length === 0) return; // Controlla che ci siano dati
@@ -708,8 +767,9 @@ function generatorePDF(concorsoId,concorsoTipoProva){
             const testDati=flattenAndFormatDates(usersData);
             const filteredList = filterFields(usersData, requiredKeys);//non serve più, TODO
             const filterListFormattedDate= formatDatesInObjects(filteredList, "dataNascita")
+          //  console.log("///////////////////////", testDati)
             
-            console.log('prova dati formattati:',testDati);
+            //console.log('prova dati formattati:',testDati);
             let dataP =  formatDate(dateProve[0].split('|')[0],true, true);//.// Restituisce la parte della data in -> gg-mm-aaaa hh:mm
             switch (concorsoTipoProva) {
                 case 'PROVA MOTORIO-ATTITUDINALE':
@@ -749,7 +809,7 @@ function generatorePDF(concorsoId,concorsoTipoProva){
                             [15, 60, 60, 40, 40, 60, 30],
                             [125, 165, 195, 277],
                         testDati,
-                            ['cognome','nome','dataNascita']//popola i campi a partire dal secondo passato come parametro in 'intestazioneColonne'
+                            ['cognome','nome','dataNascita','codiceFiscale']//popola i campi a partire dal secondo passato come parametro in 'intestazioneColonne'
                         );
                         break;
         
@@ -808,7 +868,7 @@ function generateStructuredString(inputList) {
             result += '\n';
         }
     }
-    console.log('/////////////////// ', result);
+   // console.log('/////////////////// ', result);
     return result;
 }
 

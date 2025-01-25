@@ -52,7 +52,7 @@ async function generatePage(concorsi) {
 
     // Aggiungi i pulsanti per le prove dopo che tutte le card sono state generate
     const promises = concorsi.map(concorso => {
-             aggiungiPulsanteProve(concorso.nomeCollection, "PROVA MOTORIO-ATTITUDINALE", "PROVE MOTORIE", `button-${concorso.nomeCollection}`,`btn btn-success`);
+             aggiungiPulsanteProve(concorso.nomeCollection, "PROVA MOTORIO-ATTITUDINALE", "PROVE MOTORIE", `button-${concorso.nomeCollection}`,`btn customC-btn`);
              aggiungiPulsanteProve(concorso.nomeCollection, "VISITA MEDICA","VISITA MEDICA", `button-${concorso.nomeCollection}`,`btn custom-btn`);
              aggiungiPulsanteProve(concorso.nomeCollection, "PROVA ORALE","PROVA ORALE", `button-${concorso.nomeCollection}`,`btn customB-btn`)
         }

@@ -127,7 +127,9 @@ document.addEventListener("DOMContentLoaded", () => {
   
       const buttonUser = document.getElementById(`button-${doc.codiceFiscale}`);
       buttonUser.addEventListener("click", () => {
-        console.log(buttonUser.getAttribute("data-codiceFiscale"));
+        let codiceFiscaleCandidato=buttonUser.getAttribute("data-codiceFiscale")
+        console.log(codiceFiscaleCandidato);
+        formCandidato(codiceFiscaleCandidato)
       });
     });
   }
@@ -195,7 +197,10 @@ document.addEventListener("DOMContentLoaded", () => {
   
       const buttonUser = document.getElementById(`button-${doc.codiceFiscale}`);
       buttonUser.addEventListener("click", () => {
-        console.log(buttonUser.getAttribute("data-codiceFiscale"));
+        let codiceFiscaleCandidato=buttonUser.getAttribute("data-codiceFiscale")
+        console.log(codiceFiscaleCandidato);
+        formCandidato(codiceFiscaleCandidato)
+
       });
     });
   }
@@ -249,3 +254,12 @@ document.addEventListener("DOMContentLoaded", () => {
         return "";
     }
   }
+  function formCandidato(codiceFiscale){
+    const concorsoId = document.querySelector('script[type="module"]').getAttribute('concorsoId');
+    const concorsoTipoProva = document.querySelector('script[type="module"]').getAttribute('tipoProva')
+    const url = `/gestioneProveCandidato?id=${concorsoId}&tipoProva=${concorsoTipoProva}&codiceFiscaleCandidato=${codiceFiscale}`; // Sostituisci con l'URL desiderato
+    const windowFeatures = "width=800,height=600,resizable,scrollbars";
+
+    window.open(url, "_blank", windowFeatures);
+
+};
