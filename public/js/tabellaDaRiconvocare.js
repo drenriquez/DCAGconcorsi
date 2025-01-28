@@ -19,18 +19,25 @@ document.addEventListener("DOMContentLoaded", () => {
       "dataProva",
       "giorniCertificati",
       "dataInizioMalattia",
+      "dataFineMalattia", 
     ];
   
     // Aggiungi le icone di ordinamento e i listener
     headers.forEach((header, index) => {
-      const columnKey = columns[index];
+      const columnKey = columns[index]; // Assicurati che `columns` sia definito correttamente
+      if (!columnKey) {
+        console.error("Colonna non definita per l'indice:", index);
+        return;
+      }
+    
       const icon = document.createElement("i");
       icon.className = "fas fa-sort";
       icon.style.cursor = "pointer";
       header.appendChild(icon);
-  
+    
       // Aggiungi il listener di ordinamento per ciascuna colonna
       header.addEventListener("click", () => {
+        console.log(`Ordinamento richiesto per la colonna: ${columnKey}`); // Debug
         sortTableByColumn(columnKey);
       });
     });
@@ -40,6 +47,9 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       console.error("Errore durante il caricamento della tabella:", error);
     }
+    const downloadButton = document.getElementById('exportBtnXlsx');
+    downloadButton.addEventListener("click", exportTableToExcel);
+        
   }
   
   async function populateTable() {
@@ -104,7 +114,13 @@ document.addEventListener("DOMContentLoaded", () => {
         formatDate(parseInt(assenza.dataInizioMalattia, 10), false, false, "yyyy-MM-dd")
       );
       const giorniCertificati = safeValue(assenza.giorniCertificati);
-      const dataFineMalattia = addDaysToDate(dataInizio, giorniCertificati);
+      let dataFineMalattia = addDaysToDate(dataInizio, giorniCertificati);
+      if(!giorniCertificati){
+        dataFineMalattia=addDaysToDate(doc.ultimoStep.dataProva,1)
+        console.log("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-",dataInizio)
+      }
+
+      console.log('in populateTable riga 118 dataFineMalattia:' ,dataFineMalattia, 'dataInizio',dataInizio,'giorniCErtificati',giorniCertificati)
   
       const tr = document.createElement("tr");
       tr.innerHTML = `
@@ -132,11 +148,18 @@ document.addEventListener("DOMContentLoaded", () => {
         formCandidato(codiceFiscaleCandidato)
       });
     });
+    
   }
   
   // Funzione per ordinare i dati
   function sortTableByColumn(columnKey) {
     sortDirection[columnKey] = sortDirection[columnKey] === "asc" ? "desc" : "asc";
+
+     // Debug: Stampa i valori di "dataFineMalattia" per le prime due righe
+  console.log("Valore di dataFineMalattia per l'ordinamento:", {
+    valA: getColumnValue(sortedData[0], "dataFineMalattia"),
+    valB: getColumnValue(sortedData[1], "dataFineMalattia"),
+  });
   
     sortedData.sort((a, b) => {
       let valA = getColumnValue(a, columnKey);
@@ -146,6 +169,11 @@ document.addEventListener("DOMContentLoaded", () => {
       if (valA instanceof Date && valB instanceof Date) {
         return sortDirection[columnKey] === "asc" ? valA - valB : valB - valA;
       }
+  
+      // Se uno dei due valori è null, metti l'altro prima
+      if (valA === null && valB === null) return 0;
+      if (valA === null) return 1; // "valB" viene prima
+      if (valB === null) return -1; // "valA" viene prima
   
       // Se sono valori non Date (stringhe, numeri), normalizzali
       valA = valA == null ? "" : valA;
@@ -160,13 +188,13 @@ document.addEventListener("DOMContentLoaded", () => {
       return sortDirection[columnKey] === "asc" ? valA - valB : valB - valA;
     });
   
-    updateTableBody();  // aggiorna la tabella con i dati ordinati
+    updateTableBody(); // Aggiorna la tabella con i dati ordinati
   }
   
   // Funzione per aggiornare la tabella con i dati ordinati
   function updateTableBody() {
     const tbody = document.querySelector("#documentTable tbody");
-    tbody.innerHTML = "";  // Svuota la tabella
+    tbody.innerHTML = ""; // Svuota la tabella
   
     sortedData.forEach((doc) => {
       const assenza = doc.ultimoStep?.assenzaGiustificata || {};
@@ -174,7 +202,13 @@ document.addEventListener("DOMContentLoaded", () => {
         formatDate(parseInt(assenza.dataInizioMalattia, 10), false, false, "yyyy-MM-dd")
       );
       const giorniCertificati = safeValue(assenza.giorniCertificati);
-      const dataFineMalattia = addDaysToDate(dataInizio, giorniCertificati);
+      let dataFineMalattia = addDaysToDate(dataInizio, giorniCertificati);
+      if(!giorniCertificati){
+        dataFineMalattia=addDaysToDate(doc.ultimoStep.dataProva,1)
+        console.log("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-",dataInizio)
+      }
+  
+      console.log("Rendering riga:", { dataInizio, giorniCertificati, dataFineMalattia }); // Debug
   
       const tr = document.createElement("tr");
       tr.innerHTML = `
@@ -186,7 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <td>${safeValue(formatDate(doc.ultimoStep?.dataProva, true, false, "yyyy-MM-dd"))}</td>
         <td>${giorniCertificati}</td>
         <td>${dataInizio}</td>
-        <td>${dataFineMalattia}</td>
+        <td>${dataFineMalattia}</td> <!-- Assicurati che questo valore sia corretto -->
         <td>
           <button id="button-${doc.codiceFiscale}" class="btn btn-secondary shadow-sm btn-custom" data-codiceFiscale="${doc.codiceFiscale}">
             <i class="fas fa-arrow-right"></i>
@@ -197,19 +231,21 @@ document.addEventListener("DOMContentLoaded", () => {
   
       const buttonUser = document.getElementById(`button-${doc.codiceFiscale}`);
       buttonUser.addEventListener("click", () => {
-        let codiceFiscaleCandidato=buttonUser.getAttribute("data-codiceFiscale")
+        let codiceFiscaleCandidato = buttonUser.getAttribute("data-codiceFiscale");
         console.log(codiceFiscaleCandidato);
-        formCandidato(codiceFiscaleCandidato)
-
+        formCandidato(codiceFiscaleCandidato);
       });
     });
   }
-  
   // Funzione helper per valori sicuri
   function safeValue(value) {
-    return value == null ? "" : value;
-  }
+    if (value == null || value === "NaN-NaN-NaN") {
+        return "";
+    }
+    return value;
+}
   
+  // Funzione per aggiungere giorni a una data
   // Funzione per aggiungere giorni a una data
   function addDaysToDate(dateString, days) {
     if (!dateString || isNaN(Date.parse(dateString))) {
@@ -240,16 +276,34 @@ document.addEventListener("DOMContentLoaded", () => {
       case "dataInizioMalattia":
         return safeValue(item.ultimoStep?.assenzaGiustificata?.dataInizioMalattia);
       case "dataFineMalattia":
-        // Calcolare dataFineMalattia come oggetto Date
         const dataInizio = item.ultimoStep?.assenzaGiustificata?.dataInizioMalattia;
         const giorniCertificati = item.ultimoStep?.assenzaGiustificata?.giorniCertificati;
+        
         if (dataInizio && !isNaN(giorniCertificati)) {
-          const data = new Date(dataInizio);  // crea una data a partire dalla dataInizio
-          data.setDate(data.getDate() + giorniCertificati);  // aggiungi i giorni certificati
-          console.log(`dataFineMalattia: ${data}`);  // Aggiungi log per debug
-          return data;  // ritorna un oggetto Date
+          // Se dataInizio è un timestamp, convertilo in una data
+          const data = new Date(parseInt(dataInizio, 10));
+          if (isNaN(data.getTime())) {
+            console.error("Data non valida:", dataInizio);
+            return null;
+          }
+          data.setDate(data.getDate() + parseInt(giorniCertificati, 10));
+          console.log("Calcolo dataFineMalattia:", { dataInizio, giorniCertificati, dataFineMalattia: data }); // Debug
+          const timestamp = new Date(data).getTime();
+          return timestamp // Restituisce un oggetto Date
         }
-        return null;  // ritorna null se i dati non sono validi
+        else{
+
+          const data = new Date(parseInt(item.ultimoStep.dataProva, 10));
+          data.setDate(data.getDate() + parseInt(1, 10));
+          console.log("Calcolo dataFineMalattia:", { dataInizio, dataFineMalattia: data }); // Debug
+          const timestamp = new Date(data).getTime();
+          
+          
+           return timestamp
+            //console.log("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-",dataInizio)
+          
+        }
+       // return null; // Restituisce null se i dati non sono validi
       default:
         return "";
     }
@@ -263,3 +317,29 @@ document.addEventListener("DOMContentLoaded", () => {
     window.open(url, "_blank", windowFeatures);
 
 };
+function exportTableToExcel() {
+  const tableData = [];
+
+  // Recupera i dati dalla tabella
+  const table = document.querySelector("#documentTable");
+  const headers = Array.from(table.querySelectorAll("thead th"));
+  const rows = Array.from(table.querySelectorAll("tbody tr"));
+
+  // Aggiungi le intestazioni
+  const headerRow = headers.map((header) => header.textContent.trim());
+  tableData.push(headerRow);
+
+  // Aggiungi i dati delle righe
+  rows.forEach((row) => {
+    const rowData = Array.from(row.querySelectorAll("td")).map((cell) => cell.textContent.trim());
+    tableData.push(rowData);
+  });
+
+  // Crea il foglio di lavoro e il file Excel
+  const worksheet = XLSX.utils.aoa_to_sheet(tableData);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Tabella");
+
+  // Salva il file Excel
+  XLSX.writeFile(workbook, "Tabella.xlsx");
+}

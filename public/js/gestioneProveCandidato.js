@@ -2,6 +2,7 @@ import { apiGraphQLgetAllUsers } from "../../utils/apiGraphql.js";
 import { generaTabulatiProveMotorie } from "../../utils/proveTabulatiGenerator.js"
 import { formatDate } from "../../utils/formatDate.js"
 import  esitiProveList  from "../../utils/esitiProveList.js"
+//import flatpickr from "flatpickr";
 
 document.addEventListener("DOMContentLoaded", async () => {
   const concorsoId = document.querySelector('script[type="module"]').getAttribute('concorsoId');
@@ -354,16 +355,21 @@ async function mutationStep(concorsoId,concorsoTipoProva,esito,idStep,dataProva,
                   console.log("----------------------- MUTATION RESULT",response)//ASSENTE GIUSTIFICATO
 }
 
-
-
-
-
-
-
-
-
 // Funzione per aggiungere uno step successivo
-function aggiungiStep(index,step) {
+async function aggiungiStep(index,step) {
+  const concorsoId = document.querySelector('script[type="module"]').getAttribute('concorsoId');
+  const concorsoTipoProva = document.querySelector('script[type="module"]').getAttribute('tipoProva');
+  let queryGetEsitiProveData=`
+      query {
+          getDateProveByTipoProva(concorso: "${concorsoId}",tipoProva:"${concorsoTipoProva}")
+      }
+      `;
+      const responseDateProva = await apiGraphQLgetAllUsers(queryGetEsitiProveData);
+      let listaDateProve=responseDateProva['data']['getDateProveByTipoProva'].map((res)=>{
+        return  formatDate( res.split('|')[0],true, true,"yyyy-MM-dd");
+      })
+      console.log(listaDateProve)
+ 
  notExistLastStep=false;
   console.log('dentro la aggiungiStep, step :',step)
   modificaStep(index,step);
@@ -381,10 +387,22 @@ function aggiungiStep(index,step) {
     newStepCard.innerHTML = `
       <div class="card-header step-header">Step ${newStepNumber}</div>
       <div class="card-body">
-        <div class="mb-3">
-          <label for="data-prova-${newStepNumber}" class="form-label"><strong>Data e Ora Prova:</strong></label>
-          <input type="datetime-local" id="data-prova-${newStepNumber}" class="form-control" />
+
+    <div class="mb-3">
+      <label for="data-prova-${newStepNumber}" class="form-label"><strong>Data e Ora Prova (fra le prove già calendarizzate da data Fine Malattia):</strong></label>
+      <input type="datetime-local" id="data-prova-${newStepNumber}" class="form-control" />
+      <div class="mb-3">
+            <label for="timeSelect" class="form-label">Seleziona un orario</label>
+            <select id="timeSelect" class="form-select">
+                
+            </select>
         </div>
+    </div>    
+
+    <div class="mb-3">
+      <input type="checkbox" id="toggle-input-${newStepNumber}" />
+      <label for="toggle-input-${newStepNumber}">Mostra tutti giorni</label>
+    </div>
         <div class="mb-3">
           <label for="esito-${newStepNumber}" class="form-label"><strong>Esito:</strong></label>
           <select id="esito-${newStepNumber}" class="form-control">
@@ -417,18 +435,127 @@ function aggiungiStep(index,step) {
         <button class="btn customC-btn"  id="buttonSalvaStep-${newStepNumber}">Salva Step</button>
       </div>
     `;
-
+  //   <div class="mb-3">
+  //   <label for="data-prova" class="form-label"><strong>Data e Ora Prova:</strong></label>
+  //   <input type="text" id="data-prova" class="form-control" />
+  // </div>    
     container.appendChild(newStepCard);
     const buttonSalvaStep = document.getElementById(`buttonSalvaStep-${newStepNumber}`);
     buttonSalvaStep.addEventListener('click', () => {
      console.log("button salvaStep step n: ",newStepNumber);
-    })
+    });
 
+    let formattedDataMalattia=formatDate(parseInt(step.assenzaGiustificata?.dataInizioMalattia, 10),false, false,"yyyy-MM-dd");
+    //console.log("-*-*-*-*-*-*-*-*-",formattedDataMalattia,step.assenzaGiustificata.giorniCertificati)
+    if (formattedDataMalattia == null || formattedDataMalattia === "NaN-NaN-NaN") {
+      formattedDataMalattia=step.dataProva;
+  }
+    let giorniCertificati=step.assenzaGiustificata?step.assenzaGiustificata.giorniCertificati:1
+    //console.log("-*-*-*-*-*-*-*-*-",formattedDataMalattia,giorniCertificati)
+    let formattedDataFineMalattia=addDaysToDate(formattedDataMalattia,giorniCertificati)
+    // Gestione del cambio del campo "Data e Ora Prova"
+    let dataMinima=formattedDataFineMalattia||step.dataProva
+    document.querySelector(`#toggle-input-${newStepNumber}`).addEventListener('change', function (event) {
+      const parent = document.querySelector(`#data-prova-${newStepNumber}`).parentElement;
+      //let dataMinima=formattedDataFineMalattia||step.dataProva
+      console.log('-*********---****',dataMinima)
+      if (event.target.checked) {
+        // Sostituisci con un campo di testo
+        parent.innerHTML = `
+        <label for="data-prova-${newStepNumber}" class="form-label"><strong>Data e Ora Prova da Data Fine Malattia:</strong></label>
+        <input type="datetime-local" id="data-prova-${newStepNumber}" class="form-control" />
+       <div class="mb-3">
+            <label for="timeSelect" class="form-label">Seleziona un orario</label>
+            <select id="timeSelect" class="form-select" defoult="08:00">
+                
+            </select>
+        </div>
+      `;
+        // Array di orari predefiniti
+        const predefinedTimes = [
+          "07:00", "07:30", "08:00", "08:30", "09:00", "09:30", 
+          "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", 
+          "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", 
+          "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", 
+          "19:00", "19:30", "20:00"
+      ];
+
+      // Seleziona l'elemento <select>
+      const timeSelect = document.getElementById("timeSelect");
+
+      // Genera le opzioni dinamicamente
+      predefinedTimes.forEach(time => {
+          const option = document.createElement("option");
+          option.value = time;
+          option.textContent = time;
+          timeSelect.appendChild(option);
+      });
+      // Riapplica Flatpickr al nuovo input
+      flatpickr(`#data-prova-${newStepNumber}`, {
+        //enable: ["2025-01-29", "2025-02-05", "2025-02-12"], // Date evidenziate
+        minDate: dataMinima,
+        dateFormat: "Y-m-d", // Formato della data con ora e minuti
+        //enableTime: true, // Abilita la selezione dell'ora
+        noCalendar: false, // Mostra il calendario
+        //time_24hr: true, // Usa il formato 24 ore
+        //defaultDate: dataMinima // Imposta la data e ora predefiniti (esempio: 29 gennaio 2025 alle 14:30)
+      
+      });
+      
+      } else {
+        // Ripristina il campo datetime-local
+        parent.innerHTML = `
+          <label for="data-prova-${newStepNumber}" class="form-label"><strong>Data e Ora Prova (fra le prove già calendarizzate da data Fine Malattia):</strong></label>
+          <input type="datetime-local" id="data-prova-${newStepNumber}" class="form-control" />
+          <div class="mb-3">
+            <label for="timeSelect" class="form-label">Seleziona un orario</label>
+            <select id="timeSelect" class="form-select">
+                
+            </select>
+        </div>
+        `;
+       
+        //dateInputRinvio.addEventListener("change", handleDateSelection);
+        // Riapplica Flatpickr al nuovo input
+        flatpickr(`#data-prova-${newStepNumber}`, {
+          dateFormat: "Y-m-d", // Formato della data con ora e minuti
+          //enableTime: true, // Abilita la selezione dell'ora
+          noCalendar: false, // Mostra il calendario
+          //time_24hr: true, // Usa il formato 24 ore
+          //defaultDate: dataMinima,// Imposta data e ora predefiniti con orario
+          // Imposta la data e ora predefiniti (esempio: 29 gennaio 2025 alle 14:30)
+          minDate: dataMinima,
+          enable: listaDateProve,//["2025-01-29", "2025-02-05", "2025-02-12"], // Date evidenziate
+        });
+        let dateInputRinvio = document.getElementById(`data-prova-${newStepNumber}`);
+        dateInputRinvio.addEventListener("change", (event)=>{
+          let predefinedTimes=handleDateSelection(event,event.target.value,listaDateProve,)
+          /* const predefinedTimes = [
+            "08:00",
+            "09:30",
+            "11:00",
+            "13:00",
+            "15:30",
+            "18:00"
+        ]; */
+        // Seleziona l'elemento <select>
+          const timeSelect = document.getElementById("timeSelect");
+          timeSelect.innerHTML = "";
+          // Genera le opzioni dinamicamente
+          predefinedTimes.forEach(time => {
+              const option = document.createElement("option");
+              option.value = time;
+              option.textContent = time;
+              timeSelect.appendChild(option);
+          });
+        });
+        // Array di orari predefiniti
+      }
+    });
     // Event listener per mostrare/nascondere i campi aggiuntivi
     document.getElementById(`esito-${newStepNumber}`).addEventListener("change", (event) => {
         const value = event.target.value;
         const extraFields = document.getElementById(`assenza-giustificata-fields-${newStepNumber}`);
-
         if (["ANTICIPO/POSTICIPO", "ASSENTE GIUSTIFICATO", "PROVA SOSPESA", "INFORTUNATO", "ULTERIORI ACCERTAMENTI"].includes(value)) {
             extraFields.style.display = "block";
         } else {
@@ -436,8 +563,58 @@ function aggiungiStep(index,step) {
         }
     });
 
+    
+  flatpickr(`#data-prova-${newStepNumber}`, {
+     
+      dateFormat: "Y-m-d", // Formato della data con ora e minuti
+      //enableTime: true, // Abilita la selezione dell'ora
+      noCalendar: false, // Mostra il calendario
+      //time_24hr: true, // Usa il formato 24 ore
+      //defaultDate: dataMinima,// Imposta data e ora predefiniti con orario
+      // Imposta la data e ora predefiniti (esempio: 29 gennaio 2025 alle 14:30)
+      minDate: dataMinima,
+      enable: listaDateProve,//["2025-01-29", "2025-02-05", "2025-02-12"], // Date evidenziate
+    });
 
-
+    let dateInputRinvio = document.getElementById(`data-prova-${newStepNumber}`);
+    dateInputRinvio.addEventListener("change", (event)=>{
+      let predefinedTimes=handleDateSelection(event,event.target.value,listaDateProve,)
+      /* const predefinedTimes = [
+        "08:00",
+        "09:30",
+        "11:00",
+        "13:00",
+        "15:30",
+        "18:00"
+    ]; */
+    // Seleziona l'elemento <select>
+      const timeSelect = document.getElementById("timeSelect");
+      timeSelect.innerHTML = "";
+      // Genera le opzioni dinamicamente
+      predefinedTimes.forEach(time => {
+          const option = document.createElement("option");
+          option.value = time;
+          option.textContent = time;
+          timeSelect.appendChild(option);
+      });
+    });
+    // Array di orari predefiniti
+    
+  //console.log('lista delle prove',listaDateProve)
+  
+}
+function handleDateSelection(event,dataSelected,dataList) {
+  const selectedDate = event.target.value; // Ottieni il valore della data selezionata
+  let resultList=getTimesForDate(dataList,dataSelected)
+  console.log("Data selezionata:", selectedDate, "lista orari",resultList);
+  return resultList
+  // Esegui qui ulteriori azioni (esempio: aggiornare un altro campo o fare una richiesta API)
+}
+function getTimesForDate(dataList, targetDate) {
+  // Filtra la lista per ottenere solo gli orari della data specificata
+  return dataList
+      .filter(entry => entry.startsWith(targetDate)) // Filtra per la data
+      .map(entry => entry.split(" ")[1]); // Estrai solo l'orario
 }
 function getPunteggio(index) {
   const intero = document.getElementById(`punteggio-intero-${index}`).value;
@@ -454,4 +631,13 @@ function getPunteggio(index) {
   // Assembla il punteggio come numero con due decimali
   const punteggio = interoVal + decimaleVal / 100;
   return parseFloat(punteggio.toFixed(2));
+};
+// Funzione per aggiungere giorni a una data
+function addDaysToDate(dateString, days) {
+  if (!dateString || isNaN(Date.parse(dateString))) {
+    return "";
+  }
+  const date = new Date(dateString);
+  date.setDate(date.getDate() + days);
+  return date.toISOString().split("T")[0];
 }

@@ -6,6 +6,8 @@
   <title>Gestione Stato Candidato</title>
   <!-- Bootstrap CSS -->
   <link href="/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/node_modules/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"> -->
   <style>
     .main {
       margin-top: 50px;
@@ -44,8 +46,10 @@
             color: white; /* Colore del testo */
         }
   </style>
+  
 </head>
 <body>
+
   <div class="container main">
     <h1 class="text-center">Gestione Stato <%= concorsoTipoProva %> del Candidato - <%= concorsoId %></h1>
 
@@ -84,6 +88,6 @@
   ></script>
 <script src="/js/xlsx.full.min.js"></script>
 <script src="/js/jspdf.min.js"></script>
-  
+<script src="/node_modules/flatpickr/dist/flatpickr.min.js" ></script>
 </body>
 </html>
