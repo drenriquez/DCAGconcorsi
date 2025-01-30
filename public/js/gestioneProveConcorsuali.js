@@ -460,14 +460,28 @@ async function avvioFunction(query){
  async function popolaDropdown(query,idDropdown,concorsoId){
     let dropdownElement=document.getElementById(idDropdown);
     const response = await apiGraphQLgetAllUsers(query);
-    ////console.log("+++++++++++++++++",idDropdown)
+    console.log("+++++++++++++++++response",response)
     //dropdownElement.innerHTML = `<label><input type="checkbox" name="codiceFiscale" value="codiceFiscale"> Codice Fiscale</label>`;
     // Cicla su tutte le proprietà di "data"
      for (let key in response.data) {
         // Controlla se la proprietà è un array
-        if (Array.isArray(response.data[key])) {
+        
+        let arrayResult=response.data[key]
+        if(key==='getDateProveByTipoProva'){
+            console.log("+**********++++key",key)
+            arrayResult.sort((a, b) => {
+                // Estrarre solo la parte data dalla stringa "YYYY-MM-DDTHH:MM|TipoProva"
+                const dateA = new Date(a.split('|')[0]); // Prende solo la parte della data e la converte in oggetto Date
+                const dateB = new Date(b.split('|')[0]);
+            
+                return dateA - dateB; // Ordina prima per giorno, poi per ora
+            });
+        }
+        if (Array.isArray(arrayResult)) {
             // Se è un array, cicla e stampa il contenuto
-            response.data[key].forEach((titolo, index) => {
+
+            
+            arrayResult.forEach((titolo, index) => {
                // //console.log(`${index + 1}. ${titolo}`);
                 dropdownElement.innerHTML += `<label><input type="checkbox" name="${titolo}" value="${titolo}"> ${titolo}</label>`;
             });

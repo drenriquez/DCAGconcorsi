@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
       // Aggiungi il listener di ordinamento per ciascuna colonna
       header.addEventListener("click", () => {
-        console.log(`Ordinamento richiesto per la colonna: ${columnKey}`); // Debug
+       //console.log(`Ordinamento richiesto per la colonna: ${columnKey}`); // Debug
         sortTableByColumn(columnKey);
       });
     });
@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
     const response = await apiGraphQLgetAllUsers(query);
     const data = response?.data?.getDocumentsByProvaWithEsito || []; 
-    console.log("--------  data ",data)           
+    //console.log("--------  data ",data)           
   
     sortedData = [...data]; // Memorizza i dati per l'ordinamento
     sortedData.sort((a, b) => {
@@ -107,20 +107,27 @@ document.addEventListener("DOMContentLoaded", () => {
         return dateA - dateB; // Ordinamento crescente
     });
       
-      console.log("-------- sortedData ",sortedData)    
+      //console.log("-------- sortedData ",sortedData)    
     sortedData.forEach((doc) => {
       const assenza = doc.ultimoStep?.assenzaGiustificata || {};
-      const dataInizio = safeValue(
-        formatDate(parseInt(assenza.dataInizioMalattia, 10), false, false, "yyyy-MM-dd")
+
+      console.log("assenza.dataInizioMalattia:",assenza.dataInizioMalattia)
+
+      let dataInizio = safeValue(
+        formatDate(parseInt(assenza.dataInizioMalattia, 10), false, false, "yyyy-MM-dd") //TODO
       );
+      if(checkISODateFormat(assenza.dataInizioMalattia)){
+        dataInizio=formatDate(assenza.dataInizioMalattia,false, false, "yyyy-MM-dd")
+      }
+      console.log("dataInizio (dopo formatDate) :",dataInizio)
       const giorniCertificati = safeValue(assenza.giorniCertificati);
       let dataFineMalattia = addDaysToDate(dataInizio, giorniCertificati);
       if(!giorniCertificati){
         dataFineMalattia=addDaysToDate(doc.ultimoStep.dataProva,1)
-        console.log("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-",dataInizio)
+       // console.log("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-",dataInizio)
       }
 
-      console.log('in populateTable riga 118 dataFineMalattia:' ,dataFineMalattia, 'dataInizio',dataInizio,'giorniCErtificati',giorniCertificati)
+      //console.log('in populateTable riga 118 dataFineMalattia:' ,dataFineMalattia, 'dataInizio',dataInizio,'giorniCErtificati',giorniCertificati)
   
       const tr = document.createElement("tr");
       tr.innerHTML = `
@@ -144,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const buttonUser = document.getElementById(`button-${doc.codiceFiscale}`);
       buttonUser.addEventListener("click", () => {
         let codiceFiscaleCandidato=buttonUser.getAttribute("data-codiceFiscale")
-        console.log(codiceFiscaleCandidato);
+        //console.log(codiceFiscaleCandidato);
         formCandidato(codiceFiscaleCandidato)
       });
     });
@@ -156,10 +163,10 @@ document.addEventListener("DOMContentLoaded", () => {
     sortDirection[columnKey] = sortDirection[columnKey] === "asc" ? "desc" : "asc";
 
      // Debug: Stampa i valori di "dataFineMalattia" per le prime due righe
-  console.log("Valore di dataFineMalattia per l'ordinamento:", {
+ /*  console.log("Valore di dataFineMalattia per l'ordinamento:", {
     valA: getColumnValue(sortedData[0], "dataFineMalattia"),
     valB: getColumnValue(sortedData[1], "dataFineMalattia"),
-  });
+  }); */
   
     sortedData.sort((a, b) => {
       let valA = getColumnValue(a, columnKey);
@@ -198,17 +205,21 @@ document.addEventListener("DOMContentLoaded", () => {
   
     sortedData.forEach((doc) => {
       const assenza = doc.ultimoStep?.assenzaGiustificata || {};
-      const dataInizio = safeValue(
+
+      let dataInizio = safeValue(
         formatDate(parseInt(assenza.dataInizioMalattia, 10), false, false, "yyyy-MM-dd")
       );
+      if(checkISODateFormat(assenza.dataInizioMalattia)){
+        dataInizio= dataInizio=formatDate(assenza.dataInizioMalattia,false, false, "yyyy-MM-dd")
+      }
       const giorniCertificati = safeValue(assenza.giorniCertificati);
       let dataFineMalattia = addDaysToDate(dataInizio, giorniCertificati);
       if(!giorniCertificati){
         dataFineMalattia=addDaysToDate(doc.ultimoStep.dataProva,1)
-        console.log("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-",dataInizio)
+        //console.log("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-",dataInizio)
       }
   
-      console.log("Rendering riga:", { dataInizio, giorniCertificati, dataFineMalattia }); // Debug
+     // console.log("Rendering riga:", { dataInizio, giorniCertificati, dataFineMalattia }); // Debug
   
       const tr = document.createElement("tr");
       tr.innerHTML = `
@@ -232,7 +243,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const buttonUser = document.getElementById(`button-${doc.codiceFiscale}`);
       buttonUser.addEventListener("click", () => {
         let codiceFiscaleCandidato = buttonUser.getAttribute("data-codiceFiscale");
-        console.log(codiceFiscaleCandidato);
+       // console.log(codiceFiscaleCandidato);
         formCandidato(codiceFiscaleCandidato);
       });
     });
@@ -287,7 +298,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return null;
           }
           data.setDate(data.getDate() + parseInt(giorniCertificati, 10));
-          console.log("Calcolo dataFineMalattia:", { dataInizio, giorniCertificati, dataFineMalattia: data }); // Debug
+         // console.log("Calcolo dataFineMalattia:", { dataInizio, giorniCertificati, dataFineMalattia: data }); // Debug
           const timestamp = new Date(data).getTime();
           return timestamp // Restituisce un oggetto Date
         }
@@ -295,7 +306,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
           const data = new Date(parseInt(item.ultimoStep.dataProva, 10));
           data.setDate(data.getDate() + parseInt(1, 10));
-          console.log("Calcolo dataFineMalattia:", { dataInizio, dataFineMalattia: data }); // Debug
+         // console.log("Calcolo dataFineMalattia:", { dataInizio, dataFineMalattia: data }); // Debug
           const timestamp = new Date(data).getTime();
           
           
@@ -312,7 +323,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const concorsoId = document.querySelector('script[type="module"]').getAttribute('concorsoId');
     const concorsoTipoProva = document.querySelector('script[type="module"]').getAttribute('tipoProva')
     const url = `/gestioneProveCandidato?id=${concorsoId}&tipoProva=${concorsoTipoProva}&codiceFiscaleCandidato=${codiceFiscale}`; // Sostituisci con l'URL desiderato
-    const windowFeatures = "width=800,height=600,resizable,scrollbars";
+    const windowFeatures = "width=800,height=1000,resizable,scrollbars";
 
     window.open(url, "_blank", windowFeatures);
 
@@ -342,4 +353,19 @@ function exportTableToExcel() {
 
   // Salva il file Excel
   XLSX.writeFile(workbook, "Tabella.xlsx");
+}
+function checkTimestamp(value) {
+  if (typeof value === "number" && Number.isInteger(value) && value > 0) {
+     return true;
+  }
+  else{
+    return false
+  }
+}
+function checkISODateFormat(value) {
+  const isoPattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
+  const datePattern = /^\d{4}-\d{1,2}-\d{1,2}$/;
+  if (typeof value === "string" && isoPattern.test(value)||"string" && datePattern.test(value)) {
+     return true
+  }
 }

@@ -91,7 +91,7 @@ class UserDAO {
     }
     async getUsersByBirthDate(filterDate) {
     
-        console.log("----test getUsersByBirthDate-------",filterDate)
+        //console.log("----test getUsersByBirthDate-------",filterDate)
         const date = new Date(filterDate);
         
         return await this.collection.find({ dataNascita: { $lt: date.toISOString() } }).toArray();
@@ -107,7 +107,7 @@ class UserDAO {
     //   }
     
     async getUserByExactBirthDate(filterDate) {
-        console.log("----test getUserByExactBirthDate5-------", filterDate);
+       // console.log("----test getUserByExactBirthDate5-------", filterDate);
         
         // Converti la data fornita in un oggetto Date
         const date = new Date(filterDate);
@@ -723,7 +723,7 @@ class UserDAO {
             }
         
             try {
-                console.log(JSON.stringify(query));
+                //console.log(JSON.stringify(query));
                 
                 const candidati = await this.collection
                     .aggregate([
@@ -835,7 +835,7 @@ class UserDAO {
             });
 
             // Restituiamo l'insieme dei campi come array
-            console.log("*****getAllCampiDomandeConcorso: ",Array.from(campi))
+            //console.log("*****getAllCampiDomandeConcorso: ",Array.from(campi))
             return Array.from(campi);
 
         } catch (error) {
@@ -965,7 +965,7 @@ class UserDAO {
 
         //considera l'ultimo step per idStep
         async getDocumentsByProvaWithEsito(provaDescrizione, esitoList) {
-            console.log("------------ DAO getDocumentsByProvaWithEsito -----------");
+            //console.log("------------ DAO getDocumentsByProvaWithEsito -----------");
             try {
                 if (!this.collection) {
                     throw new Error("Database not initialized. Call initializeDatabase first.");
@@ -1030,7 +1030,7 @@ class UserDAO {
                 ];
         
                 const results = await this.collection.aggregate(pipeline).toArray();
-                console.log("----", results, "-----");
+                //console.log("----", results, "-----");
                 return results;
             } catch (error) {
                 console.error("Error fetching documents by prova and esito:", error);
@@ -1071,6 +1071,7 @@ class UserDAO {
 
                 const result = await this.collection.updateOne({ codiceFiscale }, updateQuery);
                 console.log('restult for MUTATION addOrUpdateStep : ',result)
+                console.log('///////////  stepData',stepData)
                 return result.modifiedCount > 0;
             } else {
                 const pushQuery = {
@@ -1084,6 +1085,7 @@ class UserDAO {
 
                 const result = await this.collection.updateOne({ codiceFiscale }, pushQuery);
                 console.log('restult for MUTATION addOrUpdateStep : ',result)
+                console.log('///////////  stepData',stepData)
                 return result.modifiedCount > 0;
             }
         } catch (error) {
