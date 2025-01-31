@@ -129,7 +129,7 @@ function popolaSteps(steps) {
       const formattedDateProva = formatDate( step.dataProva,true, false,"yyyy-MM-dd");
       const isAssenzaGiustificata = step.esito.descrizione === "ASSENTE GIUSTIFICATO";
       const showExtraStepButton = ["ANTICIPO/POSTICIPO", "ASSENTE GIUSTIFICATO", "PROVA SOSPESA", "INFORTUNATO", "ULTERIORI ACCERTAMENTI"].includes(step.esito.descrizione);
-      const showPunteggio = ["SUPERATA","NON SUPERATA"].includes(step.esito.descrizione);
+      const showPunteggio = ["SUPERATA","NON SUPERATA","SUPERATA CON RISERVA"].includes(step.esito.descrizione);
       const isLastStep= ((index+1)===steps.length )?true:false;
       //if(((index+1)===steps[steps.length - 1]['idStep'])){}
      // console.log('steps',steps, 'steps.length: ',steps.length)//TODO
@@ -315,7 +315,7 @@ async function mutationStep(concorsoId,concorsoTipoProva,esito,codiceFiscale,idS
                       provaDescrizione: ${JSON.stringify(concorsoTipoProva)}
                       idStep: ${JSON.stringify(idStep)}
                       stepData: {
-                        dataProva: ${JSON.stringify(dataProva)}
+                        dataProva:${JSON.stringify(dataProva)}
                         prova: {
                           descrizione:${JSON.stringify(concorsoTipoProva)}
                           categoria:${JSON.stringify(categoria)}
@@ -364,7 +364,7 @@ async function mutationStep(concorsoId,concorsoTipoProva,esito,codiceFiscale,idS
                           statoCandidato: ${JSON.stringify(statoCandidato)}
                           notaObbligatoria: ${JSON.stringify(notaObbligatoria)}
                         }
-                        punteggio: ${JSON.stringify(punteggio)}
+                        punteggio: ${null}
                         linkAllegati: null
                         assenzaGiustificata:{
                           dataInizioMalattia:${JSON.stringify(convertToISO(dataInizioMalattia))||null}
@@ -811,10 +811,12 @@ function alertMessage(msg,style,idStep){
   // Crea un elemento temporaneo
   const tempDiv = document.createElement('div');
   tempDiv.innerHTML = alertHtml;
- let cardContainer=document.getElementById(`cardContainer-${idStep-1}`)
+ let cardContainer=document.getElementById(`cardContainer-${idStep-2}`)
+ let cardContainer2=document.getElementById(`cardContainer-${idStep-1}`)
   // Aggiungilo al body
   //console.log('cardContainer',cardContainer,"idStep",idStep)
- cardContainer.appendChild(tempDiv);
+ cardContainer?.appendChild(tempDiv);
+ cardContainer2?.appendChild(tempDiv);
   // Rimuovi l'alert dopo 3 secondi
   setTimeout(function() {
     const alertElement = document.querySelector('.overlay-alert');

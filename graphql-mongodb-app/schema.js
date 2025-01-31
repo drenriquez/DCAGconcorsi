@@ -241,7 +241,7 @@ const schema = buildSchema(`
     dataProva: DateTime  # Usa DateTime per il campo data
     prova: Prova
     esito: Esito
-    punteggio: String
+    punteggio: Float  
     linkAllegati: String
     assenzaGiustificata: AssenzaGiustificata
     cFTipoProva: String
@@ -274,7 +274,7 @@ const schema = buildSchema(`
     dataProva: DateTime
     prova: ProvaInput
     esito: EsitoInput
-    punteggio: String
+    punteggio: Float
     linkAllegati: String
     assenzaGiustificata: AssenzaGiustificataInput
     cFTipoProva: String
