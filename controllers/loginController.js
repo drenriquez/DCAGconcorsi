@@ -11,7 +11,7 @@ const userDao= new UserDao()
 
 async function login(req, res, next) {
   const { username, password } = req.body;
-
+  console.log("---dentro  loginController------")
   try {
     const authenticated = await ldapServerAuth(username, password);
     console.log('+++++++++++authenticated++++ : ', authenticated);
@@ -37,10 +37,10 @@ async function login(req, res, next) {
       }
 
       // Reindirizza alla homepage
-      res.redirect('/home');
+      res.redirect('/concorsi/home');
     } else {
       // Credenziali errate, reindirizza alla pagina di login con un messaggio di errore
-      res.redirect('/');
+      res.redirect('/concorsi');
     }
   } catch (error) {
     // Gestisci errori di autenticazione

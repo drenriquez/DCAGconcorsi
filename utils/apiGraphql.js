@@ -1,5 +1,5 @@
 const apiGraphQLgetAllUsers = async (query) => {
-    const response = await fetch(`/graphql`, {
+    const response = await fetch(`/concorsi/graphql`, {
         method: 'POST',
         headers: {
         'Content-Type': 'application/json',

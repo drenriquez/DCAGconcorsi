@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     let openedWindow = null; // Variabile per tenere traccia della finestra aperta
 
     document.getElementById('daRiconvocare').addEventListener('click', () => {
-        const url = `/tabellaDaRiconvocare?id=${concorsoId}&tipoProva=${concorsoTipoProva}`; 
+        const url = `/concorsi/tabellaDaRiconvocare?id=${concorsoId}&tipoProva=${concorsoTipoProva}`; 
         const windowFeatures = "width=1200,height=600,resizable,scrollbars";
 
         if (openedWindow && !openedWindow.closed) {
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         
     document.querySelector('#eseguiBtn').addEventListener('click', function() {
         //let campiSelezionati=getSelectedTest()
-      //console.log("-----riga 10: ",campiRestituiti);
+      //////console.log("-----riga 10: ",campiRestituiti);
       let campiPerQuery = campiRestituiti.length === 0 ? ["cognome", "nome","codiceFiscale","dataNascita"] : campiRestituiti;
       avvioFunction( `
         query {
@@ -204,7 +204,7 @@ async function avvioFunction(query){
     // Mostra lo spinner e nascondi la tabella all'inizio
   
     const response = await apiGraphQLgetAllUsers(query);
-    console.log(query)
+    ////console.log(query)
     const users = response["data"]["getCandidatiByCriteria"];
     usersData=users;
     //document.getElementById('exportBtn').addEventListener('click', exportTableToExcel(users));
@@ -216,10 +216,17 @@ async function avvioFunction(query){
     let sortDirection = {}; // Stato di ordinamento
 
     if (users.length > 0) {
-        ////console.log("____________________________",users[0])
+        console.log("____________________________",users[0])
         generateTableHeader(users[0]);
         generateTableRows(users, currentPage, recordsPerPage);
         generatePagination(users.length, recordsPerPage);
+    }
+    else{
+        console.log("____________VUOTO________________")
+        let userNull=[{'codiceFiscale': '-', 'cognome': '-', 'nome': '-', 'dataNascita': '-', 'statoCandidato': '-'}]
+        generateTableHeader(userNull[0]);
+        generateTableRows(userNull, currentPage, recordsPerPage);
+        generatePagination(userNull.length, recordsPerPage);
     }
     // Nascondi lo spinner e mostra la tabella dopo il caricamento
     spinner.style.display = 'none';
@@ -272,7 +279,7 @@ async function avvioFunction(query){
             // Se è un valore puro, aggiungi la chiave
             keys.push(parentKey);
         }
-        ////console.log("*******************",keys)
+        //////console.log("*******************",keys)
         return keys;
     }
 
@@ -289,7 +296,7 @@ async function avvioFunction(query){
 
         // Ottieni tutte le chiavi (compresi i campi annidati)
         const nestedKeys = getNestedKeys(user);
-        ////console.log("----------------",nestedKeys)
+        //////console.log("----------------",nestedKeys)
         // Genera le colonne per i nomi dei campi
         nestedKeys.forEach(key => {
             const th = document.createElement('th');
@@ -351,7 +358,7 @@ async function avvioFunction(query){
         // Aggiungi un gestore di eventi al pulsante
         button.addEventListener('click', function() {
             const codiceFiscale = this.getAttribute('data-codiceFiscale');
-            console.log('Pulsante cliccato per codice fiscale:', codiceFiscale);
+            //console.log('Pulsante cliccato per codice fiscale:', codiceFiscale);
             formCandidato(codiceFiscale);
 
             // Inserisci qui la logica da eseguire quando viene cliccato il pulsante
@@ -445,7 +452,7 @@ async function avvioFunction(query){
    
     
    
-}
+}//avvioFunction
  
  function getSelectedTest() {
     var checkboxes = document.querySelectorAll('.dropdown-campiRestituiti input[type="checkbox"]');
@@ -460,7 +467,7 @@ async function avvioFunction(query){
  async function popolaDropdown(query,idDropdown,concorsoId){
     let dropdownElement=document.getElementById(idDropdown);
     const response = await apiGraphQLgetAllUsers(query);
-    console.log("+++++++++++++++++response",response)
+    ////console.log("+++++++++++++++++response",response)
     //dropdownElement.innerHTML = `<label><input type="checkbox" name="codiceFiscale" value="codiceFiscale"> Codice Fiscale</label>`;
     // Cicla su tutte le proprietà di "data"
      for (let key in response.data) {
@@ -468,21 +475,39 @@ async function avvioFunction(query){
         
         let arrayResult=response.data[key]
         if(key==='getDateProveByTipoProva'){
-            console.log("+**********++++key",key)
-            arrayResult.sort((a, b) => {
+            //////console.log("+**********++++key",arrayResult)
+           /*  arrayResult.sort((a, b) => {
                 // Estrarre solo la parte data dalla stringa "YYYY-MM-DDTHH:MM|TipoProva"
                 const dateA = new Date(a.split('|')[0]); // Prende solo la parte della data e la converte in oggetto Date
                 const dateB = new Date(b.split('|')[0]);
             
                 return dateA - dateB; // Ordina prima per giorno, poi per ora
+            }); */
+            const uniqueDates = new Set();
+
+            // Ordinare e rimuovere duplicati
+             arrayResult = arrayResult
+            .sort((a, b) => {
+                const dateA = new Date(a.split('|')[0]); // Estrarre la data e convertirla
+                const dateB = new Date(b.split('|')[0]);
+                return dateA - dateB;
+            })
+            .filter(dateString => {
+                if (uniqueDates.has(dateString)) {
+                    return false; // Scarta i duplicati
+                }
+                uniqueDates.add(dateString);
+                return true;
             });
+
+            //////console.log("arrayResult unicizzato",arrayResult);
         }
         if (Array.isArray(arrayResult)) {
             // Se è un array, cicla e stampa il contenuto
 
             
             arrayResult.forEach((titolo, index) => {
-               // //console.log(`${index + 1}. ${titolo}`);
+               // ////////console.log(`${index + 1}. ${titolo}`);
                 dropdownElement.innerHTML += `<label><input type="checkbox" name="${titolo}" value="${titolo}"> ${titolo}</label>`;
             });
             break; // Esci dal ciclo dopo aver trovato l'array
@@ -498,48 +523,48 @@ async function avvioFunction(query){
           .filter(checkbox => checkbox.checked)
           .map(checkbox => checkbox.value); // Raccoglie i valori selezionati
         selectedOptionsInput.value = selected.length ? selected.join(', ') : 'Seleziona opzioni...';
-       ////console.log("////////////  ",idDropdown,"---  ",selected);
+       //////////console.log("////////////  ",idDropdown,"---  ",selected);
         switch(idDropdown) {
             case "dropdown-riserve":
               riserve=selected;
-              ////console.log(selected)
+              ////////console.log(selected)
             break;
             case "dropdown-titoliPreferenziali":
               titoliPreferenziali=selected
-              ////console.log(titoliPreferenziali)
+              ////////console.log(titoliPreferenziali)
             break;
             case "dropdown-patenti":
                 patenti=selected
-               // //console.log(patenti)
+               // //////console.log(patenti)
             break;
             case "dropdown-tipoProve":
                 tipoProve=selected
-               // //console.log(tipoProve)
+               // //////console.log(tipoProve)
             break;
             case "dropdown-esitoProva":
                 esitiProve=selected
-              //  //console.log(esitiProve)
+              //  //////console.log(esitiProve)
             break;
             case "dropdown-dataConcorsoTipoProva":
                 dateProve=selected
-               // //console.log(dateProve)
+               // //////console.log(dateProve)
             break;
             case "dropdown-esitoConcorsoTipoProva":
                 esitiProve=selected
-               // //console.log(dateProve)
+               // //////console.log(dateProve)
             break;
             case "dropdown-domande":
                 statoCandidato=selected
-               // //console.log(statoCandidato)
+               // //////console.log(statoCandidato)
             break;
             case "dropdown-campiRestituiti":
                 campiRestituiti=selected
-               //console.log("riga 455:",campiRestituiti)
+               //////console.log("riga 455:",campiRestituiti)
             break;
             default:
               // code block
           }
-          //console.log("////////////riga 377  ",idDropdown,"---  ",selected)
+          //////console.log("////////////riga 377  ",idDropdown,"---  ",selected)
         if(idDropdown==="dropdown-tipoProve"){
             let dropdownElementEsiti=document.getElementById('dropdown-esitoProva');
             let dropdownElementDataProva=document.getElementById('dropdown-dataProva');
@@ -553,10 +578,10 @@ async function avvioFunction(query){
             selectedOptionsInputEsiti.value = selectedEsiti.length ? selectedEsiti.join(', ') : 'Seleziona opzioni...';
             
             //popolaDropdown(queryGetEsitiProve,"dropdown-esitoProva",concorsoId)
-           // //console.log('----------',selected)
+           // //////console.log('----------',selected)
             if(selected.length){
                 for (const elemento of selected) {
-                   // //console.log(elemento);
+                   // //////console.log(elemento);
                     let queryGetEsitiProve=`
                         query {
                             getEsitiByProva(concorso: "${concorsoId}",tipoProva:"${elemento}")
@@ -591,7 +616,7 @@ async function avvioFunction(query){
         dataP =  formatDate(dateProve[0].split('|')[0],true, true);//.// Restituisce la parte della data in -> gg-mm-aaaa hh:mm
     }
     // Ottieni la tabella dal DOM
-    console.log('exportBtn------------------------------------')
+    ////console.log('exportBtn------------------------------------')
     let table = document.getElementById('concorsiTable');
     if (!table) return;
 
@@ -712,7 +737,7 @@ async function aggiungiPulsanteProve(concorsoId,nomeProva,nomeButton) {
         // Inserisci il pulsante subito dopo l'elemento con id "filtroAvanzato"
         targetElement.insertAdjacentElement('afterend', newButton);
         newButton.addEventListener('click', function () {
-            window.location.href = `/gestioneProveConcorsuali?id=${concorsoId}&tipoProva=${nomeProva}`;//?id=${concorsoId}
+            window.location.href = `/concorsi/gestioneProveConcorsuali?id=${concorsoId}&tipoProva=${nomeProva}`;//?id=${concorsoId}
         });
     }
 };
@@ -781,9 +806,9 @@ function generatorePDF(concorsoId,concorsoTipoProva){
             const testDati=flattenAndFormatDates(usersData);
             const filteredList = filterFields(usersData, requiredKeys);//non serve più, TODO
             const filterListFormattedDate= formatDatesInObjects(filteredList, "dataNascita")
-          //  console.log("///////////////////////", testDati)
+          //  ////console.log("///////////////////////", testDati)
             
-            //console.log('prova dati formattati:',testDati);
+            //////console.log('prova dati formattati:',testDati);
             let dataP =  formatDate(dateProve[0].split('|')[0],true, true);//.// Restituisce la parte della data in -> gg-mm-aaaa hh:mm
             switch (concorsoTipoProva) {
                 case 'PROVA MOTORIO-ATTITUDINALE':
@@ -828,10 +853,10 @@ function generatorePDF(concorsoId,concorsoTipoProva){
                         break;
         
                 default:
-                    console.error('Tipo di prova non riconosciuto:', concorsoTipoProva);
+                    ////console.error('Tipo di prova non riconosciuto:', concorsoTipoProva);
                     break;
             }
-            //console.log(filterListFormattedDate,dateProve)
+            //////console.log(filterListFormattedDate,dateProve)
         }
        else(
         alert("SELEZIONARE UNA DATA PROVA")
@@ -844,7 +869,7 @@ function generatorePDF(concorsoId,concorsoTipoProva){
 function formCandidato(codiceFiscale){
         const concorsoId = document.querySelector('script[type="module"]').getAttribute('concorsoId');
         const concorsoTipoProva = document.querySelector('script[type="module"]').getAttribute('tipoProva')
-        const url = `/gestioneProveCandidato?id=${concorsoId}&tipoProva=${concorsoTipoProva}&codiceFiscaleCandidato=${codiceFiscale}`; // Sostituisci con l'URL desiderato
+        const url = `/concorsi/gestioneProveCandidato?id=${concorsoId}&tipoProva=${concorsoTipoProva}&codiceFiscaleCandidato=${codiceFiscale}`; // Sostituisci con l'URL desiderato
         const windowFeatures = "width=800,height=600,resizable,scrollbars";
     
         window.open(url, "_blank", windowFeatures);
@@ -882,7 +907,7 @@ function generateStructuredString(inputList) {
             result += '\n';
         }
     }
-   // console.log('/////////////////// ', result);
+   // ////console.log('/////////////////// ', result);
     return result;
 }
 

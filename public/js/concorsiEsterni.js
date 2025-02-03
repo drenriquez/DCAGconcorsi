@@ -46,7 +46,7 @@ async function generatePage(concorsi) {
     document.querySelectorAll('.gestioneBtn').forEach(button => {
         button.addEventListener('click', function () {
             const concorsoId = this.getAttribute('data-id');
-            window.location.href = `/gestioneConcorsi?id=${concorsoId}`;
+            window.location.href = `/concorsi/gestioneConcorsi?id=${concorsoId}`;
         });
     });
 
@@ -91,7 +91,7 @@ async function aggiungiPulsanteProve(concorsoId, nomeProva, nomeButton, idButton
             targetElement.insertAdjacentElement('afterend', newButton);
 
             newButton.addEventListener('click', function () {
-                window.location.href = `/gestioneProveConcorsuali?id=${concorsoId}&tipoProva=${nomeProva}`;
+                window.location.href = `/concorsi/gestioneProveConcorsuali?id=${concorsoId}&tipoProva=${nomeProva}`;
             });
         }
     } catch (error) {

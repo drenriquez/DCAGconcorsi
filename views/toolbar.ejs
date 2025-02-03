@@ -90,14 +90,14 @@
 <nav class="navbar navbar-expand-lg fixed-top">
   <div class="container">
     <img src="/images/vvf_logo.png" alt="VVF Logo" width="40" height="40" class="rounded-circle logo">
-    <a class="navbar-brand" href="/home">DCAGConcorsi</a>
+    <a class="navbar-brand" href="/concorsi/home">DCAGConcorsi</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link text-light" href="/home">
+          <a class="nav-link text-light" href="/concorsi/home">
             <i class="fas fa-home"></i> Home
           </a>
         </li>
@@ -112,19 +112,19 @@
         <% if (livelloUser === "2") { %>
           <div class="nav-separator"></div> <!-- Separatore -->
           <li class="nav-item">
-            <a class="nav-link text-light" href="/admin">ADMIN</a>
+            <a class="nav-link text-light" href="/concorsi/admin">ADMIN</a>
           </li>
          <!--  <li class="nav-item">
             <a class="nav-link text-light" href="/gestioneConcorsi">CONCORSI INTERNI</a>
           </li> -->
           <li class="nav-item">
-            <a class="nav-link text-light" href="/concorsiEsterni">CONCORSI ESTERNI</a>
+            <a class="nav-link text-light" href="/concorsi/concorsiEsterni">CONCORSI ESTERNI</a>
           </li>
         <% } %>
 
         <!-- Logout -->
         <li class="nav-item">
-          <a class="nav-link text-light" href="/logout">
+          <a class="nav-link text-light" href="/concorsi/logout">
             <i class="fas fa-sign-out-alt"></i> Logout
           </a>
         </li>

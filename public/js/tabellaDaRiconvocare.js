@@ -3,6 +3,9 @@ import { apiGraphQLgetAllUsers } from "../../utils/apiGraphql.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     initTable();
+    document.getElementById('aggiorna-dati').addEventListener('click', () => {
+      location.reload();
+    });
   });
   
   let sortedData = [];
@@ -322,7 +325,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function formCandidato(codiceFiscale){
     const concorsoId = document.querySelector('script[type="module"]').getAttribute('concorsoId');
     const concorsoTipoProva = document.querySelector('script[type="module"]').getAttribute('tipoProva')
-    const url = `/gestioneProveCandidato?id=${concorsoId}&tipoProva=${concorsoTipoProva}&codiceFiscaleCandidato=${codiceFiscale}`; // Sostituisci con l'URL desiderato
+    const url = `/concorsi/gestioneProveCandidato?id=${concorsoId}&tipoProva=${concorsoTipoProva}&codiceFiscaleCandidato=${codiceFiscale}`; // Sostituisci con l'URL desiderato
     const windowFeatures = "width=800,height=1000,resizable,scrollbars";
 
     window.open(url, "_blank", windowFeatures);

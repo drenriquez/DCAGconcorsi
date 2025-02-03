@@ -184,6 +184,13 @@ async function avvioFunction(query){
         generateTableRows(users, currentPage, recordsPerPage);
         generatePagination(users.length, recordsPerPage);
     }
+    else{
+        console.log("____________VUOTO________________")
+        let userNull=[{'codiceFiscale': '-', 'cognome': '-', 'nome': '-', 'dataNascita': '-', 'statoCandidato': '-'}]
+        generateTableHeader(userNull[0]);
+        generateTableRows(userNull, currentPage, recordsPerPage);
+        generatePagination(userNull.length, recordsPerPage);
+    }
     // Nascondi lo spinner e mostra la tabella dopo il caricamento
     spinner.style.display = 'none';
     

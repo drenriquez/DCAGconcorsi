@@ -10,12 +10,19 @@ const morgan = require('morgan');
 const { v4: uuidv4 } = require('uuid');
 const { MongoClient } = require('mongodb');
 const databaseConfig = require('./config/database');
-const { userApiAuth } = require('./middleware/userApiAuth');
+const { userApiAuth }= require('./middleware/userApiAuth');
+
 
 // Import GraphQL dependencies
 const { graphqlHTTP } = require('express-graphql');
 const schema = require('./graphql-mongodb-app/schema');
 const resolvers = require('./graphql-mongodb-app/resolver');
+
+
+
+
+
+
 
 const mongoClient = new MongoClient(databaseConfig.dbURI);
 mongoClient.connect(function(err) {
@@ -34,17 +41,19 @@ const usersRouter = require('./routes/users');
 const loginRouter = require('./routes/login');
 const logoutRouter = require('./routes/logout');
 const dashboardRouter = require('./routes/dashboard');
-const adminRouter = require('./routes/admin');
-const databaseRouter = require('./routes/database');
-const gestioneConcorsiRouter = require('./routes/gestioneConcorsi');
-const concorsiEsterniRouter = require('./routes/concorsiEsterni');
-const gestioneProveConcorsualiRouter = require('./routes/gestioneProveConcorsuali');
-const gestioneProveCandidatoRouter = require('./routes/gestioneProveCandidato');
-const tabellaDaRiconvocareRouter = require('./routes/TabellaDaRiconvocare');
-const ConcorsiEsterniController = require('./controllers/concorsiEsterniController');
+const adminRouter =require('./routes/admin');
+const databaseRouter =require('./routes/database')
+const gestioneConcorsiRouter =require('./routes/gestioneConcorsi');
+const concorsiEsterniRouter=require('./routes/concorsiEsterni');
+const gestioneProveConcorsualiRouter=require('./routes/gestioneProveConcorsuali');
+const gestioneProveCandidatoRouter=require('./routes/gestioneProveCandidato');
+const tabellaDaRiconvocareRouter=require('./routes/TabellaDaRiconvocare');
+const ConcorsiEsterniController =require('./controllers/concorsiEsterniController');
+//const concorsiInterniRouter =require('./controllers/concorsiInterniController');
 const UserController = require('./controllers/userController');
-const DatabaseController = require('./controllers/databaseController');
-
+//const ILG189Controller = require('./controllers/concorsoGenericController');
+//const VF350Controller = require('./controllers/concorsoGenericController');
+const DatabaseController=require('./controllers/databaseController');
 const app = express();
 const utilsPath = path.join(__dirname, 'utils');
 
@@ -57,20 +66,25 @@ app.use(cors({
 }));
 
 const userController = new UserController();
-const databaseController = new DatabaseController();
-const concorsiEsterniController = new ConcorsiEsterniController();
+//const iLG189Controller = new ILG189Controller('189ILG');
+//const vF350Controller = new VF350Controller('350VF');
+const databaseController=new DatabaseController();
+const concorsiEsterniController= new ConcorsiEsterniController()
+
 
 // Configura il server GraphQL
-app.use('/concorsi/graphql', userApiAuth, graphqlHTTP({
+app.use('/graphql',userApiAuth, graphqlHTTP({
   schema,
   rootValue: resolvers,
   graphiql: true, // Attiva GraphiQL per testare le query via interfaccia
 }));
 
 //REST
-app.use('/concorsi/api', databaseController.getRouter());
-app.use('/concorsi/api', concorsiEsterniController.getRouter());
-app.use('/concorsi/api', userApiAuth, userController.getRouter());
+app.use('/api',databaseController.getRouter())
+//app.use('/api',iLG189Controller.getRouter());
+//app.use('/api',vF350Controller.getRouter());
+app.use('/api',concorsiEsterniController.getRouter());
+app.use('/api', userApiAuth,userController.getRouter());
 
 app.use(helmet());
 app.use(cookieParser());
@@ -91,6 +105,18 @@ app.use(session({
     collection: 'sessions'
   })
 }));
+        // Middleware per impostare la variabile req.session.Api se non è già impostata
+// app.use((req, res, next) => {
+//   if (!req.session.Api) {
+//     req.session.Api = '*******************la-tua-stringa'; // Imposta il valore che desideri
+//   }
+//   next();
+// });
+// app.use((req, res, next) => {
+//   console.log('Cookies: ', req.cookies);
+//   console.log('Session: ', req.session);
+//   next();
+// });
 
 var accessLogStream = rfs.createStream('access.log', {
   interval: '1d',
@@ -117,18 +143,20 @@ app.use('/utils', express.static(utilsPath, {
   }
 }));
 
-app.use('/concorsi', homeRouter);
-app.use('/concorsi', usersRouter);
-app.use('/concorsi', loginRouter);
-app.use('/concorsi', logoutRouter);
-app.use('/concorsi', dashboardRouter);
-app.use('/concorsi', adminRouter);
-app.use('/concorsi', databaseRouter);
-app.use('/concorsi', gestioneConcorsiRouter);
-app.use('/concorsi', concorsiEsterniRouter);
-app.use('/concorsi', gestioneProveConcorsualiRouter);
-app.use('/concorsi', gestioneProveCandidatoRouter);
-app.use('/concorsi', tabellaDaRiconvocareRouter);
+app.use(homeRouter);
+app.use(userApiAuth,usersRouter);
+app.use(loginRouter);
+app.use(logoutRouter);
+app.use(dashboardRouter);
+app.use(adminRouter);
+app.use(databaseRouter);
+app.use(gestioneConcorsiRouter);
+app.use(concorsiEsterniRouter);
+app.use(gestioneProveConcorsualiRouter);
+app.use(gestioneProveCandidatoRouter);
+app.use(tabellaDaRiconvocareRouter)
+
+
 
 app.use(function(req, res, next) {
   next(createError(404));

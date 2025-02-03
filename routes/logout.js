@@ -6,7 +6,7 @@ const { userAuth } = require('../middleware/userAuth');
 router.get('/logout',userAuth, function(req, res, next) {
     req.session.isAuthenticated=false
     req.session.destroy();
-    res.redirect('/login')
+    res.redirect('/concorsi/login')
     console.log("test logout");
 });
 

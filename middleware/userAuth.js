@@ -4,7 +4,7 @@ function userAuth(req, res, next) {
 
     if (!isAuthenticated) {
         // Se l'utente non è autenticato, reindirizza alla pagina di login
-        return res.redirect('/login');
+        return res.redirect('/concorsi/login');
     }
 
     // Se l'utente è autenticato, passa al middleware successivo

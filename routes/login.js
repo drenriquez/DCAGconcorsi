@@ -6,6 +6,7 @@ const authController = require('../controllers/loginController');
 
 /* GET login page. */
 router.get(['/', '/login'], function(req, res, next) {
+  console.log("---dentro  loginRouter------")
   res.render('login', { title: 'DCAGconcorsi' });
 });
 
