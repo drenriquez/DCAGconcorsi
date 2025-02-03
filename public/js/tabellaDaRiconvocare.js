@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
       location.reload();
     });
   });
-  
   let sortedData = [];
   let sortDirection = {};
   
