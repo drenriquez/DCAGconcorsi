@@ -41,6 +41,7 @@ const concorsiEsterniRouter = require('./routes/concorsiEsterni');
 const gestioneProveConcorsualiRouter = require('./routes/gestioneProveConcorsuali');
 const gestioneProveCandidatoRouter = require('./routes/gestioneProveCandidato');
 const tabellaDaRiconvocareRouter = require('./routes/TabellaDaRiconvocare');
+const inserimentoProveRouter = require('./routes/inserimentoProve');
 const ConcorsiEsterniController = require('./controllers/concorsiEsterniController');
 const UserController = require('./controllers/userController');
 const DatabaseController = require('./controllers/databaseController');
@@ -80,7 +81,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: { 
-    maxAge: 3600000,
+    maxAge: 360000000,
     httpOnly: true,
     secure: false,
     sameSite: 'Lax'
@@ -129,6 +130,7 @@ app.use('/concorsi', concorsiEsterniRouter);
 app.use('/concorsi', gestioneProveConcorsualiRouter);
 app.use('/concorsi', gestioneProveCandidatoRouter);
 app.use('/concorsi', tabellaDaRiconvocareRouter);
+app.use('/concorsi', inserimentoProveRouter);
 
 app.use(function(req, res, next) {
   next(createError(404));

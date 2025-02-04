@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carica e Visualizza File Excel</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+     #mainId{
+        margin: 100px !important;
+     }
+    </style>
+</head>
+<body>
+    <%- include('toolbar', { livelloUser: livelloUser }) %>
+    <div class="container mt-5" id="mainId">
+        <h1 class="mb-4">Carica e Visualizza File Excel</h1>
+        <div class="mb-3">
+            <input type="file" class="form-control" id="fileInput" accept=".xlsx, .xls">
+        </div>
+        <div id="excelData" class="mt-4"></div>
+    </div>
+
+    <!-- Bootstrap JS e dipendenze -->
+    
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="/js/inserimentoProve.js"
+    apiUserURL="<%= apiUserURL %>"
+    concorsoId="<%= concorsoId %>"
+    userCodFisc="<%= userCodFisc %>"
+    livelloUser="<%= livelloUser %>"
+  ></script>
+    <script src="/js/xlsx.full.min.js"></script>
+</body>
+</html>

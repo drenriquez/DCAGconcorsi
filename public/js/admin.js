@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     addNewUser()
 })
 
-
+//test
 async function popolaSelect(idSelectElement, opzioniArray, onChangeFunction) {
     var select = document.getElementById(idSelectElement);
     // Rimuovi le opzioni esistenti

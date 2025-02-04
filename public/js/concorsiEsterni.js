@@ -30,13 +30,16 @@ async function generatePage(concorsi) {
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `
-            <div class="card-body">
-                <h5 class="card-title">${concorso.nome}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">${concorso.data}</h6>
-                <p class="card-text">${concorso.descrizione}</p>
-                <button type="button" class="btn btn-danger bold gestioneBtn" 
-                        data-id="${concorso.nomeCollection}" 
-                        id="button-${concorso.nomeCollection}">GESTIONE</button>
+           <div class="card-body d-flex justify-content-between align-items-start">
+                <div>
+                    <h5 class="card-title">${concorso.nome}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">${concorso.data}</h6>
+                    <p class="card-text">${concorso.descrizione}</p>
+                    <button type="button" class="btn btn-danger bold gestioneBtn"
+                        data-id="${concorso.nomeCollection}"
+                        id="button-${concorso.nomeCollection}">GENERALE</button>
+                </div>
+                <button type="button" id="inserimentoProve" class="btn btn-secondary">GESTIONE</button>
             </div>
         `;
         column.appendChild(card);
@@ -45,10 +48,18 @@ async function generatePage(concorsi) {
     // Aggiungi evento per il click sui bottoni "GESTIONE"
     document.querySelectorAll('.gestioneBtn').forEach(button => {
         button.addEventListener('click', function () {
-            const concorsoId = this.getAttribute('data-id');
+            let concorsoId = this.getAttribute('data-id');
             window.location.href = `/concorsi/gestioneConcorsi?id=${concorsoId}`;
         });
     });
+
+    let buttonInserimentoProve=document.getElementById('inserimentoProve');
+  
+        buttonInserimentoProve.addEventListener('click', function () {
+            let concorsoId = this.getAttribute('data-id');
+            window.location.href = `/concorsi/inserimentoProve?id=${concorsoId}`;
+        });
+    
 
     // Aggiungi i pulsanti per le prove dopo che tutte le card sono state generate
     const promises = concorsi.map(concorso => {

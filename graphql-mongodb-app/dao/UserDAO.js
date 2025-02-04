@@ -1062,18 +1062,18 @@ class UserDAO {
                 // Creiamo una copia di stepData per evitare modifiche indesiderate
                 let updatedStepData = { ...stepData };
         
-                // ✅ Convertiamo la data in un oggetto Date prima di salvare
+                //  Convertiamo la data in un oggetto Date prima di salvare
                 if (updatedStepData.dataProva && typeof updatedStepData.dataProva === "string") {
                     const parsedDate = new Date(updatedStepData.dataProva);
                     if (!isNaN(parsedDate)) {
                         updatedStepData.dataProva = parsedDate; // MongoDB la salverà come Date
                     } else {
-                        console.warn("⚠️ Warning: dataProva non è una data valida", updatedStepData.dataProva);
+                        console.warn(" Warning: dataProva non è una data valida", updatedStepData.dataProva);
                         updatedStepData.dataProva = null; // Evita di salvare un valore errato
                     }
                 }
         
-                console.log("✅ Dati da salvare:", updatedStepData);
+                console.log(" Dati da salvare:", updatedStepData);
         
                 if (iterConcorsoIndex >= 0) {
                     // Aggiornamento dello step esistente
@@ -1087,7 +1087,7 @@ class UserDAO {
                     };
         
                     const result = await this.collection.updateOne({ codiceFiscale }, updateQuery);
-                    console.log('✅ Risultato aggiornamento:', result);
+                    console.log(' Risultato aggiornamento:', result);
                     return result.modifiedCount > 0;
                 } else {
                     // Nuovo step da aggiungere
@@ -1101,11 +1101,11 @@ class UserDAO {
                     };
         
                     const result = await this.collection.updateOne({ codiceFiscale }, pushQuery);
-                    console.log('✅ Risultato inserimento:', result);
+                    console.log(' Risultato inserimento:', result);
                     return result.modifiedCount > 0;
                 }
             } catch (error) {
-                console.error('❌ Errore in addOrUpdateStep:', error);
+                console.error(' Errore in addOrUpdateStep:', error);
                 throw error;
             }
         }
