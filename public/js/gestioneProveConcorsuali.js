@@ -19,7 +19,21 @@ document.addEventListener('DOMContentLoaded', async function() {
     let openedWindow = null; // Variabile per tenere traccia della finestra aperta
 
     document.getElementById('daRiconvocare').addEventListener('click', () => {
-        const url = `/concorsi/tabellaDaRiconvocare?id=${concorsoId}&tipoProva=${concorsoTipoProva}`; 
+        const url = `/concorsi/tabellaDaRiconvocare?id=${concorsoId}&tipoProva=${concorsoTipoProva}&dataProva=${dateProve[0]}`; 
+        const windowFeatures = "width=1200,height=600,resizable,scrollbars";
+
+        if (openedWindow && !openedWindow.closed) {
+            // Se la finestra è già aperta e non è chiusa, aggiorniamola
+            openedWindow.location.href = url;
+            openedWindow.focus(); // Porta la finestra in primo piano
+        } else {
+            // Altrimenti apriamo una nuova finestra e salviamo il riferimento
+            openedWindow = window.open(url, "_blank", windowFeatures);
+        }
+    });
+
+    document.getElementById('btnTabulatiPersonalizzati').addEventListener('click', () => {
+        const url = `/concorsi/tabulatiPersonalizzati?id=${concorsoId}&tipoProva=${concorsoTipoProva}&dataProva=${dateProve[0]}`; 
         const windowFeatures = "width=1200,height=600,resizable,scrollbars";
 
         if (openedWindow && !openedWindow.closed) {
@@ -307,11 +321,18 @@ async function avvioFunction(query){
             th.addEventListener('click', () => sortTableByColumn(key));
             headerRow.appendChild(th);
         });
+        let isChecked = document.getElementById("myCheckbox").checked;
+        if(isChecked){
+        const thDataFirstStep = document.createElement('th');
+        thDataFirstStep.innerText = 'dataFirstStep';
+        headerRow.appendChild(thDataFirstStep);
+        }
+        const thStepCandidato = document.createElement('th');
+        thStepCandidato.innerText = 'schedaCandidato';
+        headerRow.appendChild(thStepCandidato); 
     }
-
-
    // Funzione per popolare le righe della tabella, in base alla pagina corrente
-   function generateTableRows(users, currentPage, recordsPerPage) {
+   async function generateTableRows(users, currentPage, recordsPerPage) {
     const tableBody = document.getElementById('tableBody');
     tableBody.innerHTML = ''; // Pulisci il corpo della tabella prima di rigenerarla
 
@@ -345,7 +366,21 @@ async function avvioFunction(query){
             td.innerText = value !== null && value !== undefined ? value : ''; // Mostra il valore o stringa vuota
             row.appendChild(td);
         });
-
+        let isChecked = document.getElementById("myCheckbox").checked;
+        if(isChecked){
+        //casella test
+         let queryStep=`query{
+            getFirstStepDateByProva(concorso:"350VVF",codiceFiscale:"${user.codiceFiscale}",provaDescrizione:"PROVA MOTORIO-ATTITUDINALE")
+        }`
+        const dataFirstStep = await apiGraphQLgetAllUsers(queryStep);
+        console.log(dataFirstStep['data']['getFirstStepDateByProva'])
+        const tdDataFirstStep=document.createElement('td');
+        const h1Test = document.createElement('h4');
+        h1Test.innerHTML=dataFirstStep['data']['getFirstStepDateByProva']
+        tdDataFirstStep.appendChild(h1Test)
+        
+        row.appendChild(tdDataFirstStep) 
+        }
         // Aggiungi la colonna con il pulsante alla fine della riga
         const tdButton = document.createElement('td');
         const button = document.createElement('button');
@@ -363,11 +398,12 @@ async function avvioFunction(query){
 
             // Inserisci qui la logica da eseguire quando viene cliccato il pulsante
         });
-
+        
         // Aggiungi il pulsante alla cella e la cella alla riga
         tdButton.appendChild(button);
         row.appendChild(tdButton);
 
+        
         // Aggiungi la riga completa alla tabella
         tableBody.appendChild(row);
     }
@@ -803,7 +839,10 @@ function generatorePDF(concorsoId,concorsoTipoProva){
     const requiredKeys = ['cognome', 'nome', 'dataNascita'];
     if(hasKeys(usersData[0], requiredKeys)){
         if(dateProve.length===1){
+
+            console.log('******************--userData--prima della trasf',usersData)
             const testDati=flattenAndFormatDates(usersData);
+            console.log('******************--testDati',testDati)
             const filteredList = filterFields(usersData, requiredKeys);//non serve più, TODO
             const filterListFormattedDate= formatDatesInObjects(filteredList, "dataNascita")
           //  ////console.log("///////////////////////", testDati)

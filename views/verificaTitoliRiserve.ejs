@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form con Tab - Bootstrap 5</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/node_modules/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+    <style>
+        .card {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Verifica Titoli TitoliPreferenziali e Riserve</h1>
+
+        <!-- Informazioni Candidato -->
+        <div class="card">
+            <div class="card-header bg-danger text-white">Dati Candidato</div>
+            <div class="card-body" id="candidato-info">
+                <p><strong>Nome:</strong> ${candidato.nome}</p>
+                    <p><strong>Cognome:</strong> ${candidato.cognome}</p>
+                    <p><strong>Codice Fiscale:</strong> ${candidato.codiceFiscale}</p>
+                      
+            </div>
+        </div>
+
+        <!-- Sezione Anagrafica -->
+      <!--   <div class="card">
+            <div class="card-header">Anagrafica</div>
+            <div class="card-body">   
+                    <p><strong>Nome:</strong> ${candidato.nome}</p>
+                    <p><strong>Cognome:</strong> ${candidato.cognome}</p>
+                    <p><strong>Codice Fiscale:</strong> ${candidato.codiceFiscale}</p>
+                      
+            </div>
+        </div> -->
+
+        <!-- Sezione Titoli Preferenziali -->
+        <div class="card">
+            <div class="card-header"><strong>Titoli Preferenziali</strong></div>
+            <div class="card-body">
+                <ul class="nav nav-tabs" id="titoliTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="cartella1-tab" data-bs-toggle="tab" data-bs-target="#cartella1" type="button" role="tab" aria-controls="cartella1" aria-selected="true">Cartella 1</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="cartella2-tab" data-bs-toggle="tab" data-bs-target="#cartella2" type="button" role="tab" aria-controls="cartella2" aria-selected="false">Cartella 2</button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="titoliTabsContent">
+                    <div class="tab-pane fade show active" id="cartella1" role="tabpanel" aria-labelledby="cartella1-tab">
+                        <form id="formCartella1">
+                            <div class="mb-3">
+                                <label for="titolo1" class="form-label">Titolo</label>
+                                <input type="text" class="form-control" id="titolo1" value="Titolo Cartella 1">
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="verificato1" checked>
+                                <label class="form-check-label" for="verificato1">Verificato</label>
+                            </div>
+                            <div class="mb-3">
+                                <label for="numeroProtocollo1" class="form-label">Numero Protocollo</label>
+                                <input type="text" class="form-control" id="numeroProtocollo1" value="12345">
+                            </div>
+                            <div class="mb-3">
+                                <label for="dataProtocollo1" class="form-label">Data Protocollo</label>
+                                <input type="date" class="form-control" id="dataProtocollo1" value="2023-10-26">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Salva</button>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="cartella2" role="tabpanel" aria-labelledby="cartella2-tab">
+                        <form id="formCartella2">
+                            <div class="mb-3">
+                                <label for="titolo2" class="form-label">Titolo</label>
+                                <input type="text" class="form-control" id="titolo2" value="Titolo Cartella 2">
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="verificato2">
+                                <label class="form-check-label" for="verificato2">Verificato</label>
+                            </div>
+                            <div class="mb-3">
+                                <label for="numeroProtocollo2" class="form-label">Numero Protocollo</label>
+                                <input type="text" class="form-control" id="numeroProtocollo2" value="67890">
+                            </div>
+                            <div class="mb-3">
+                                <label for="dataProtocollo2" class="form-label">Data Protocollo</label>
+                                <input type="date" class="form-control" id="dataProtocollo2" value="2023-10-27">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Salva</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sezione Preferenze -->
+        <div class="card">
+            <div class="card-header"><strong>Preferenze</strong></div>
+            <div class="card-body">
+                <ul class="nav nav-tabs" id="preferenzeTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="opzione1-tab" data-bs-toggle="tab" data-bs-target="#opzione1" type="button" role="tab" aria-controls="opzione1" aria-selected="true">Opzione 1</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="opzione2-tab" data-bs-toggle="tab" data-bs-target="#opzione2" type="button" role="tab" aria-controls="opzione2" aria-selected="false">Opzione 2</button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="preferenzeTabsContent">
+                    <div class="tab-pane fade show active" id="opzione1" role="tabpanel" aria-labelledby="opzione1-tab">
+                        <form id="formOpzione1">
+                            <div class="mb-3">
+                                <label for="titoloOpzione1" class="form-label">Titolo</label>
+                                <input type="text" class="form-control" id="titoloOpzione1" value="Titolo Opzione 1">
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="verificatoOpzione1" checked>
+                                <label class="form-check-label" for="verificatoOpzione1">Verificato</label>
+                            </div>
+                            <div class="mb-3">
+                                <label for="numeroProtocolloOpzione1" class="form-label">Numero Protocollo</label>
+                                <input type="text" class="form-control" id="numeroProtocolloOpzione1" value="54321">
+                            </div>
+                            <div class="mb-3">
+                                <label for="dataProtocolloOpzione1" class="form-label">Data Protocollo</label>
+                                <input type="date" class="form-control" id="dataProtocolloOpzione1" value="2023-11-01">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Salva</button>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="opzione2" role="tabpanel" aria-labelledby="opzione2-tab">
+                        <form id="formOpzione2">
+                            <div class="mb-3">
+                                <label for="titoloOpzione2" class="form-label">Titolo</label>
+                                <input type="text" class="form-control" id="titoloOpzione2" value="Titolo Opzione 2">
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="verificatoOpzione2">
+                                <label class="form-check-label" for="verificatoOpzione2">Verificato</label>
+                            </div>
+                            <div class="mb-3">
+                                <label for="numeroProtocolloOpzione2" class="form-label">Numero Protocollo</label>
+                                <input type="text" class="form-control" id="numeroProtocolloOpzione2" value="98765">
+                            </div>
+                            <div class="mb-3">
+                                <label for="dataProtocolloOpzione2" class="form-label">Data Protocollo</label>
+                                <input type="date" class="form-control" id="dataProtocolloOpzione2" value="2023-11-02">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Salva</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/node_modules/flatpickr/dist/flatpickr.min.js"></script>
+    <script type="module" src="/js/verificaTitoliRiserve.js"
+        apiUserURL="<%= apiUserURL %>"
+        concorsoId="<%= concorsoId %>"
+        codiceFiscaleCandidato="<%= codiceFiscaleCandidato %>">
+    </script>
+</body>
+
+</html>

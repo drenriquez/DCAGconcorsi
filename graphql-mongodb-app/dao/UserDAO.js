@@ -1036,14 +1036,57 @@ class UserDAO {
                 console.error("Error fetching documents by prova and esito:", error);
                 throw error;
             }
-        }
+        };
+        async getFirstStepDateByProva(codiceFiscale, provaDescrizione) {
+            console.log("resolver chiamata a getFirstStepDateByProva")
+            try {
+                if (!this.collection) {
+                    throw new Error("Database not initialized. Call initializeDatabase first.");
+                }
+        
+                const pipeline = [
+                    // Filtra per il candidato specifico
+                    {
+                        $match: {
+                            codiceFiscale: codiceFiscale,
+                            "iterConcorso.prova.descrizione": provaDescrizione
+                        }
+                    },
+                    // Espandi iterConcorso per lavorare sugli step individualmente
+                    { $unwind: "$iterConcorso" },
+                    // Filtra solo gli step della prova richiesta
+                    {
+                        $match: {
+                            "iterConcorso.prova.descrizione": provaDescrizione
+                        }
+                    },
+                    // Ordina per idStep per ottenere il primo
+                    { $sort: { "iterConcorso.idStep": 1 } },
+                    // Seleziona il primo step trovato
+                    { $limit: 1 },
+                    // Proietta solo i campi necessari
+                    {
+                        $project: {
+                            _id: 0,
+                            dataPrimoStep: "$iterConcorso.dataProva"
+                        }
+                    }
+                ];
+        
+                const result = await this.collection.aggregate(pipeline).toArray();
+                return result.length > 0 ? result[0].dataPrimoStep : null;
+            } catch (error) {
+                console.error("Error fetching first step date:", error);
+                throw error;
+            }
+        };
 
 
 /* -------------------------------------------------------------------------------------------------
 
                           MUTATION - mutation
 ------------------------------------------------------------------------------------------------------*/
-        // Aggiungi o aggiorna uno step
+        // Aggiungi o aggiorna uno step per idStep
         async addOrUpdateStep(codiceFiscale, provaDescrizione, idStep, stepData) {
             console.log('******* Chiamata funzione addOrUpdateStep nel DAO');
         
@@ -1108,7 +1151,81 @@ class UserDAO {
                 console.error(' Errore in addOrUpdateStep:', error);
                 throw error;
             }
+        };
+        // Aggiungi o aggiorna uno step per dataProva
+        async addOrUpdateStepByDataProva(codiceFiscale, provaDescrizione, dataProva, stepData) {
+            console.log('******* Chiamata funzione addOrUpdateStepByDataProva nel DAO');
+        
+            try {
+                // Trova il documento con il codice fiscale specifico
+                const user = await this.collection.findOne({ codiceFiscale });
+                if (!user) {
+                    throw new Error(`User with codiceFiscale ${codiceFiscale} not found`);
+                }
+        
+                // Converte la data di input in un oggetto Date
+                const parsedDataProva = new Date(dataProva);
+                if (isNaN(parsedDataProva)) {
+                    throw new Error("Invalid date format for dataProva");
+                }
+        
+                // Trova l'oggetto iterConcorso corrispondente alla dataProva e provaDescrizione
+                const iterConcorsoIndex = user.iterConcorso.findIndex(
+                    (step) => new Date(step.dataProva).getTime() === parsedDataProva.getTime() &&
+                              step.prova.descrizione === provaDescrizione
+                );
+        
+                // Creiamo una copia di stepData per evitare modifiche indesiderate
+                let updatedStepData = { ...stepData };
+        
+                //  Convertiamo la data in un oggetto Date prima di salvare
+                if (updatedStepData.dataProva && typeof updatedStepData.dataProva === "string") {
+                    const parsedDate = new Date(updatedStepData.dataProva);
+                    if (!isNaN(parsedDate)) {
+                        updatedStepData.dataProva = parsedDate; // MongoDB la salverà come Date
+                    } else {
+                        console.warn(" Warning: dataProva non è una data valida", updatedStepData.dataProva);
+                        updatedStepData.dataProva = null; // Evita di salvare un valore errato
+                    }
+                }
+        
+                console.log(" Dati da salvare:", updatedStepData);
+        
+                if (iterConcorsoIndex >= 0) {
+                    // Aggiornamento dello step esistente
+                    const updateQuery = {
+                        $set: {
+                            [`iterConcorso.${iterConcorsoIndex}`]: {
+                                ...user.iterConcorso[iterConcorsoIndex],
+                                ...updatedStepData,
+                            },
+                        },
+                    };
+        
+                    const result = await this.collection.updateOne({ codiceFiscale }, updateQuery);
+                    console.log(' Risultato aggiornamento:', result);
+                    return result.modifiedCount > 0;
+                } else {
+                    // Nuovo step da aggiungere
+                    const pushQuery = {
+                        $push: {
+                            iterConcorso: {
+                                dataProva: parsedDataProva,
+                                ...updatedStepData,
+                            },
+                        },
+                    };
+        
+                    const result = await this.collection.updateOne({ codiceFiscale }, pushQuery);
+                    console.log(' Risultato inserimento:', result);
+                    return result.modifiedCount > 0;
+                }
+            } catch (error) {
+                console.error(' Errore in addOrUpdateStepByDataProva:', error);
+                throw error;
+            }
         }
+        
         
     }
     

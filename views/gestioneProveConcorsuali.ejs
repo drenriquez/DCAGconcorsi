@@ -143,13 +143,26 @@
             background-color: #676b68; /* Colore di sfondo */
             color: white; /* Colore del testo */
             border: 2px solid #676b68; /* Bordo */
-            margin-left: 100px;
+            margin-left: 50px;
             zoom: 120%;
             float: right;
         }
         .custom-btn:hover {
             background-color: #3e413f; /* Colore di sfondo hover */
             border-color: #3e413f; /* Colore del bordo hover */
+            color: white; /* Colore del testo */
+        }
+        .custom-btnB {
+            background-color: #f59444; /* Colore di sfondo */
+            color: white; /* Colore del testo */
+            border: 2px solid #f59444; /* Bordo */
+            margin-left: 10px;
+            zoom: 120%;
+            float: right;
+        }
+        .custom-btnB:hover {
+            background-color: #945928; /* Colore di sfondo hover */
+            border-color: #945928; /* Colore del bordo hover */
             color: white; /* Colore del testo */
         }
         
@@ -173,6 +186,18 @@
                     <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">TitoliPreferenziali e Riserve</a>
                     <a class="btn btn-success" data-bs-toggle="collapse" href="#multiCollapseExample4" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Filtro Campi Restituiti</a>
                     <a class="btn btn-dark" id="filtroAvanzato" data-bs-toggle="collapse" href="#multiCollapseExample5" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Filtro Avanzato</a>
+                  
+                    <% if (userCodFisc === "NTRNRC80S15G273K") { %>
+                      <input class="form-check-input" type="checkbox" id="myCheckbox">
+                      <label class="form-check-label" for="myCheckbox">mostra data prima convocazione</label>
+                    <% } %>
+
+
+
+                      
+                      
+                      <a class="btn btn-dark custom-btnB" id="daValidare" data-bs-toggle="collapse" href="/tabellaDaRiconvocare" role="button" aria-expanded="false">Da Validare</a>
+                    
                     <a class="btn custom-btn" id="daRiconvocare" data-bs-toggle="collapse" href="/tabellaDaRiconvocare" role="button" aria-expanded="false">Da Riconvocare</a>
                 </p>
                   <div class="row">
@@ -368,6 +393,7 @@
 <button id="exportBtn" class="btn btn-primary">Esporta in Excel</button>
 <button id="exportPdfBtn" class="btn btn-danger">Esporta in PDF Tabulati identificazione</button>
 <button id="exportPdfBtnEsiti" class="btn btn-success">Esporta in PDF Tabulati esiti</button>
+<button id="btnTabulatiPersonalizzati" class="btn btn-secondary">crea Tabulati personalizzati</button>
 
 
 
@@ -402,6 +428,7 @@
         apiUserURL="<%= apiUserURL %>"
         concorsoId="<%= concorsoId %>"
         tipoProva="<%= concorsoTipoProva %>"
+        userCodFisc="<%= userCodFisc %>"
     ></script>
     <script src="/js/xlsx.full.min.js"></script>
     <script src="/js/jspdf.min.js"></script>

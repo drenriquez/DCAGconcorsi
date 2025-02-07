@@ -35,13 +35,20 @@ const schema = buildSchema(`
     """analizza l'intera collezione e, per ogni documento, estrae i campi presenti nell'ultimo oggetto di domandeConcorso"""
     getAllCampiDomandeConcorso(concorso: String!): [String!]!
     getStepsByProvaByCandidato(concorso: String!,codiceFiscale: String!,tipoProva:String!): [IterConcorso]
+     """restituisce ultimo step per idStep per una specifica prova e per dato candidato"""
     getDocumentsByProvaWithEsito(concorso: String!, provaDescrizione: String!, esitoList: [String]!): [User]
+    """restituisce ultimo step per idStep per una specifica prova e per dato candidato"""
+    getFirstStepDateByProva(concorso: String!, codiceFiscale: String!, provaDescrizione: String!):String 
+     
   }
 
   type Mutation {
     createUser(concorso: String!, codiceFiscale: String!, cognome: String!, nome: String!, dataNascita: DateTime!, comuneNascita: ComuneInput!): User
     deleteUser(concorso: String!, id: String!): String
+    """Aggiungi o aggiorna uno step di una specifica prova, identificandolo per idStep"""
     addOrUpdateStep(concorso: String!, codiceFiscale: String!,provaDescrizione: String!,idStep: Int!,stepData: IterConcorsoInput!): IterConcorso
+    addOrUpdateStepByDataProva(concorso: String!, codiceFiscale: String!,provaDescrizione: String!,dataProva: DateTime!,stepData: IterConcorsoInput!): IterConcorso
+    
   }
 
   type User {

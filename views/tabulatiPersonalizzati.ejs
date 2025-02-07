@@ -11,29 +11,34 @@
      #mainId{
         margin: 100px !important;
      }
+     .mb-3{
+        margin: 50px !important;
+     }
     </style>
 </head>
 <body>
     <%- include('toolbar', { livelloUser: livelloUser }) %>
     <div class="container mt-5" id="mainId">
-        <h1 class="mb-4">Importa Risultati Prove</h1>
+        <h1 class="mb-4">Carica e Visualizza File Excel</h1>
+        <button id="exportPdfBtn" class="btn btn-danger">Esporta in PDF Tabulati identificazione</button>
         <div class="mb-3">
             <input type="file" class="form-control" id="fileInput" accept=".xlsx, .xls">
         </div>
-        <button id="btnInserimento" class="btn btn-danger">aggiorna/inserisci prova</button>
-        <button id="btnReport" class="btn btn-primary">report in console</button>
         <div id="excelData" class="mt-4"></div>
     </div>
 
     <!-- Bootstrap JS e dipendenze -->
     
     <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script type="module" src="/js/inserimentoProve.js"
+    <script type="module" src="/js/tabulatiPersonalizzati.js"
     apiUserURL="<%= apiUserURL %>"
     concorsoId="<%= concorsoId %>"
     userCodFisc="<%= userCodFisc %>"
     livelloUser="<%= livelloUser %>"
+    tipoProva="<%= tipoProva %>"
+    dataProva="<%= dataProva %>"
   ></script>
     <script src="/js/xlsx.full.min.js"></script>
+    <script src="/js/jspdf.min.js"></script>
 </body>
 </html>

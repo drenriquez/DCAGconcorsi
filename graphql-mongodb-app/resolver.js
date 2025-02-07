@@ -540,6 +540,12 @@ getDocumentsByProvaWithEsito: async ({concorso,provaDescrizione, esitoList})=>{
   await userDao.initializeDatabase();
   return userDao.getDocumentsByProvaWithEsito(provaDescrizione, esitoList);
 },
+getFirstStepDateByProva: async ({concorso, codiceFiscale,provaDescrizione})=>{
+  const userDao = new UserDAO(concorso);
+  console.log("resolver chiamata a getFirstStepDateByProva")
+  await userDao.initializeDatabase();
+  return userDao.getFirstStepDateByProva(codiceFiscale,provaDescrizione);
+},
 /* -------------------------------------------------------------------------------------------------
 
                           MUTATION
@@ -550,8 +556,13 @@ addOrUpdateStep: async({concorso,codiceFiscale, provaDescrizione, idStep, stepDa
   const userDao = new UserDAO(concorso);
   await userDao.initializeDatabase();
   return userDao.addOrUpdateStep(codiceFiscale, provaDescrizione, idStep, stepData)
+},
+addOrUpdateStepByDataProva: async({concorso,codiceFiscale, provaDescrizione, dataProva, stepData})=>{
+  console.log('---------chiamato resolver addOrUpdateStepByDataProva ',concorso)
+  const userDao = new UserDAO(concorso);
+  await userDao.initializeDatabase();
+  return userDao.addOrUpdateStepByDataProva(codiceFiscale, provaDescrizione, dataProva, stepData)
 }
-
 
 };
 

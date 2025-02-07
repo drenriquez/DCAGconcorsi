@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const concorsoTipoProva = document.querySelector('script[type="module"]').getAttribute('tipoProva');
   
     const query = `
-    query GetDocumentsByProvaWithEsito {
+    query {
       getDocumentsByProvaWithEsito(
         concorso: "${concorsoId}",
         provaDescrizione: "${concorsoTipoProva}",

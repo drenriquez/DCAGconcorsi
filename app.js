@@ -42,6 +42,8 @@ const gestioneProveConcorsualiRouter = require('./routes/gestioneProveConcorsual
 const gestioneProveCandidatoRouter = require('./routes/gestioneProveCandidato');
 const tabellaDaRiconvocareRouter = require('./routes/TabellaDaRiconvocare');
 const inserimentoProveRouter = require('./routes/inserimentoProve');
+const tabulatiPersonalizzati= require('./routes/tabulatiPersonalizzati');
+const verificaTitoliRiserve= require('./routes/verificaTitoliRiserve');
 const ConcorsiEsterniController = require('./controllers/concorsiEsterniController');
 const UserController = require('./controllers/userController');
 const DatabaseController = require('./controllers/databaseController');
@@ -131,6 +133,9 @@ app.use('/concorsi', gestioneProveConcorsualiRouter);
 app.use('/concorsi', gestioneProveCandidatoRouter);
 app.use('/concorsi', tabellaDaRiconvocareRouter);
 app.use('/concorsi', inserimentoProveRouter);
+app.use('/concorsi', tabulatiPersonalizzati);//verificaTitoliRiserve
+app.use('/concorsi', verificaTitoliRiserve);
+
 
 app.use(function(req, res, next) {
   next(createError(404));
